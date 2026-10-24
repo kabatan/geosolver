@@ -1,0 +1,71 @@
+{
+  "id": "HMMT-2008-FEB-GEO-02",
+  "dsl": {
+    "id": "HMMT-2008-FEB-GEO-02",
+    "variables": [
+      "s"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(9, 3 * sqrt(3))"
+      },
+      {
+        "name": "C",
+        "expression": "Point(9, -3 * sqrt(3))"
+      },
+      {
+        "name": "Omega",
+        "expression": "Incircle(A, B, C)"
+      },
+      {
+        "name": "I",
+        "expression": "Center(Omega)"
+      },
+      {
+        "name": "R",
+        "expression": "Radius(Omega)"
+      },
+      {
+        "name": "J",
+        "expression": "Point(2 * s, 0)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(J, s)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": "Distance(C, A)"
+      },
+      {
+        "left": "Distance(I, J)",
+        "operator": "=",
+        "right": "R + s"
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "s",
+        "operator": "<",
+        "right": "R"
+      }
+    ],
+    "target": "R / s"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "id": "AIME-2008-I-02",
+  "dsl": {
+    "id": "AIME-2008-I-02",
+    "variables": [
+      "h"
+    ],
+    "constructions": [
+      {
+        "name": "E",
+        "expression": "Point(0,0)"
+      },
+      {
+        "name": "M",
+        "expression": "Point(10,0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(0,10)"
+      },
+      {
+        "name": "I",
+        "expression": "Point(10,10)"
+      },
+      {
+        "name": "G",
+        "expression": "Point(5,h)"
+      },
+      {
+        "name": "X",
+        "expression": "Intersect(Line(G,E),Line(A,I))"
+      },
+      {
+        "name": "Y",
+        "expression": "Intersect(Line(G,M),Line(A,I))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "h",
+        "operator": ">",
+        "right": "10"
+      },
+      {
+        "left": "Area(E,M,Y,X)",
+        "operator": "=",
+        "right": "80"
+      }
+    ],
+    "target": "h"
+  }
+}

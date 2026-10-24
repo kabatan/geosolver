@@ -1,0 +1,158 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "x14",
+    "x15",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "k2",
+    "x2": "k3",
+    "x3": "k4",
+    "x4": "p10",
+    "x5": "p11",
+    "x6": "p12",
+    "x7": "p5",
+    "x8": "p6",
+    "x9": "p7",
+    "x10": "p8",
+    "x11": "p9",
+    "x12": "s1",
+    "x13": "s13",
+    "x14": "s14",
+    "x15": "t15"
+  },
+  "target_variable": "x15",
+  "equations": [
+    "x12**2 - 3",
+    "x1**4 - x1**2 + 1/16",
+    "x2**4 - x2**2 + 1/16",
+    "x3**2 - 3/4",
+    "x1*x7 + x12*x2*x7 - 2*x2*x3",
+    "x1*x8 + x12*x2*x8 - x2",
+    "x1*x9 + x12*x2*x9 - 2*x2",
+    "x1 - 4*x10*x2 + x12*x2",
+    "x1*x11 + x11*x12*x2 + 2*x2*x3",
+    "x1*x4 + x12*x2*x4 - x2",
+    "x1*x12**2 - x1 + x12**3*x2 - x12*x2 + 16*x2*x5 - 16*x2",
+    "x1*x12**2 + 2*x1*x12 + x1 + x12**3*x2 + 2*x12**2*x2 + x12*x2 - 16*x2*x6",
+    "x1**2*x7**2 + x1**2*x8**2 - 2*x1**2*x8*x9 + x1**2*x9**2 + 2*x1*x12*x2*x7**2 + 2*x1*x12*x2*x8**2 - 4*x1*x12*x2*x8*x9 + 2*x1*x12*x2*x9**2 + x12**2*x2**2*x7**2 + x12**2*x2**2*x8**2 - 2*x12**2*x2**2*x8*x9 + x12**2*x2**2*x9**2 - 4*x2**2",
+    "x1**2 + 2*x1*x12*x2 - 16*x10**2*x2**2 + 32*x10*x2**2*x8 + x12**2*x2**2 - 16*x2**2*x7**2 + 32*x2**2*x7 - 16*x2**2*x8**2 - 16*x2**2",
+    "x11**2 - 2*x11*x7 - x13**2 + x4**2 - 2*x4*x8 + x7**2 + x8**2",
+    "-x14**2 + x5**2 - 2*x5*x7 + x6**2 - 2*x6*x8 + x7**2 + x8**2",
+    "x13 - x14*x15"
+  ],
+  "saturation_factors": [
+    "x2",
+    "-x12/4 + x8 - 1/4",
+    "x13",
+    "x14",
+    "x1 + x12*x2"
+  ],
+  "polynomial": "x15**4 - 14*x15**2 + 1",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[8]/omega1:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "4/(k2**2/k3**2 + 2*k2*s1/k3 + s1**2)"
+    },
+    {
+      "source": "construction[8]/omega1:Circle:result:radius",
+      "operator": ">",
+      "expression": "2/(k2/k3 + s1)"
+    },
+    {
+      "source": "construction[9]/omega2:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "k2**2/(16*k3**2) + k2*s1/(8*k3) + s1**2/16"
+    },
+    {
+      "source": "construction[9]/omega2:Circle:result:radius",
+      "operator": ">",
+      "expression": "k2/(4*k3) + s1/4"
+    },
+    {
+      "source": "condition[0]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "4/(k2**2/k3**2 + 2*k2*s1/k3 + s1**2)"
+    },
+    {
+      "source": "condition[0]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "2/(k2/k3 + s1)"
+    },
+    {
+      "source": "condition[1]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "k2**2/(16*k3**2) + k2*s1/(8*k3) + s1**2/16"
+    },
+    {
+      "source": "condition[1]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "k2/(4*k3) + s1/4"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": "<",
+      "expression": "p6 - s1/4 - 1/4"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "s13"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "s14"
+    }
+  ],
+  "algebraic_constants": [
+    {
+      "symbol": "k2",
+      "expression": "sqrt(2)/4 + sqrt(6)/4",
+      "minimal_polynomial": "16*_constant**4 - 16*_constant**2 + 1",
+      "intended_value_80d": "0.96592582628906828674974319972889736763390483900840455040234307631042321397985552"
+    },
+    {
+      "symbol": "k3",
+      "expression": "-sqrt(2)/4 + sqrt(6)/4",
+      "minimal_polynomial": "16*_constant**4 - 16*_constant**2 + 1",
+      "intended_value_80d": "0.25881904510252076234889883762404832834906890131993051381400320731505697474880200"
+    },
+    {
+      "symbol": "k4",
+      "expression": "sqrt(3)/2",
+      "minimal_polynomial": "4*_constant**2 - 3",
+      "intended_value_80d": "0.86602540378443864676372317075293618347140262690519031402790348972596650845440002"
+    }
+  ],
+  "original_target_variable": "t15"
+}

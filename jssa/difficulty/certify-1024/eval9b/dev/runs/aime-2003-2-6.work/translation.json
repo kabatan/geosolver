@@ -1,0 +1,147 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "z1",
+    "z2",
+    "z3",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_x",
+    "x2": "v_y",
+    "x3": "s1",
+    "x4": "s2",
+    "x5": "s3",
+    "x6": "s4",
+    "x7": "t5"
+  },
+  "target_variable": "x7",
+  "equations": [
+    "-x1**2 - x2**2 + x3**2",
+    "x3 - 13",
+    "-x1**2 + 28*x1 - x2**2 + x4**2 - 196",
+    "x4 - 15",
+    "-49*x2**2 + x5**2",
+    "-196*x2**2/9 + x6**2",
+    "x5 - x6/2 - x7/2"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x1**2 + x2**2",
+    "x1**2 - 28*x1 + x2**2 + 196"
+  ],
+  "polynomial": "12544 - x7**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[7]/ab_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2 + v_y**2"
+    },
+    {
+      "source": "construction[8]/bc_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "196"
+    },
+    {
+      "source": "construction[9]/ca_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2 + (v_x - 14)**2"
+    },
+    {
+      "source": "construction[10]/apbp_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2 + v_y**2"
+    },
+    {
+      "source": "construction[11]/bpcp_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "196"
+    },
+    {
+      "source": "construction[12]/cpap_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2 + (14 - v_x)**2"
+    },
+    {
+      "source": "construction[13]/overlap_bc_cpap:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "196"
+    },
+    {
+      "source": "construction[13]/overlap_bc_cpap:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2 + (14 - v_x)**2"
+    },
+    {
+      "source": "construction[14]/overlap_bc_apbp:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "196"
+    },
+    {
+      "source": "construction[14]/overlap_bc_apbp:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2 + v_y**2"
+    },
+    {
+      "source": "construction[15]/overlap_ca_apbp:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2 + (v_x - 14)**2"
+    },
+    {
+      "source": "construction[15]/overlap_ca_apbp:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2 + v_y**2"
+    },
+    {
+      "source": "construction[16]/overlap_ca_bpcp:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2 + (v_x - 14)**2"
+    },
+    {
+      "source": "construction[16]/overlap_ca_bpcp:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "196"
+    },
+    {
+      "source": "construction[17]/overlap_ab_bpcp:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2 + v_y**2"
+    },
+    {
+      "source": "construction[17]/overlap_ab_bpcp:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "196"
+    },
+    {
+      "source": "construction[18]/overlap_ab_cpap:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2 + v_y**2"
+    },
+    {
+      "source": "construction[18]/overlap_ab_cpap:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2 + (14 - v_x)**2"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_y"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t5"
+}

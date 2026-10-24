@@ -1,0 +1,125 @@
+{
+  "id": "aime-2001-2-6",
+  "dsl": {
+    "id": "aime-2001-2-6",
+    "variables": [
+      "x",
+      "y",
+      "gx",
+      "gy",
+      "hx",
+      "hy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(1, 1)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(1, -1)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(-1, -1)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(-1, 1)"
+      },
+      {
+        "name": "O",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(O, sqrt(2))"
+      },
+      {
+        "name": "E",
+        "expression": "Point(-1, x)"
+      },
+      {
+        "name": "F",
+        "expression": "Point(-1, y)"
+      },
+      {
+        "name": "G",
+        "expression": "Point(gx, gy)"
+      },
+      {
+        "name": "H",
+        "expression": "Point(hx, hy)"
+      },
+      {
+        "name": "ef_line",
+        "expression": "Line(E, F)"
+      },
+      {
+        "name": "fg_line",
+        "expression": "Line(F, G)"
+      },
+      {
+        "name": "gh_line",
+        "expression": "Line(G, H)"
+      },
+      {
+        "name": "he_line",
+        "expression": "Line(H, E)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "x",
+        "operator": ">",
+        "right": -1
+      },
+      {
+        "left": "y",
+        "operator": ">",
+        "right": "x"
+      },
+      {
+        "left": "y",
+        "operator": "<",
+        "right": 1
+      },
+      {
+        "left": "Distance(E, F)",
+        "operator": "=",
+        "right": "Distance(F, G)"
+      },
+      {
+        "left": "Perpendicular(ef_line, fg_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(ef_line, gh_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(fg_line, he_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(G, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(H, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Area(E, F, G, H)",
+        "operator": ">",
+        "right": 0
+      }
+    ],
+    "target": "Area(E, F, G, H) / Area(A, B, C, D)"
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_cx",
+    "x2": "v_cy",
+    "x3": "v_vx",
+    "x4": "v_vy",
+    "x5": "p1",
+    "x6": "p2",
+    "x7": "p3",
+    "x8": "p4",
+    "x9": "s5",
+    "x10": "s6",
+    "x11": "s7",
+    "x12": "s8",
+    "x13": "t9"
+  },
+  "target_variable": "x13",
+  "equations": [
+    "-x1**2/2 + 5*x1/2 - x2**2/2 + x2*x5",
+    "-x3*x5 - x4*x6 + 5*x4/2 + x5*x6",
+    "-x1*x3*x5 - x1*x4*x7 + 5*x1*x4/2 + x1*x5*x7 + x2*x3*x7 - 5*x2*x3 - 5*x2*x7/2 + 25*x2/2 + 5*x3*x5 + 5*x4*x7 - 25*x4/2 - 5*x5*x7",
+    "-x1*x4*x8 + x1*x5*x8 - x2*x3*x5 + x2*x3*x8 - 5*x2*x4/2 + 5*x2*x5 - 5*x2*x8/2 + 5*x4*x8 - 5*x5*x8",
+    "-x1**2 + 10*x1 - x2**2 + x9**2 - 25",
+    "x9 - 4",
+    "5*x3/2 - x4*x5 + x5**2 - 25/4",
+    "-x10**2 + x7**2 - 10*x7 + x8**2 + 25",
+    "x10 - 9/2",
+    "x11**2 - 25*x2**2/4",
+    "-x12**2 + x6**2 - 10*x6 + 25",
+    "x12 - x13"
+  ],
+  "saturation_factors": [
+    "-x4 + x5",
+    "x11",
+    "x1",
+    "x1 - 5",
+    "x2",
+    "x5**2 + 25/4",
+    "x3**2 - 5*x3 + x4**2 - 2*x4*x5 + x5**2 + 25/4",
+    "-x1*x4 + x1*x5 + x2*x3 - 5*x2/2 + 5*x4 - 5*x5",
+    "x1**2 - 10*x1 + x2**2 + 25",
+    "x1**2 - 5*x1 + x2**2"
+  ],
+  "polynomial": "324 - 25*x13**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[3]/O:Circumcenter:triangle",
+      "operator": "!=",
+      "expression": "5*v_cy"
+    },
+    {
+      "source": "construction[5]/P:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-p1 + v_vy)**2 + (v_vx - 5/2)**2"
+    },
+    {
+      "source": "construction[5]/P:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "25"
+    },
+    {
+      "source": "construction[5]/P:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-p1 + v_vy)**2 + (v_vx - 5/2)**2"
+    },
+    {
+      "source": "construction[5]/P:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "25"
+    },
+    {
+      "source": "construction[6]/Q:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-p1 + v_vy)**2 + (v_vx - 5/2)**2"
+    },
+    {
+      "source": "construction[6]/Q:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_cy**2 + (v_cx - 5)**2"
+    },
+    {
+      "source": "construction[6]/Q:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-p1 + v_vy)**2 + (v_vx - 5/2)**2"
+    },
+    {
+      "source": "construction[6]/Q:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_cy**2 + (v_cx - 5)**2"
+    },
+    {
+      "source": "condition[2]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-p1 + v_vy)**2 + (v_vx - 5/2)**2"
+    },
+    {
+      "source": "condition[2]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "p1**2 + 25/4"
+    },
+    {
+      "source": "condition[2]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-p1 + v_vy)**2 + (v_vx - 5/2)**2"
+    },
+    {
+      "source": "condition[2]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "p1**2 + 25/4"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_cy"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "s7"
+    },
+    {
+      "source": "condition[6]:AcuteTriangle:triangle",
+      "operator": "!=",
+      "expression": "5*v_cy"
+    },
+    {
+      "source": "condition[6]:AcuteTriangle",
+      "operator": ">",
+      "expression": "5*v_cx"
+    },
+    {
+      "source": "condition[6]:AcuteTriangle",
+      "operator": ">",
+      "expression": "25 - 5*v_cx"
+    },
+    {
+      "source": "condition[6]:AcuteTriangle",
+      "operator": ">",
+      "expression": "-v_cx*(5 - v_cx) + v_cy**2"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t9"
+}

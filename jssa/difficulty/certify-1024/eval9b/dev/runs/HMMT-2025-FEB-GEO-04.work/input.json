@@ -1,0 +1,169 @@
+{
+  "id": "HMMT-2025-FEB-GEO-04",
+  "dsl": {
+    "id": "HMMT-2025-FEB-GEO-04",
+    "variables": [
+      "cx",
+      "r2",
+      "o1x",
+      "o1y"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(20, 0)"
+      },
+      {
+        "name": "O3",
+        "expression": "Point(10, 0)"
+      },
+      {
+        "name": "S3",
+        "expression": "Circle(O3, 10)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, 0)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(cx, r2)"
+      },
+      {
+        "name": "S2",
+        "expression": "Circle(O2, r2)"
+      },
+      {
+        "name": "dx",
+        "expression": "cx - 10"
+      },
+      {
+        "name": "dy",
+        "expression": "r2"
+      },
+      {
+        "name": "dn",
+        "expression": "sqrt(dx * dx + dy * dy)"
+      },
+      {
+        "name": "vx",
+        "expression": "-r2 * dy / dn"
+      },
+      {
+        "name": "vy",
+        "expression": "r2 * dx / dn"
+      },
+      {
+        "name": "U",
+        "expression": "Point(O2.x + vx, O2.y + vy)"
+      },
+      {
+        "name": "V",
+        "expression": "Point(O2.x - vx, O2.y - vy)"
+      },
+      {
+        "name": "O1",
+        "expression": "Point(o1x, o1y)"
+      },
+      {
+        "name": "S1",
+        "expression": "Circle(O1, 1)"
+      },
+      {
+        "name": "U1",
+        "expression": "Point(o1x - 1, o1y)"
+      },
+      {
+        "name": "V1",
+        "expression": "Point(o1x + 1, o1y)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(O2, C)",
+        "operator": "=",
+        "right": "r2"
+      },
+      {
+        "left": "Distance(O3, U)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(O3, V)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(U, V)",
+        "operator": "=",
+        "right": "2 * r2"
+      },
+      {
+        "left": "Collinear(U, O2, V)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(O1, U1)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(O1, V1)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(U1, V1)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Parallel(Line(U1, V1), Line(A, B))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(U1, S2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(V1, S2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(O1, Line(U, V))",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Collinear(U1, O1, V1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "r2",
+        "operator": ">",
+        "right": "1"
+      },
+      {
+        "left": "cx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cx",
+        "operator": "<",
+        "right": "20"
+      }
+    ],
+    "target": "Distance(A, C) * Distance(C, B)"
+  }
+}

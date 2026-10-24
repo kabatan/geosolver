@@ -1,0 +1,65 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_s",
+    "x2": "s1",
+    "x3": "s2",
+    "x4": "s3",
+    "x5": "t4"
+  },
+  "target_variable": "x5",
+  "equations": [
+    "x2**2 - 3",
+    "x1**4*x2**2 - 49*x3**2/36",
+    "x1**4*x2**2 - 4*x4**2/9",
+    "x3 - x4*x5"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x4",
+    "x1",
+    "x2**2 + 1/9",
+    "x2**2 + 25",
+    "x2**2 + 4"
+  ],
+  "polynomial": "16 - 49*x5**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "method": "rabinowitsch",
+  "coefficients": [
+    "0",
+    "36*z2^2*yy",
+    "-36*z2^2*yy",
+    "49*x3*z2^2*yy+49*x5*z2*yy",
+    "0",
+    "-49*x3*x5*z2*yy-49*x5^2*yy+16*x4*z2*yy+16*yy",
+    "0",
+    "0",
+    "0",
+    "0",
+    "1"
+  ],
+  "exponent": null
+}

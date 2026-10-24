@@ -1,0 +1,180 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_t_e",
+    "x2": "v_t_f",
+    "x3": "v_x",
+    "x4": "p2",
+    "x5": "p3",
+    "x6": "p4",
+    "x7": "s1",
+    "x8": "s5",
+    "x9": "s6",
+    "x10": "s7",
+    "x11": "s8",
+    "x12": "s9",
+    "x13": "t10"
+  },
+  "target_variable": "x13",
+  "equations": [
+    "-x3**2 + x7**2 - 144",
+    "-12*x3 + x4*x7 + 12*x4",
+    "-12*x1*x2*x3 + 12*x1*x5 + x2*x5*x7",
+    "12*x1*x2*x7 + 144*x1*x2 + 12*x1*x6 - 144*x1 + x2*x6*x7 - 12*x2*x7",
+    "-144*x1**2 + x8**2",
+    "x8 - 3",
+    "-144*x1**2 + 288*x1 + x9**2 - 144",
+    "x9 - 9",
+    "x10**2 - x2**2*x3**2 - 144*x2**2",
+    "x10 - 10",
+    "x11**2 - x2**2*x3**2 - 144*x2**2 + 2*x2*x3**2 + 288*x2 - x3**2 - 144",
+    "x11 - 27",
+    "x4*x6 - 12*x4 + 12*x5",
+    "-x1*x2*x3 + x1*x5 - x2*x3*x6/12 + x2*x3 - x2*x5",
+    "-4*x12**2 + x2**2*x3**2*x6**2 - 24*x2**2*x3**2*x6 + 144*x2**2*x3**2 + 24*x2**2*x3*x5*x6 - 288*x2**2*x3*x5 + 144*x2**2*x5**2 + 24*x2*x3**2*x6 - 288*x2*x3**2 - 2*x2*x3*x4*x6**2 + 24*x2*x3*x4*x6 - 24*x2*x3*x5*x6 + 576*x2*x3*x5 - 24*x2*x4*x5*x6 - 288*x2*x5**2 + 144*x3**2 - 24*x3*x4*x6 - 288*x3*x5 + x4**2*x6**2 + 24*x4*x5*x6 + 144*x5**2",
+    "x12 - x13"
+  ],
+  "saturation_factors": [
+    "x7 + 12",
+    "x3",
+    "x4**2 + 144",
+    "x3**2 + x7**2 + 24*x7 + 144",
+    "12*x1 + x2*x7",
+    "x3**2 + 144",
+    "x1**2 - 2*x1*x2 + x2**2*x3**2/144 + x2**2"
+  ],
+  "polynomial": "247168065600 - 11336689*x13**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[3]/E:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "construction[4]/F:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "v_x**2 + 144"
+    },
+    {
+      "source": "construction[5]/bc_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2"
+    },
+    {
+      "source": "construction[6]/angle_bisector:AngleBisector:first_ray",
+      "operator": "!=",
+      "expression": "v_x**2 + 144"
+    },
+    {
+      "source": "construction[6]/angle_bisector:AngleBisector:second_ray",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "construction[6]/angle_bisector:AngleBisector:result:line_direction",
+      "operator": "!=",
+      "expression": "144*v_x**2 + (-12*s1 - 144)**2"
+    },
+    {
+      "source": "construction[7]/D:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "144*v_x**2 + (-12*s1 - 144)**2"
+    },
+    {
+      "source": "construction[7]/D:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2"
+    },
+    {
+      "source": "construction[8]/ef_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_t_f**2*v_x**2 + (12*v_t_e - 12*v_t_f)**2"
+    },
+    {
+      "source": "construction[9]/G:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "144*v_x**2 + (-12*s1 - 144)**2"
+    },
+    {
+      "source": "construction[9]/G:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_t_f**2*v_x**2 + (12*v_t_e - 12*v_t_f)**2"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_x"
+    },
+    {
+      "source": "condition[1]:Bound:endpoint",
+      "operator": ">=",
+      "expression": "v_t_e"
+    },
+    {
+      "source": "condition[1]:Bound:endpoint",
+      "operator": "<=",
+      "expression": "v_t_e - 1"
+    },
+    {
+      "source": "condition[2]:Bound:endpoint",
+      "operator": ">=",
+      "expression": "v_t_f"
+    },
+    {
+      "source": "condition[2]:Bound:endpoint",
+      "operator": "<=",
+      "expression": "v_t_f - 1"
+    },
+    {
+      "source": "condition[7]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_x**2"
+    },
+    {
+      "source": "condition[8]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "p2**2 + 144"
+    },
+    {
+      "source": "condition[9]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_t_f**2*v_x**2 + (-12*v_t_e + 12*v_t_f)**2"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t10"
+}

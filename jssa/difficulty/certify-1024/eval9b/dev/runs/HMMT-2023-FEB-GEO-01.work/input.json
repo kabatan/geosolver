@@ -1,0 +1,79 @@
+{
+  "id": "HMMT-2023-FEB-GEO-01",
+  "dsl": {
+    "id": "HMMT-2023-FEB-GEO-01",
+    "variables": [
+      "s",
+      "px",
+      "py"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(s, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(s / 2, sqrt(3) * s / 2)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(-s / 2, sqrt(3) * s / 2)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(-s, 0)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(-s / 2, -sqrt(3) * s / 2)"
+      },
+      {
+        "name": "F",
+        "expression": "Point(s / 2, -sqrt(3) * s / 2)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(px, py)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Area(P, B, C)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "Area(P, A, D)",
+        "operator": "=",
+        "right": 23
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": "<",
+        "right": "sqrt(3) * s / 2"
+      },
+      {
+        "left": "px",
+        "operator": ">",
+        "right": "-s + py / sqrt(3)"
+      },
+      {
+        "left": "px",
+        "operator": "<",
+        "right": "s - py / sqrt(3)"
+      }
+    ],
+    "target": "Area(A, B, C, D, E, F)"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "AIME-2009-I-12",
+  "dsl": {
+    "id": "AIME-2009-I-12",
+    "variables": [
+      "ix",
+      "iy"
+    ],
+    "constructions": [
+      {
+        "name": "C",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(12, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(0, 35)"
+      },
+      {
+        "name": "D",
+        "expression": "FootOfPerpendicular(C, Line(A, B))"
+      },
+      {
+        "name": "O",
+        "expression": "Midpoint(C, D)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(O, Distance(C, D) / 2)"
+      },
+      {
+        "name": "I",
+        "expression": "Point(ix, iy)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(O, Line(A, I))",
+        "operator": "=",
+        "right": "Distance(C, D) / 2"
+      },
+      {
+        "left": "Distance(O, Line(B, I))",
+        "operator": "=",
+        "right": "Distance(C, D) / 2"
+      },
+      {
+        "left": "ix",
+        "operator": "<",
+        "right": "0"
+      },
+      {
+        "left": "iy",
+        "operator": "<",
+        "right": "0"
+      }
+    ],
+    "target": "(Distance(A, I) + Distance(B, I)) / Distance(A, B) + 1"
+  }
+}

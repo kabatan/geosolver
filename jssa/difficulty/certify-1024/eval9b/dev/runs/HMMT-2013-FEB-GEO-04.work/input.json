@@ -1,0 +1,92 @@
+{
+  "id": "HMMT-2013-FEB-GEO-04",
+  "dsl": {
+    "id": "HMMT-2013-FEB-GEO-04",
+    "variables": [
+      "r1",
+      "r2",
+      "Ax",
+      "Ay",
+      "b"
+    ],
+    "constructions": [
+      {
+        "name": "O1",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(r1, 0)"
+      },
+      {
+        "name": "omega1",
+        "expression": "Circle(O1, r1)"
+      },
+      {
+        "name": "omega2",
+        "expression": "Circle(O2, r2)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(Ax, Ay)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(b, 0)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(O1, O2)",
+        "operator": "=",
+        "right": "r1"
+      },
+      {
+        "left": "Distance(O1, A)",
+        "operator": "=",
+        "right": "r1"
+      },
+      {
+        "left": "Distance(O2, A)",
+        "operator": "=",
+        "right": "r2"
+      },
+      {
+        "left": "Distance(O2, B)",
+        "operator": "=",
+        "right": "r2"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "r1"
+      },
+      {
+        "left": "r1",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r2",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "!=",
+        "right": "0"
+      },
+      {
+        "left": "Distance(B, O1)",
+        "operator": "!=",
+        "right": "0"
+      }
+    ],
+    "target": "r1 / r2"
+  }
+}

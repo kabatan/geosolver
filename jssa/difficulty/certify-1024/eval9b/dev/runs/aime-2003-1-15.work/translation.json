@@ -1,0 +1,168 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_x",
+    "x2": "v_y",
+    "x3": "p2",
+    "x4": "p3",
+    "x5": "p4",
+    "x6": "p5",
+    "x7": "p6",
+    "x8": "s1",
+    "x9": "s7",
+    "x10": "s8",
+    "x11": "s9",
+    "x12": "t10"
+  },
+  "target_variable": "x12",
+  "equations": [
+    "-x1**2 - x2**2 + x8**2",
+    "-507*x1 + x3*x8 + 507*x3 - 507*x8",
+    "-507*x2 + x4*x8 + 507*x4",
+    "x3**2 - x3*x5 + x4**2",
+    "x1*x3**2 - x1*x3*x6 + x1*x4**2 - x2*x4*x6 + 507*x3**2 - 507*x3*x6 + 507*x4**2",
+    "-x1*x3*x7 + x2*x3**2 + x2*x4**2 - x2*x4*x7 - 507*x3*x7",
+    "x8 - 360",
+    "-x1**2 + 1014*x1 - x2**2 + x9**2 - 257049",
+    "x9 - 780",
+    "-x10**2 + x3**2 - 2*x3*x6 + x4**2 - 2*x4*x7 + x6**2 + x7**2",
+    "-x11**2 + x5**2 - 2*x5*x6 + x6**2 + x7**2",
+    "x10 - x11*x12"
+  ],
+  "saturation_factors": [
+    "x3",
+    "x8 + 507",
+    "x11",
+    "x2",
+    "x3**2 + x4**2",
+    "x1*x3 + x2*x4 + 507*x3",
+    "x1**2 + 2*x1*x8 + x2**2 + x8**2",
+    "x1**2 + 1014*x1 + x2**2 + 257049",
+    "x1**2 + x2**2",
+    "x1**2 - 1014*x1 + x2**2 + 257049"
+  ],
+  "polynomial": "2401 - 57600*x12**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/ca_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2 + (v_x - 507)**2"
+    },
+    {
+      "source": "construction[5]/bc_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "257049"
+    },
+    {
+      "source": "construction[6]/angle_bisector:AngleBisector:first_ray",
+      "operator": "!=",
+      "expression": "v_x**2 + v_y**2"
+    },
+    {
+      "source": "construction[6]/angle_bisector:AngleBisector:second_ray",
+      "operator": "!=",
+      "expression": "257049"
+    },
+    {
+      "source": "construction[6]/angle_bisector:AngleBisector:result:line_direction",
+      "operator": "!=",
+      "expression": "257049*v_y**2 + (507*s1 + 507*v_x)**2"
+    },
+    {
+      "source": "construction[7]/D:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "257049*v_y**2 + (507*s1 + 507*v_x)**2"
+    },
+    {
+      "source": "construction[7]/D:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2 + (v_x - 507)**2"
+    },
+    {
+      "source": "construction[8]/bd_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "p2**2 + p3**2"
+    },
+    {
+      "source": "construction[9]/df_line:PerpendicularLine:argument:line_direction",
+      "operator": "!=",
+      "expression": "p2**2 + p3**2"
+    },
+    {
+      "source": "construction[9]/df_line:PerpendicularLine:result:line_direction",
+      "operator": "!=",
+      "expression": "p2**2 + p3**2"
+    },
+    {
+      "source": "construction[10]/F:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "p2**2 + p3**2"
+    },
+    {
+      "source": "construction[10]/F:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "257049"
+    },
+    {
+      "source": "construction[11]/bm_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2/4 + (v_x/2 + 507/2)**2"
+    },
+    {
+      "source": "construction[12]/E:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "p2**2 + p3**2"
+    },
+    {
+      "source": "construction[12]/E:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2/4 + (v_x/2 + 507/2)**2"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_y"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t10"
+}

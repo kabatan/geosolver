@@ -1,0 +1,178 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_x",
+    "x2": "v_y",
+    "x3": "v_z",
+    "x4": "p1",
+    "x5": "p2",
+    "x6": "s3",
+    "x7": "s4",
+    "x8": "s5",
+    "x9": "s6",
+    "x10": "t7"
+  },
+  "target_variable": "x10",
+  "equations": [
+    "-x1**2*x3 + x1**2*x4 - x1*x2**2 + x2**2*x4",
+    "-x1**2*x2 + x1**2*x5 + x1*x2*x3 + x2**2*x5",
+    "-x1**2 + x6**2",
+    "-x1**2 - x2**2 + x7**2",
+    "-x2**2 + x8**2",
+    "x6 + x7 + x8 - 152",
+    "x2**2*x3**2 - 361*x2**2",
+    "x1**2*x2**2 - 361*x1**2 - 2*x1*x2**2*x3 + x2**2*x3**2 - 361*x2**2",
+    "-x1*x2 + x1*x5 + x2*x4",
+    "-x1**2 + 2*x1*x3 - x3**2 + x9**2",
+    "-x10 + x9"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - x3",
+    "x2",
+    "x3",
+    "x1**2 + x2**2"
+  ],
+  "polynomial": "9025 - 9*x10**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/omega:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "361"
+    },
+    {
+      "source": "construction[4]/omega:Circle:result:radius",
+      "operator": ">",
+      "expression": "19"
+    },
+    {
+      "source": "construction[5]/am_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2"
+    },
+    {
+      "source": "construction[6]/pm_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2 + v_y**2"
+    },
+    {
+      "source": "construction[7]/contact_am:ContactPoint:argument:radius_squared",
+      "operator": ">",
+      "expression": "361"
+    },
+    {
+      "source": "construction[7]/contact_am:ContactPoint:argument:radius",
+      "operator": ">",
+      "expression": "19"
+    },
+    {
+      "source": "construction[7]/contact_am:ContactPoint:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2"
+    },
+    {
+      "source": "construction[8]/contact_pm:ContactPoint:argument:radius_squared",
+      "operator": ">",
+      "expression": "361"
+    },
+    {
+      "source": "construction[8]/contact_pm:ContactPoint:argument:radius",
+      "operator": ">",
+      "expression": "19"
+    },
+    {
+      "source": "construction[8]/contact_pm:ContactPoint:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2 + v_y**2"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_x"
+    },
+    {
+      "source": "condition[1]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_y"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_z"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": "<",
+      "expression": "-v_x + v_z"
+    },
+    {
+      "source": "condition[5]:IsTangent:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_y**2"
+    },
+    {
+      "source": "condition[5]:IsTangent:argument:radius_squared",
+      "operator": ">",
+      "expression": "361"
+    },
+    {
+      "source": "condition[5]:IsTangent:argument:radius",
+      "operator": ">",
+      "expression": "19"
+    },
+    {
+      "source": "condition[6]:IsTangent:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_x**2 + v_y**2"
+    },
+    {
+      "source": "condition[6]:IsTangent:argument:radius_squared",
+      "operator": ">",
+      "expression": "361"
+    },
+    {
+      "source": "condition[6]:IsTangent:argument:radius",
+      "operator": ">",
+      "expression": "19"
+    },
+    {
+      "source": "condition[7]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_y**2"
+    },
+    {
+      "source": "condition[8]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_x**2 + v_y**2"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t7"
+}

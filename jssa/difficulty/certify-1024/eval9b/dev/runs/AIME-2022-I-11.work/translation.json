@@ -1,0 +1,170 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_bx",
+    "x2": "v_by",
+    "x3": "v_oy",
+    "x4": "s1",
+    "x5": "s2",
+    "x6": "t3"
+  },
+  "target_variable": "x6",
+  "equations": [
+    "-x3**2 + x4**2 - 81/4",
+    "-x1**2*x3**2 + x1**2*x4**2 + 15*x1*x2*x3 + 56*x1*x3**2 - 56*x1*x4**2 + x2**2*x4**2 - 225*x2**2/4 - 420*x2*x3 - 784*x3**2 + 784*x4**2",
+    "-x1**2*x3**2 + x1**2*x4**2 + 15*x1*x2*x3 + x2**2*x4**2 - 225*x2**2/4",
+    "-x1**2*x3**2 + x1**2*x4**2 - 41*x1*x2*x3 + 56*x1*x3**2 - 56*x1*x4**2 + x2**2*x4**2 - 1681*x2**2/4 + 1148*x2*x3 - 784*x3**2 + 784*x4**2",
+    "-784*x2**2 + x5**2",
+    "x5 - x6"
+  ],
+  "saturation_factors": [
+    "x4",
+    "x2",
+    "x1**2 + x2**2",
+    "x1**2 - 28*x1 + x2**2",
+    "x1**2 - 56*x1 + x2**2 + 784"
+  ],
+  "polynomial": "x6**4 - 129654*x6**2 + 4202539929",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[8]/omega:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "construction[8]/omega:Circle:result:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "condition[0]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "condition[0]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "condition[1]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "condition[1]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "condition[2]:OnLine:line",
+      "operator": "!=",
+      "expression": "784"
+    },
+    {
+      "source": "condition[3]:OnLine:line",
+      "operator": "!=",
+      "expression": "784"
+    },
+    {
+      "source": "condition[4]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_by**2 + (v_bx - 28)**2"
+    },
+    {
+      "source": "condition[4]:IsTangent:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_by**2 + (v_bx - 28)**2"
+    },
+    {
+      "source": "condition[4]:IsTangent:argument:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "condition[4]:IsTangent:argument:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "condition[5]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_bx**2 + v_by**2"
+    },
+    {
+      "source": "condition[5]:IsTangent:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_bx**2 + v_by**2"
+    },
+    {
+      "source": "condition[5]:IsTangent:argument:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "condition[5]:IsTangent:argument:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "condition[6]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_by**2 + (28 - v_bx)**2"
+    },
+    {
+      "source": "condition[6]:IsTangent:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_by**2 + (28 - v_bx)**2"
+    },
+    {
+      "source": "condition[6]:IsTangent:argument:radius_squared",
+      "operator": ">",
+      "expression": "s1**2"
+    },
+    {
+      "source": "condition[6]:IsTangent:argument:radius",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "condition[10]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_by"
+    },
+    {
+      "source": "condition[11]:explicit_comparison",
+      "operator": ">",
+      "expression": "s1"
+    },
+    {
+      "source": "condition[12]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_bx*(28 - v_bx) - v_by**2"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t3"
+}

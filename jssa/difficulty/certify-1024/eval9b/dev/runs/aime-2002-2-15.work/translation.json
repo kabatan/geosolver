@@ -1,0 +1,220 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_m",
+    "x2": "v_w",
+    "x3": "v_x",
+    "x4": "v_y",
+    "x5": "v_z",
+    "x6": "s1",
+    "x7": "s2",
+    "x8": "t3"
+  },
+  "target_variable": "x8",
+  "equations": [
+    "x3**2 - 18*x3 - 12*x4 + 117",
+    "x2 - x5**2/12 + 3*x5/2 - 39/4",
+    "x2*x4 - 68",
+    "x1**2*x3**2 - x1**2*x4**2 - 2*x1*x3*x4",
+    "x1**2*x2**2 - x1**2*x5**2 + 2*x1*x2*x5",
+    "-x2**2 + 2*x2*x4 - x3**2 + 2*x3*x5 - x4**2 - x5**2 + x6**2",
+    "-x2**2 + 2*x2*x4 - x4**2 + x7**2",
+    "-x1 + x8"
+  ],
+  "saturation_factors": [
+    "x6 - x7",
+    "-x2 - x4 + x6",
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x1**2 + 1"
+  ],
+  "polynomial": "5764801*x8**4 - 152818848*x8**2 + 1012766976",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[0]/C1:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "v_y**2"
+    },
+    {
+      "source": "construction[0]/C1:Circle:result:radius",
+      "operator": ">",
+      "expression": "v_y"
+    },
+    {
+      "source": "construction[1]/C2:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "v_w**2"
+    },
+    {
+      "source": "construction[1]/C2:Circle:result:radius",
+      "operator": ">",
+      "expression": "v_w"
+    },
+    {
+      "source": "construction[3]/m_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_m**2 + 1"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_x"
+    },
+    {
+      "source": "condition[1]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_y"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_z"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_w"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_m"
+    },
+    {
+      "source": "condition[5]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_y**2"
+    },
+    {
+      "source": "condition[5]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "v_y"
+    },
+    {
+      "source": "condition[6]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_w**2"
+    },
+    {
+      "source": "condition[6]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "v_w"
+    },
+    {
+      "source": "condition[8]:IsTangent:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_m**2 + 1"
+    },
+    {
+      "source": "condition[8]:IsTangent:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_y**2"
+    },
+    {
+      "source": "condition[8]:IsTangent:argument:radius",
+      "operator": ">",
+      "expression": "v_y"
+    },
+    {
+      "source": "condition[9]:IsTangent:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_m**2 + 1"
+    },
+    {
+      "source": "condition[9]:IsTangent:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_w**2"
+    },
+    {
+      "source": "condition[9]:IsTangent:argument:radius",
+      "operator": ">",
+      "expression": "v_w"
+    },
+    {
+      "source": "condition[10]:Center:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_y**2"
+    },
+    {
+      "source": "condition[10]:Center:argument:radius",
+      "operator": ">",
+      "expression": "v_y"
+    },
+    {
+      "source": "condition[10]:Center:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_w**2"
+    },
+    {
+      "source": "condition[10]:Center:argument:radius",
+      "operator": ">",
+      "expression": "v_w"
+    },
+    {
+      "source": "condition[10]:explicit_comparison",
+      "operator": ">",
+      "expression": "s1 - s2"
+    },
+    {
+      "source": "condition[11]:Center:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_y**2"
+    },
+    {
+      "source": "condition[11]:Center:argument:radius",
+      "operator": ">",
+      "expression": "v_y"
+    },
+    {
+      "source": "condition[11]:Center:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_w**2"
+    },
+    {
+      "source": "condition[11]:Center:argument:radius",
+      "operator": ">",
+      "expression": "v_w"
+    },
+    {
+      "source": "condition[11]:explicit_comparison",
+      "operator": "<",
+      "expression": "s1 - v_w - v_y"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t3"
+}

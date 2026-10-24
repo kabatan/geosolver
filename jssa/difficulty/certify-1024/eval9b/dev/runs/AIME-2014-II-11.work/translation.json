@@ -1,0 +1,189 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "x14",
+    "x15",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_ax",
+    "x2": "v_ay",
+    "x3": "v_cx",
+    "x4": "v_cy",
+    "x5": "v_ex",
+    "x6": "v_ey",
+    "x7": "k3",
+    "x8": "k4",
+    "x9": "k8",
+    "x10": "k9",
+    "x11": "s10",
+    "x12": "s11",
+    "x13": "s12",
+    "x14": "s5",
+    "x15": "t13"
+  },
+  "target_variable": "x15",
+  "equations": [
+    "x7**4 - x7**2 + 1/16",
+    "x8**4 - x8**2 + 1/16",
+    "x14**2 - x6**2",
+    "x14*x7 - x5*x8 + x8",
+    "x9**2 - 1/2",
+    "x10**2 - 1/2",
+    "x10*x5**2 - x10*x5 + x10*x6**2 + x14*x9",
+    "x3*x6 - x4*x5",
+    "x3*x5 - x3/2 + x4*x6 - x5 + 1/2",
+    "x1*x6 - x2*x5",
+    "-x1**2 + 2*x1*x3 + x11**2 - x2**2 + 2*x2*x4 - x3**2 - x4**2",
+    "-x1**2 + 2*x1 + x12**2 - x2**2 - 1",
+    "x11 - x12",
+    "-x1**2 + 2*x1*x5 + x13**2 - x2**2 + 2*x2*x6 - x5**2 - x6**2",
+    "x13 - x15"
+  ],
+  "saturation_factors": [
+    "x1 - x5",
+    "x3",
+    "x4",
+    "x6",
+    "x1**2 + x2**2",
+    "x3**2 - 2*x3 + x4**2 + 1",
+    "x5**2 + x6**2",
+    "x5**2 - 2*x5 + x6**2 + 1",
+    "x5**2 - x5 + x6**2 + 1/4"
+  ],
+  "polynomial": "484*x15**4 - 152*x15**2 + 1",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[0]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "1"
+    },
+    {
+      "source": "condition[0]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_ey**2 + (v_ex - 1)**2"
+    },
+    {
+      "source": "condition[1]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "v_ey**2 + (1 - v_ex)**2"
+    },
+    {
+      "source": "condition[1]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_ex**2 + v_ey**2"
+    },
+    {
+      "source": "condition[3]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_ex**2 + v_ey**2"
+    },
+    {
+      "source": "condition[4]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_cy**2 + (v_cx - 1)**2"
+    },
+    {
+      "source": "condition[4]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_ey**2 + (1/2 - v_ex)**2"
+    },
+    {
+      "source": "condition[4]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_cy**2 + (v_cx - 1)**2"
+    },
+    {
+      "source": "condition[4]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_ey**2 + (1/2 - v_ex)**2"
+    },
+    {
+      "source": "condition[6]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_ax**2 + v_ay**2"
+    },
+    {
+      "source": "condition[8]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_ey"
+    },
+    {
+      "source": "condition[9]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_cx"
+    },
+    {
+      "source": "condition[10]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_cy"
+    },
+    {
+      "source": "condition[11]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_ax - v_ex"
+    }
+  ],
+  "algebraic_constants": [
+    {
+      "symbol": "k3",
+      "expression": "-sqrt(2)/4 + sqrt(6)/4",
+      "minimal_polynomial": "16*_constant**4 - 16*_constant**2 + 1",
+      "intended_value_80d": "0.25881904510252076234889883762404832834906890131993051381400320731505697474880200"
+    },
+    {
+      "symbol": "k4",
+      "expression": "-sqrt(6)/4 - sqrt(2)/4",
+      "minimal_polynomial": "16*_constant**4 - 16*_constant**2 + 1",
+      "intended_value_80d": "-0.96592582628906828674974319972889736763390483900840455040234307631042321397985552"
+    },
+    {
+      "symbol": "k8",
+      "expression": "sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    },
+    {
+      "symbol": "k9",
+      "expression": "-sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "-0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    }
+  ],
+  "original_target_variable": "t13"
+}

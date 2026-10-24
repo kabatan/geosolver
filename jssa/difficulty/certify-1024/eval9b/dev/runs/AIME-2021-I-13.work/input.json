@@ -1,0 +1,113 @@
+{
+  "id": "AIME-2021-I-13",
+  "dsl": {
+    "id": "AIME-2021-I-13",
+    "variables": [
+      "ax",
+      "ay",
+      "d",
+      "ox",
+      "oy",
+      "r"
+    ],
+    "constructions": [
+      {
+        "name": "O1",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(d, 0)"
+      },
+      {
+        "name": "omega1",
+        "expression": "Circle(O1, 961)"
+      },
+      {
+        "name": "omega2",
+        "expression": "Circle(O2, 625)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(ax, ay)"
+      },
+      {
+        "name": "B",
+        "expression": "Intersect(omega1, omega2, exclude=A)"
+      },
+      {
+        "name": "O",
+        "expression": "Point(ox, oy)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(O, r)"
+      },
+      {
+        "name": "L",
+        "expression": "Line(A, B)"
+      },
+      {
+        "name": "P",
+        "expression": "Intersect(L, omega, n=1)"
+      },
+      {
+        "name": "Q",
+        "expression": "Intersect(L, omega, exclude=P)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "OnCircle(A, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(A, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(O, O1)",
+        "operator": "=",
+        "right": "r + 961"
+      },
+      {
+        "left": "Distance(O, O2)",
+        "operator": "=",
+        "right": "r + 625"
+      },
+      {
+        "left": "OnCircle(P, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(Q, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Angle(P, O, Q)",
+        "operator": "=",
+        "right": "2 * pi / 3"
+      },
+      {
+        "left": "d",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(O1, O2)"
+  }
+}

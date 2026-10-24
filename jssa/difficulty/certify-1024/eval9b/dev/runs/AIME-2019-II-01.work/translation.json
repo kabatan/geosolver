@@ -1,0 +1,119 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_cx",
+    "x2": "v_cy",
+    "x3": "v_dx",
+    "x4": "v_dy",
+    "x5": "p1",
+    "x6": "p2",
+    "x7": "s3",
+    "x8": "s4",
+    "x9": "s5",
+    "x10": "s6",
+    "x11": "s7",
+    "x12": "t8"
+  },
+  "target_variable": "x12",
+  "equations": [
+    "x1*x4*x5 - 9*x1*x4 - x2*x3*x5 + 9*x2*x5",
+    "x1*x4*x6 - x2*x3*x6 - 9*x2*x4 + 9*x2*x6",
+    "-x1**2 - x2**2 + x7**2",
+    "x7 - 17",
+    "-x1**2 + 18*x1 - x2**2 + x8**2 - 81",
+    "x8 - 10",
+    "-x3**2 - x4**2 + x9**2",
+    "x9 - 10",
+    "x10**2 - x3**2 + 18*x3 - x4**2 - 81",
+    "x10 - 17",
+    "-4*x11**2/81 + x6**2",
+    "x11 - x12"
+  ],
+  "saturation_factors": [
+    "x1 - 9",
+    "x2",
+    "x3",
+    "x4",
+    "x1**2 + x2**2",
+    "x1*x4 - x2*x3 + 9*x2",
+    "x3**2 - 18*x3 + x4**2 + 81"
+  ],
+  "polynomial": "2916 - 25*x12**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/X:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_cx**2 + v_cy**2"
+    },
+    {
+      "source": "construction[4]/X:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_dy**2 + (v_dx - 9)**2"
+    },
+    {
+      "source": "construction[4]/X:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_cx**2 + v_cy**2"
+    },
+    {
+      "source": "construction[4]/X:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_dy**2 + (v_dx - 9)**2"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_cy"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_dy"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_cx - 9"
+    },
+    {
+      "source": "condition[7]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_dx"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t8"
+}

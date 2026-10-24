@@ -1,0 +1,91 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_p",
+    "x2": "k3",
+    "x3": "s4",
+    "x4": "s5",
+    "x5": "t6"
+  },
+  "target_variable": "x5",
+  "equations": [
+    "x2**2 - 3/4",
+    "-144*x1**2 + 1728*x1 + x3**2 - 5184",
+    "x1**2*x2 - 12*x1*x2 - x3/2",
+    "-2*x1**2 + x4**2",
+    "x4 - x5"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - 12",
+    "x1 - 6",
+    "x1**2 - 12*x1 + 72"
+  ],
+  "polynomial": "x5**8 - 384*x5**6 + 41472*x5**4 - 884736*x5**2 + 5308416",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[5]/O1:Circumcenter:triangle",
+      "operator": "!=",
+      "expression": "12*v_p"
+    },
+    {
+      "source": "construction[6]/O2:Circumcenter:triangle",
+      "operator": "!=",
+      "expression": "144 - 12*v_p"
+    },
+    {
+      "source": "condition[0]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "(6 - v_p)**2 + 36"
+    },
+    {
+      "source": "condition[0]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "(6 - v_p)**2 + 36"
+    },
+    {
+      "source": "condition[1]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "288"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_p - 6"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_p - 12"
+    }
+  ],
+  "algebraic_constants": [
+    {
+      "symbol": "k3",
+      "expression": "-sqrt(3)/2",
+      "minimal_polynomial": "4*_constant**2 - 3",
+      "intended_value_80d": "-0.86602540378443864676372317075293618347140262690519031402790348972596650845440002"
+    }
+  ],
+  "original_target_variable": "t6"
+}

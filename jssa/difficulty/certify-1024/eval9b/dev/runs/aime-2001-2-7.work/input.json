@@ -1,0 +1,119 @@
+{
+  "id": "aime-2001-2-7",
+  "dsl": {
+    "id": "aime-2001-2-7",
+    "variables": [
+      "x",
+      "y",
+      "t",
+      "v"
+    ],
+    "constructions": [
+      {
+        "name": "P",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "Q",
+        "expression": "Point(90, 0)"
+      },
+      {
+        "name": "R",
+        "expression": "Point(0, 120)"
+      },
+      {
+        "name": "S",
+        "expression": "PointOnSegment(P, R, x / 120)"
+      },
+      {
+        "name": "T",
+        "expression": "PointOnSegment(Q, R, t)"
+      },
+      {
+        "name": "U",
+        "expression": "PointOnSegment(P, Q, y / 90)"
+      },
+      {
+        "name": "V",
+        "expression": "PointOnSegment(Q, R, v)"
+      },
+      {
+        "name": "pr_line",
+        "expression": "Line(P, R)"
+      },
+      {
+        "name": "pq_line",
+        "expression": "Line(P, Q)"
+      },
+      {
+        "name": "st_line",
+        "expression": "Line(S, T)"
+      },
+      {
+        "name": "uv_line",
+        "expression": "Line(U, V)"
+      },
+      {
+        "name": "C1",
+        "expression": "Incircle(P, Q, R)"
+      },
+      {
+        "name": "C2",
+        "expression": "Incircle(R, S, T)"
+      },
+      {
+        "name": "C3",
+        "expression": "Incircle(Q, U, V)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "x",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "x",
+        "operator": "<",
+        "right": 120
+      },
+      {
+        "left": "y",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "y",
+        "operator": "<",
+        "right": 90
+      },
+      {
+        "predicate": "Bound(t, (0, 1))"
+      },
+      {
+        "predicate": "Bound(v, (0, 1))"
+      },
+      {
+        "left": "Perpendicular(st_line, pr_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(st_line, C1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(uv_line, pq_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(uv_line, C1)",
+        "operator": "=",
+        "right": 0
+      }
+    ],
+    "target": "Distance(Center(C2), Center(C3))"
+  }
+}

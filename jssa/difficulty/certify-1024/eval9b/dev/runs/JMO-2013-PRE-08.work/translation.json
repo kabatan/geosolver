@@ -1,0 +1,118 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "z1",
+    "z2",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_d",
+    "x2": "v_ox",
+    "x3": "v_oy",
+    "x4": "v_r",
+    "x5": "s1",
+    "x6": "s2",
+    "x7": "s3",
+    "x8": "s4",
+    "x9": "s5",
+    "x10": "t6"
+  },
+  "target_variable": "x10",
+  "equations": [
+    "-x2**2 - 10*x2 - x3**2 + x5**2 - 25",
+    "-x4 + x5 + 5",
+    "-x2**2 - x3**2 + 12*x3 + x6**2 - 36",
+    "-x4 + x6 + 6",
+    "-x2**2 + 40*x2 - x3**2 + x7**2 - 400",
+    "-x4 + x7 + 20",
+    "-x1**2 - 2*x1*x3 - x2**2 - x3**2 + x8**2",
+    "x1 - x4 + x8",
+    "-x1**2 + x9**2",
+    "-x10 + x9"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x4"
+  ],
+  "polynomial": "144 - x10**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[5]/O1:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "25"
+    },
+    {
+      "source": "construction[5]/O1:Circle:result:radius",
+      "operator": ">",
+      "expression": "5"
+    },
+    {
+      "source": "construction[6]/O2:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "36"
+    },
+    {
+      "source": "construction[6]/O2:Circle:result:radius",
+      "operator": ">",
+      "expression": "6"
+    },
+    {
+      "source": "construction[7]/O3:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "400"
+    },
+    {
+      "source": "construction[7]/O3:Circle:result:radius",
+      "operator": ">",
+      "expression": "20"
+    },
+    {
+      "source": "construction[8]/O4:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "v_d**2"
+    },
+    {
+      "source": "construction[8]/O4:Circle:result:radius",
+      "operator": ">",
+      "expression": "v_d"
+    },
+    {
+      "source": "construction[10]/Omega:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "v_r**2"
+    },
+    {
+      "source": "construction[10]/Omega:Circle:result:radius",
+      "operator": ">",
+      "expression": "v_r"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_d"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_r"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t6"
+}

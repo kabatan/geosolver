@@ -1,0 +1,111 @@
+{
+  "id": "aime-2001-1-9",
+  "dsl": {
+    "id": "aime-2001-1-9",
+    "variables": [
+      "x",
+      "y",
+      "p",
+      "q",
+      "r"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(15, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(x, y)"
+      },
+      {
+        "name": "D",
+        "expression": "PointOnSegment(A, B, p)"
+      },
+      {
+        "name": "E",
+        "expression": "PointOnSegment(B, C, q)"
+      },
+      {
+        "name": "F",
+        "expression": "PointOnSegment(C, A, r)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "y",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 13
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 17
+      },
+      {
+        "left": "p",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "q",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "predicate": "Bound(p, (0, 1), inclusive=False)"
+      },
+      {
+        "predicate": "Bound(q, (0, 1), inclusive=False)"
+      },
+      {
+        "predicate": "Bound(r, (0, 1), inclusive=False)"
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": "p * Distance(A, B)"
+      },
+      {
+        "left": "Distance(B, E)",
+        "operator": "=",
+        "right": "q * Distance(B, C)"
+      },
+      {
+        "left": "Distance(C, F)",
+        "operator": "=",
+        "right": "r * Distance(C, A)"
+      },
+      {
+        "left": "p + q + r",
+        "operator": "=",
+        "right": "2 / 3"
+      },
+      {
+        "left": "p**2 + q**2 + r**2",
+        "operator": "=",
+        "right": "2 / 5"
+      }
+    ],
+    "target": "Area(D, E, F) / Area(A, B, C)"
+  }
+}

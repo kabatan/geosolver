@@ -1,0 +1,179 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "x14",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_Ax",
+    "x2": "v_Ay",
+    "x3": "v_s",
+    "x4": "k7",
+    "x5": "k8",
+    "x6": "p1",
+    "x7": "p2",
+    "x8": "p3",
+    "x9": "p4",
+    "x10": "s10",
+    "x11": "s11",
+    "x12": "s14",
+    "x13": "s9",
+    "x14": "t15"
+  },
+  "target_variable": "x14",
+  "equations": [
+    "-x1**2/2 - x2**2/2 + x2*x6 + x3**2/2",
+    "-x1**3/2 - x1**2*x7/2 - x1*x2**2/2 + x1*x2*x6 - x2**2*x7/2",
+    "-x1**2*x2/2 - x1**2*x8/2 - x2**3/2 + x2**2*x6 - x2**2*x8/2",
+    "-x1**2/2 - x2**2/2 + x2*x9 + x3**2/2",
+    "x4**2 - 1/2",
+    "x5**2 - 1/2",
+    "x13**2 - 4*x2**2*x3**2",
+    "x1**2*x5 + x13*x4 + x2**2*x5 - x3**2*x5",
+    "-x1**2 + x10**2 - x2**2",
+    "-x11**2 + x7**2 + x8**2",
+    "x10 - 2*x11",
+    "x1**2*x7**2 + x1**2*x8**2 - 2*x1**2*x8*x9 + x1**2*x9**2 - x12**2 + x2**2*x7**2 + x2**2*x8**2 - 2*x2**2*x8*x9 + x2**2*x9**2 - 2*x2*x7**2*x9 - 2*x2*x8**2*x9 + 4*x2*x8*x9**2 - 2*x2*x9**3 + x7**2*x9**2 + x8**2*x9**2 - 2*x8*x9**3 + x9**4",
+    "x1*x7 - x12*x14 + x2*x8 - x2*x9 - x8*x9 + x9**2"
+  ],
+  "saturation_factors": [
+    "x10",
+    "x12",
+    "x2",
+    "x3",
+    "x1**2 + x2**2 - 2*x2*x6 + x6**2",
+    "-x1**2 - x2**2 + x2*x6",
+    "x7**2 + x8**2 - 2*x8*x9 + x9**2",
+    "x1**2 + x2**2 - 2*x2*x9 + x9**2",
+    "x1**2 + 2*x1*x3 + x2**2 + x3**2",
+    "x1**2 + x2**2",
+    "x1**2 - 2*x1*x3 + x2**2 + x3**2"
+  ],
+  "polynomial": "1 - 64*x14**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/Gamma:Circumcircle:triangle",
+      "operator": "!=",
+      "expression": "-v_Ay*(-v_Ax - v_s) + v_Ay*(-v_Ax + v_s)"
+    },
+    {
+      "source": "construction[4]/Gamma:Circumcircle:result:radius_squared",
+      "operator": ">",
+      "expression": "v_Ax**2 + (-p1 + v_Ay)**2"
+    },
+    {
+      "source": "construction[5]/D:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_Ax**2 + v_Ay**2"
+    },
+    {
+      "source": "construction[5]/D:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_Ax**2 + v_Ay**2"
+    },
+    {
+      "source": "construction[5]/D:Intersect:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_Ax**2 + (-p1 + v_Ay)**2"
+    },
+    {
+      "source": "construction[5]/D:Intersect:exclude",
+      "operator": "!=",
+      "expression": "v_Ax**2*(2*v_Ax**2 + 2*v_Ay*(-p1 + v_Ay))**2/(v_Ax**2 + v_Ay**2)**2 + v_Ay**2*(2*v_Ax**2 + 2*v_Ay*(-p1 + v_Ay))**2/(v_Ax**2 + v_Ay**2)**2"
+    },
+    {
+      "source": "construction[6]/O:Circumcenter:triangle",
+      "operator": "!=",
+      "expression": "-v_Ay*(-v_Ax - v_s) + v_Ay*(-v_Ax + v_s)"
+    },
+    {
+      "source": "condition[0]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "v_Ay**2 + (-v_Ax - v_s)**2"
+    },
+    {
+      "source": "condition[0]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_Ay**2 + (-v_Ax + v_s)**2"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_s"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_Ay"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "s10"
+    },
+    {
+      "source": "target:Angle:first_ray",
+      "operator": "!=",
+      "expression": "v_Ax**2 + (-p4 + v_Ay)**2"
+    },
+    {
+      "source": "target:Angle:second_ray",
+      "operator": "!=",
+      "expression": "p2**2 + (p3 - p4)**2"
+    }
+  ],
+  "algebraic_constants": [
+    {
+      "symbol": "k7",
+      "expression": "sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    },
+    {
+      "symbol": "k8",
+      "expression": "-sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "-0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    }
+  ],
+  "original_target_variable": "t15"
+}

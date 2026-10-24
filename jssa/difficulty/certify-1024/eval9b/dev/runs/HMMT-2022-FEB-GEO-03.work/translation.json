@@ -1,0 +1,135 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_ex",
+    "x2": "v_ey",
+    "x3": "v_gx",
+    "x4": "v_gy",
+    "x5": "p1",
+    "x6": "s2",
+    "x7": "s3",
+    "x8": "s4",
+    "x9": "t5"
+  },
+  "target_variable": "x9",
+  "equations": [
+    "-x1*x4 + x2*x3 - x3 + x4*x5",
+    "-x1**2 - x2**2 + x6**2",
+    "x6 - 1",
+    "-x3**2 - x4**2 + x7**2",
+    "x7 - 1",
+    "x1*x3 + x2*x4",
+    "x1**2 - 2*x1*x2*x5 + 2*x1*x5 + x2**2*x5**2 - 2*x2*x5**2 + x5**2 - 4*x8**2",
+    "x8 - 1/2",
+    "x1*x9 - x2"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - x2",
+    "x2",
+    "x3",
+    "x4",
+    "x1**2 + x2**2",
+    "x3**2 + x4**2"
+  ],
+  "polynomial": "9 - 16*x9**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[7]/H:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_gx**2 + v_gy**2"
+    },
+    {
+      "source": "construction[7]/H:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "1"
+    },
+    {
+      "source": "construction[7]/H:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_gx**2 + v_gy**2"
+    },
+    {
+      "source": "construction[7]/H:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "1"
+    },
+    {
+      "source": "condition[2]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_ex**2 + v_ey**2"
+    },
+    {
+      "source": "condition[2]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_gx**2 + v_gy**2"
+    },
+    {
+      "source": "condition[2]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_ex**2 + v_ey**2"
+    },
+    {
+      "source": "condition[2]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_gx**2 + v_gy**2"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_ex"
+    },
+    {
+      "source": "condition[7]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_ey"
+    },
+    {
+      "source": "condition[8]:explicit_comparison",
+      "operator": "<",
+      "expression": "-v_ex + v_ey"
+    },
+    {
+      "source": "condition[9]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_gx"
+    },
+    {
+      "source": "condition[10]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_gy"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t5"
+}

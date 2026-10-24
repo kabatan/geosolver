@@ -1,0 +1,57 @@
+{
+  "id": "JMO-2008-PRE-02",
+  "dsl": {
+    "id": "JMO-2008-PRE-02",
+    "variables": [
+      "e"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(1, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(1, 1)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(0, 1)"
+      },
+      {
+        "name": "O",
+        "expression": "Midpoint(A, D)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(O, Distance(O, A))"
+      },
+      {
+        "name": "E",
+        "expression": "Point(e, 0)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(O, Line(C, E))",
+        "operator": "=",
+        "right": "Distance(O, A)"
+      },
+      {
+        "left": "e",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": "<",
+        "right": "1"
+      }
+    ],
+    "target": "Area(C, B, E)"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_dx",
+    "x2": "v_dy",
+    "x3": "s10",
+    "x4": "s5",
+    "x5": "s6",
+    "x6": "s9",
+    "x7": "t11"
+  },
+  "target_variable": "x7",
+  "equations": [
+    "-144*x1**2 + 120*x1*x2 - 25*x2**2 + x4**2",
+    "-25*x2**2 + x5**2",
+    "x1*x4 - x1*x5 - 12*x2*x5/5",
+    "-144*x1**2 + 1440*x1 + x6**2 - 3600",
+    "5*x2 + x6 - 60",
+    "-x1**2 - x2**2 + x3**2",
+    "x3 - x7"
+  ],
+  "saturation_factors": [
+    "x3",
+    "x2",
+    "x1**2 + x2**2",
+    "x1**2 - 10*x1 + x2**2 - 24*x2 + 169"
+  ],
+  "polynomial": "279841*x7**4 - 49514400*x7**2 + 2190240000",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[0]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "25"
+    },
+    {
+      "source": "condition[0]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_dx**2 + v_dy**2"
+    },
+    {
+      "source": "condition[0]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "169"
+    },
+    {
+      "source": "condition[0]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_dx**2 + v_dy**2"
+    },
+    {
+      "source": "condition[1]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "169"
+    },
+    {
+      "source": "condition[1]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "condition[1]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "(v_dx - 5)**2 + (v_dy - 12)**2"
+    },
+    {
+      "source": "condition[1]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_dy"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "s10"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t11"
+}

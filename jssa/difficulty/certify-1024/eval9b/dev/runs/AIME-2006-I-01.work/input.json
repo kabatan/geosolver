@@ -1,0 +1,66 @@
+{
+  "id": "AIME-2006-I-01",
+  "dsl": {
+    "id": "AIME-2006-I-01",
+    "variables": [
+      "Dx",
+      "Dy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(18, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(18, 21)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(Dx, Dy)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 18
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 21
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 14
+      },
+      {
+        "left": "Angle(A, C, D)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Dy",
+        "operator": ">",
+        "right": "21"
+      },
+      {
+        "left": "Dx",
+        "operator": "<",
+        "right": "18"
+      }
+    ],
+    "target": "Distance(A, B) + Distance(B, C) + Distance(C, D) + Distance(D, A)"
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "id": "HMMT-2010-FEB-GEO-10",
+  "dsl": {
+    "id": "HMMT-2010-FEB-GEO-10",
+    "variables": [],
+    "constructions": [
+      {
+        "name": "P",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "Q",
+        "expression": "Point(1, 0)"
+      },
+      {
+        "name": "ta",
+        "expression": "2 / (sqrt(3) + cos(pi / 12) / sin(pi / 12))"
+      },
+      {
+        "name": "A",
+        "expression": "Point(ta * cos(pi / 6), ta * sin(pi / 6))"
+      },
+      {
+        "name": "r1",
+        "expression": "ta"
+      },
+      {
+        "name": "r2",
+        "expression": "1 / (2 * ta)"
+      },
+      {
+        "name": "O1",
+        "expression": "Point(0, r1)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(1, r2)"
+      },
+      {
+        "name": "omega1",
+        "expression": "Circle(O1, r1)"
+      },
+      {
+        "name": "omega2",
+        "expression": "Circle(O2, r2)"
+      },
+      {
+        "name": "B",
+        "expression": "Point((1 - sqrt(3)) / 4, (1 + sqrt(3)) / 4)"
+      },
+      {
+        "name": "X",
+        "expression": "Point(-ta * cos(pi / 6), ta * sin(pi / 6))"
+      },
+      {
+        "name": "tt",
+        "expression": "(1 + sqrt(3)) / (2 * ta)"
+      },
+      {
+        "name": "Y",
+        "expression": "Point(1 + tt * (1 - sqrt(3)) / 4, tt * (1 + sqrt(3)) / 4)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "OnCircle(A, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(A, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "A.y",
+        "operator": "<",
+        "right": "B.y"
+      },
+      {
+        "left": "Distance(A, X)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, Y)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(A, X) / Distance(A, Y)"
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_k",
+    "x2": "p1",
+    "x3": "p2",
+    "x4": "p3",
+    "x5": "p4",
+    "x6": "s10",
+    "x7": "s5",
+    "x8": "s6",
+    "x9": "s7",
+    "x10": "s8",
+    "x11": "s9",
+    "x12": "t11"
+  },
+  "target_variable": "x12",
+  "equations": [
+    "-x1**2/2 + x1*x2 - 25/2",
+    "-x1**2/2 + x1*x3 - 49/2",
+    "-x1**4/4 + x1**2*x2**2 - 2*x1**2*x2*x5 + x1**2*x4**2 + 10*x1**2*x4 + x1**2*x5**2 + 25*x1**2/2 - 625/4",
+    "-x1**4/4 + x1**2*x3**2 - 2*x1**2*x3*x5 + x1**2*x4**2 - 14*x1**2*x4 + x1**2*x5**2 + 49*x1**2/2 - 2401/4",
+    "3*x1**4/4 - 2*x1**3*x2 + x1**2*x2**2 + 25*x1**2/2 - 625/4",
+    "3*x1**4/4 - 2*x1**3*x3 + x1**2*x3**2 + 49*x1**2/2 - 2401/4",
+    "x1**2 - 2*x1*x5 + x4**2 + x5**2 - x7**2",
+    "x7 - 5",
+    "x2**2 - x8**2",
+    "-x1**2/2 + x1*x8 - 25/2",
+    "x3**2 - x9**2",
+    "-x1**2/2 + x1*x9 - 49/2",
+    "-x1**2 + x10**2",
+    "-x11**2 + x5**2",
+    "-324*x1**2 + x6**2",
+    "-x12 + x6"
+  ],
+  "saturation_factors": [
+    "x10 - x11",
+    "x1",
+    "x2**2 - 2*x2*x3 + x3**2 + 144",
+    "x1**2 - 2*x1*x5 + x4**2 + x5**2",
+    "x1**2 + 25",
+    "x1**2 + 49"
+  ],
+  "polynomial": "x12**4 - 9720*x12**2 + 23619600",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[7]/omega1:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "v_k**2/4 + 25/2 + 625/(4*v_k**2)"
+    },
+    {
+      "source": "construction[7]/omega1:Circle:result:radius",
+      "operator": ">",
+      "expression": "(v_k**2 + 25)/(2*v_k)"
+    },
+    {
+      "source": "construction[8]/omega2:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "v_k**2/4 + 49/2 + 2401/(4*v_k**2)"
+    },
+    {
+      "source": "construction[8]/omega2:Circle:result:radius",
+      "operator": ">",
+      "expression": "(v_k**2 + 49)/(2*v_k)"
+    },
+    {
+      "source": "construction[9]/L:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "construction[9]/L:ParallelLine:argument:line_direction",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "construction[9]/L:ParallelLine:result:line_direction",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "construction[12]/Q:Intersect:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_k**2/4 + 25/2 + 625/(4*v_k**2)"
+    },
+    {
+      "source": "construction[12]/Q:Intersect:argument:radius",
+      "operator": ">",
+      "expression": "(v_k**2 + 25)/(2*v_k)"
+    },
+    {
+      "source": "construction[12]/Q:Intersect:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_k**2/4 + 49/2 + 2401/(4*v_k**2)"
+    },
+    {
+      "source": "construction[12]/Q:Intersect:argument:radius",
+      "operator": ">",
+      "expression": "(v_k**2 + 49)/(2*v_k)"
+    },
+    {
+      "source": "construction[12]/Q:Intersect:distinct_centers",
+      "operator": "!=",
+      "expression": "(p1 - p2)**2 + 144"
+    },
+    {
+      "source": "construction[12]/Q:Intersect:exclude",
+      "operator": "!=",
+      "expression": "p3**2 + (p4 - v_k)**2"
+    },
+    {
+      "source": "condition[0]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_k**2/4 + 25/2 + 625/(4*v_k**2)"
+    },
+    {
+      "source": "condition[0]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "(v_k**2 + 25)/(2*v_k)"
+    },
+    {
+      "source": "condition[1]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_k**2/4 + 49/2 + 2401/(4*v_k**2)"
+    },
+    {
+      "source": "condition[1]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "(v_k**2 + 49)/(2*v_k)"
+    },
+    {
+      "source": "condition[2]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_k**2/4 + 25/2 + 625/(4*v_k**2)"
+    },
+    {
+      "source": "condition[2]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "(v_k**2 + 25)/(2*v_k)"
+    },
+    {
+      "source": "condition[3]:OnCircle:argument:radius_squared",
+      "operator": ">",
+      "expression": "v_k**2/4 + 49/2 + 2401/(4*v_k**2)"
+    },
+    {
+      "source": "condition[3]:OnCircle:argument:radius",
+      "operator": ">",
+      "expression": "(v_k**2 + 49)/(2*v_k)"
+    },
+    {
+      "source": "condition[9]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_k"
+    },
+    {
+      "source": "condition[10]:explicit_comparison",
+      "operator": ">",
+      "expression": "12"
+    },
+    {
+      "source": "condition[11]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "condition[11]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "condition[11]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "condition[11]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "condition[11]:explicit_comparison",
+      "operator": "<",
+      "expression": "s8 - s9"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t11"
+}

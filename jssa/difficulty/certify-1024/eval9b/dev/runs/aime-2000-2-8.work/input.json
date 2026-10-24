@@ -1,0 +1,59 @@
+{
+  "id": "aime-2000-2-8",
+  "dsl": {
+    "id": "aime-2000-2-8",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "constructions": [
+      {
+        "name": "C",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(x, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(0, y)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(sqrt(11), y)"
+      },
+      {
+        "name": "ac_line",
+        "expression": "Line(A, C)"
+      },
+      {
+        "name": "bd_line",
+        "expression": "Line(B, D)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "x",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "y",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(ac_line, bd_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": "sqrt(1001)"
+      }
+    ],
+    "target": "Distance(B, C)"
+  }
+}

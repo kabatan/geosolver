@@ -1,0 +1,91 @@
+{
+  "id": "JMO-2023-PRE-03",
+  "dsl": {
+    "id": "JMO-2023-PRE-03",
+    "variables": [
+      "ex",
+      "ey",
+      "fx",
+      "fy"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(3, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(3 / 2, 3 * sqrt(3) / 2)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(1, 0)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(ex, ey)"
+      },
+      {
+        "name": "F",
+        "expression": "Point(fx, fy)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Collinear(C, E, A)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Collinear(A, F, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Angle(A, D, E)",
+        "operator": "=",
+        "right": "pi / 3"
+      },
+      {
+        "left": "Angle(D, E, F)",
+        "operator": "=",
+        "right": "pi / 3"
+      },
+      {
+        "left": "ey",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "fy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ex",
+        "operator": ">",
+        "right": "1.5"
+      },
+      {
+        "left": "ex",
+        "operator": "<",
+        "right": "3"
+      },
+      {
+        "left": "fx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "fx",
+        "operator": "<",
+        "right": "1.5"
+      }
+    ],
+    "target": "Distance(A, F)"
+  }
+}

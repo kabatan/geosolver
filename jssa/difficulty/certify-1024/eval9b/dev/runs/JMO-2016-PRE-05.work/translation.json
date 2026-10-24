@@ -1,0 +1,138 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "x14",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_bx",
+    "x2": "v_by",
+    "x3": "v_cx",
+    "x4": "v_cy",
+    "x5": "v_px",
+    "x6": "v_py",
+    "x7": "s1",
+    "x8": "s2",
+    "x9": "s3",
+    "x10": "s4",
+    "x11": "s5",
+    "x12": "s6",
+    "x13": "s7",
+    "x14": "t8"
+  },
+  "target_variable": "x14",
+  "equations": [
+    "-x3**2 - x4**2 + x7**2",
+    "x7 - 20",
+    "-x1**2 - x2**2 + x8**2",
+    "x7 - x8",
+    "-x5**2 - x6**2 + x9**2",
+    "x9 - 16",
+    "-x1**2 + 2*x1*x5 + x10**2 - x2**2 + 2*x2*x6 - x5**2 - x6**2",
+    "x11**2 - x3**2 + 32*x3 - x4**2 - 256",
+    "x10 - x11",
+    "x3*x6 - x4*x5 + 16*x4 - 16*x6",
+    "x12**2 - 64*x6**2",
+    "x12 - 28",
+    "-x1**2*x4**2/4 + x1**2*x4*x6/2 - x1**2*x6**2/4 + x1*x2*x3*x4/2 - x1*x2*x3*x6/2 - x1*x2*x4*x5/2 + x1*x2*x5*x6/2 - x1*x3*x4*x6/2 + x1*x3*x6**2/2 + x1*x4**2*x5/2 - x1*x4*x5*x6/2 + x13**2 - x2**2*x3**2/4 + x2**2*x3*x5/2 - x2**2*x5**2/4 + x2*x3**2*x6/2 - x2*x3*x4*x5/2 - x2*x3*x5*x6/2 + x2*x4*x5**2/2 - x3**2*x6**2/4 + x3*x4*x5*x6/2 - x4**2*x5**2/4",
+    "x13 - x14"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x4",
+    "x6",
+    "x1**2 + x2**2",
+    "x1**2 - 2*x1*x3 + x2**2 - 2*x2*x4 + x3**2 + x4**2",
+    "x1**2 - 32*x1 + x2**2 + 256",
+    "x3**2 + x4**2",
+    "x3**2 - 32*x3 + x4**2 + 256"
+  ],
+  "polynomial": "3969 - 16*x14**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[6]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_cy**2 + (v_cx - 16)**2"
+    },
+    {
+      "source": "condition[8]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_by"
+    },
+    {
+      "source": "condition[9]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_cy"
+    },
+    {
+      "source": "condition[10]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_py"
+    },
+    {
+      "source": "condition[11]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_bx**2 + v_by**2"
+    },
+    {
+      "source": "condition[11]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_cx**2 + v_cy**2"
+    },
+    {
+      "source": "condition[11]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "256"
+    },
+    {
+      "source": "condition[11]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "(v_bx - v_cx)**2 + (v_by - v_cy)**2"
+    },
+    {
+      "source": "condition[11]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_by**2 + (v_bx - 16)**2"
+    },
+    {
+      "source": "condition[11]:SimplePolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_cy**2 + (v_cx - 16)**2"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t8"
+}

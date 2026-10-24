@@ -1,0 +1,51 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_t",
+    "x2": "s1",
+    "x3": "t2"
+  },
+  "target_variable": "x3",
+  "equations": [
+    "x1**2 - 164*x1/73 + 6724/5329",
+    "-324*x1**2 + 432*x1 + x2**2 - 144",
+    "x2 - x3"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x1",
+    "x1 - 1",
+    "x1**2 - 128*x1/73 + 64/73"
+  ],
+  "polynomial": "360000 - 5329*x3**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "method": "rabinowitsch",
+  "coefficients": [
+    "265148380800*z3*yy^2-1576800*z3*yy+335650262400*yy^2-1726596*yy",
+    "-127720800*z3*yy^2+1035957600*yy^2-5329*yy",
+    "127720800*x2*z3*yy^2+127720800*x3*z3*yy^2-1035957600*x2*yy^2-1035957600*x3*yy^2+5329*x2*yy+5329*x3*yy",
+    "0",
+    "0",
+    "306529920000*x1*yy^2-1576800*x1*yy-344321280000*yy^2+1965600*yy",
+    "0",
+    "1749600/73*z3*yy-194400*yy+1"
+  ],
+  "exponent": null
+}

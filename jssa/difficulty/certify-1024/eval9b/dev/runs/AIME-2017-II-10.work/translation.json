@@ -1,0 +1,94 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_px",
+    "x2": "v_py",
+    "x3": "s1",
+    "x4": "s2",
+    "x5": "t3"
+  },
+  "target_variable": "x5",
+  "equations": [
+    "-441*x1**2 + 74088*x1 + x3**2 - 3111696",
+    "x3 - 1092",
+    "x1 - 4*x2 + 84",
+    "-1764*x2**2 + 148176*x2 + x4**2 - 3111696",
+    "x4 - x5"
+  ],
+  "saturation_factors": [
+    "x1 - 28",
+    "x1 - 84",
+    "x2",
+    "x2 - 42"
+  ],
+  "polynomial": "298116 - x5**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[6]/O:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "7497"
+    },
+    {
+      "source": "construction[6]/O:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "2548"
+    },
+    {
+      "source": "construction[6]/O:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "7497"
+    },
+    {
+      "source": "construction[6]/O:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "2548"
+    },
+    {
+      "source": "condition[1]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "5508"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_px - 28"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_px - 84"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_py"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_py - 42"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t3"
+}

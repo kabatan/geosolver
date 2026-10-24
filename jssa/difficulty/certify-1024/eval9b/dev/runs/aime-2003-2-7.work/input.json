@@ -1,0 +1,59 @@
+{
+  "id": "aime-2003-2-7",
+  "dsl": {
+    "id": "aime-2003-2-7",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(x, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(0, y)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(-x, 0)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(0, -y)"
+      },
+      {
+        "name": "circumcircle_abd",
+        "expression": "Circumcircle(A, B, D)"
+      },
+      {
+        "name": "circumcircle_acd",
+        "expression": "Circumcircle(A, C, D)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "x",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "y",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Radius(circumcircle_abd)",
+        "operator": "=",
+        "right": "25/2"
+      },
+      {
+        "left": "Radius(circumcircle_acd)",
+        "operator": "=",
+        "right": 25
+      }
+    ],
+    "target": "Area(A, B, C, D)"
+  }
+}

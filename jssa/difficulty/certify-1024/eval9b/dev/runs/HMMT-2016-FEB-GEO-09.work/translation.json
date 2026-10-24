@@ -1,0 +1,183 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "x14",
+    "x15",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11",
+    "z12",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_cx",
+    "x2": "v_cy",
+    "x3": "v_dx",
+    "x4": "v_dy",
+    "x5": "p3",
+    "x6": "p4",
+    "x7": "p7",
+    "x8": "p8",
+    "x9": "s1",
+    "x10": "s10",
+    "x11": "s2",
+    "x12": "s5",
+    "x13": "s6",
+    "x14": "s9",
+    "x15": "t11"
+  },
+  "target_variable": "x15",
+  "equations": [
+    "-x3**2 + 98*x3 - x4**2 + x9**2 - 2401",
+    "x11**2 - x3**2 - x4**2",
+    "x11*x5 - 49*x11 - 49*x3 + x5*x9 + 49*x5",
+    "x11*x6 - 49*x4 + x6*x9 + 49*x6",
+    "-x1**2 + 2*x1*x3 + x12**2 - x2**2 + 2*x2*x4 - x3**2 - x4**2",
+    "-x1**2 + 98*x1 + x13**2 - x2**2 - 2401",
+    "-x1*x9 + x12*x7 - 49*x12 - x13*x3 + x13*x7 + x7*x9",
+    "x12*x8 - x13*x4 + x13*x8 - x2*x9 + x8*x9",
+    "x11 - 49",
+    "-x1**2 + x14**2 - x2**2",
+    "x14 - 73",
+    "x1**2*x4 - 49*x1*x4 + x2**2*x4 - x2*x3**2 + 49*x2*x3 - x2*x4**2",
+    "-x3*x6 - x3*x8 + x4*x5 + x4*x7 - 98*x4 + 49*x6 + 49*x8",
+    "-x10**2 + x5**2 - 2*x5*x7 + x6**2 - 2*x6*x8 + x7**2 + x8**2",
+    "x10 - x15"
+  ],
+  "saturation_factors": [
+    "x11 + x9 + 49",
+    "x12 + x13 + x9",
+    "x10",
+    "x2",
+    "x4",
+    "x1**2 + x2**2",
+    "x1**2 - 2*x1*x3 + x2**2 - 2*x2*x4 + x3**2 + x4**2",
+    "x1**2 - 98*x1 + x2**2 + 2401",
+    "x1*x4 - x2*x3",
+    "x1*x4 - x2*x3 + 49*x2 - 49*x4",
+    "x3**2 + x4**2",
+    "x3**2 - 98*x3 + x4**2 + 2401"
+  ],
+  "polynomial": "625*x15**4 - 2704800*x15**2 + 2926377216",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11",
+    "z12"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/I:Incenter:triangle",
+      "operator": "!=",
+      "expression": "49*v_dy"
+    },
+    {
+      "source": "construction[5]/J:Incenter:triangle",
+      "operator": "!=",
+      "expression": "v_cy*(-v_cx + v_dx) + (49 - v_cx)*(-v_cy + v_dy)"
+    },
+    {
+      "source": "condition[4]:OnLine:line",
+      "operator": "!=",
+      "expression": "v_dy**2 + (49 - v_dx)**2"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_cy"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_dy"
+    },
+    {
+      "source": "condition[7]:explicit_comparison",
+      "operator": ">",
+      "expression": "s10"
+    },
+    {
+      "source": "condition[8]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "2401"
+    },
+    {
+      "source": "condition[8]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_cx**2 + v_cy**2"
+    },
+    {
+      "source": "condition[8]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_dx**2 + v_dy**2"
+    },
+    {
+      "source": "condition[8]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_cy**2 + (49 - v_cx)**2"
+    },
+    {
+      "source": "condition[8]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_dy**2 + (49 - v_dx)**2"
+    },
+    {
+      "source": "condition[8]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "(v_cx - v_dx)**2 + (v_cy - v_dy)**2"
+    },
+    {
+      "source": "condition[8]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "49*v_cy"
+    },
+    {
+      "source": "condition[8]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "-v_cy*(-v_cx + v_dx) + (v_cx - 49)*(-v_cy + v_dy)"
+    },
+    {
+      "source": "condition[8]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "v_dx*(-v_cy + v_dy) - v_dy*(-v_cx + v_dx)"
+    },
+    {
+      "source": "condition[8]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "49*v_dy"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t11"
+}

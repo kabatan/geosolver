@@ -1,0 +1,71 @@
+{
+  "id": "HMMT-2006-FEB-GEO-02",
+  "dsl": {
+    "id": "HMMT-2006-FEB-GEO-02",
+    "variables": [
+      "Bx",
+      "By"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(1, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(3, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(Bx, By)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(P, C)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Angle(A, B, P)",
+        "operator": "=",
+        "right": "pi / 4"
+      },
+      {
+        "left": "By",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "!=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "!=",
+        "right": "Distance(A, C)"
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "!=",
+        "right": "Distance(A, C)"
+      }
+    ],
+    "target": "Area(A, B, C)"
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "id": "HMMT-2009-FEB-GEO-04",
+  "dsl": {
+    "id": "HMMT-2009-FEB-GEO-04",
+    "variables": [
+      "x",
+      "u"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0,0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(x,0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(x,1)"
+      },
+      {
+        "name": "D",
+        "expression": "Reflect(B,Line(A,C))"
+      },
+      {
+        "name": "O",
+        "expression": "Point(u*x,u)"
+      },
+      {
+        "name": "M",
+        "expression": "FootOfPerpendicular(O,Line(A,B))"
+      },
+      {
+        "name": "Bp",
+        "expression": "Point(x/u,0)"
+      },
+      {
+        "name": "Cp",
+        "expression": "Point(x/u,1/u)"
+      },
+      {
+        "name": "Np",
+        "expression": "FootOfPerpendicular(C,Line(Bp,Cp))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": "<",
+        "right": "1"
+      },
+      {
+        "left": "Distance(O,Line(A,B))",
+        "operator": "=",
+        "right": "Distance(O,Line(B,C))"
+      },
+      {
+        "left": "Parallel(Line(M,Np),Line(A,C))",
+        "operator": "=",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(A,B)/Distance(B,C)"
+  }
+}

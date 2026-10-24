@@ -1,0 +1,87 @@
+{
+  "id": "HMMT-2024-FEB-GEO-09",
+  "dsl": {
+    "id": "HMMT-2024-FEB-GEO-09",
+    "variables": [
+      "cx",
+      "cy",
+      "x",
+      "t"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(6, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "X",
+        "expression": "Point(x, 0)"
+      },
+      {
+        "name": "P",
+        "expression": "Point((1 - t) * cx + t * x, (1 - t) * cy)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Angle(B, X, C)",
+        "operator": "=",
+        "right": "pi / 3"
+      },
+      {
+        "left": "Perpendicular(Line(B, P), Line(A, C))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(B, P)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "x",
+        "operator": "<",
+        "right": "6"
+      },
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": "<",
+        "right": "1"
+      }
+    ],
+    "target": "Distance(C, P)"
+  }
+}

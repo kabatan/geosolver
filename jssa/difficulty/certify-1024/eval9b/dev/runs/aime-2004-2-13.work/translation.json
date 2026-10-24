@@ -1,0 +1,182 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11",
+    "z12",
+    "z13",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_x",
+    "x2": "v_y",
+    "x3": "s1",
+    "x4": "s2",
+    "x5": "s3",
+    "x6": "s4",
+    "x7": "t5"
+  },
+  "target_variable": "x7",
+  "equations": [
+    "x3**2 - 3",
+    "x1*x3 + 5*x2*x3/3 - 55*x3/6",
+    "x1**2*x3**2 + x1**2 - 4*x1*x2 - 10*x1*x3**2 + 4*x2**2 + 25*x3**2 - 4*x4**2",
+    "x4 - 15",
+    "x3**2 - 16*x5**2/225",
+    "x1**2*x2**2*x3**2 - 11*x1**2*x2*x3**2 + 121*x1**2*x3**2/4 + 30*x1*x2*x3**2 - 165*x1*x3**2 + 225*x3**2 - 16*x6**2",
+    "x5 - x6*x7"
+  ],
+  "saturation_factors": [
+    "x3",
+    "x6",
+    "x1",
+    "x1 - 5",
+    "x2 - 11/2",
+    "x2 - 5/2",
+    "x3**2 + 1",
+    "x3**2 + 121/25",
+    "4*x2**2/25 + x3**2",
+    "4*x2**2/25 - 24*x2/25 + x3**2 + 36/25",
+    "x1**2*x3**2 + x1**2 - 12*x1 + 36",
+    "x1**2*x3**2 + x1**2 - 10*x1*x3**2 - 22*x1 + 25*x3**2 + 121",
+    "x1**2*x3**2 + x1**2 - 4*x1*x2 - 10*x1*x3**2 + 4*x2**2 + 25*x3**2"
+  ],
+  "polynomial": "2401 - 189225*x7**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11",
+    "z12",
+    "z13"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[5]/ac_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "25*s1**2/4 + 121/4"
+    },
+    {
+      "source": "construction[6]/de_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-v_x/2 + v_y)**2 + (-s1*v_x/2 + 5*s1/2)**2"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "9"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "25*s1**2/4 + 121/4"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "s1**2*v_x**2/4 + v_x**2/4"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "25*s1**2/4 + v_y**2"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "25*s1**2/4 + 25/4"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "s1**2*v_x**2/4 + (3 - v_x/2)**2"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "25*s1**2/4 + (3 - v_y)**2"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "(11/2 - v_x/2)**2 + (-s1*v_x/2 + 5*s1/2)**2"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "(11/2 - v_y)**2"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "(v_x/2 - v_y)**2 + (s1*v_x/2 - 5*s1/2)**2"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "15*s1/2"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "5*s1*v_x/4 - 5*s1*(v_x/2 - 11/2)/2 - 25*s1/4"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "-(-v_x/2 + v_y)*(s1*v_x/2 - 5*s1/2) + (v_x/2 - 11/2)*(-s1*v_x/2 + 5*s1/2)"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "-5*s1*(-v_x/2 + v_y)/2 + v_y*(-s1*v_x/2 + 5*s1/2)"
+    },
+    {
+      "source": "condition[0]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "15*s1/2"
+    },
+    {
+      "source": "condition[1]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_x - 5"
+    },
+    {
+      "source": "condition[2]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "25*s1**2/4 + 121/4"
+    },
+    {
+      "source": "condition[2]:Parallel:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-v_x/2 + v_y)**2 + (-s1*v_x/2 + 5*s1/2)**2"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t5"
+}

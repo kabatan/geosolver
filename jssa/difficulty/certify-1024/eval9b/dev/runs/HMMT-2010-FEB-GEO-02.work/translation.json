@@ -1,0 +1,90 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_w",
+    "x2": "p1",
+    "x3": "p2",
+    "x4": "p3",
+    "x5": "s4",
+    "x6": "t5"
+  },
+  "target_variable": "x6",
+  "equations": [
+    "-x1**3 + x1**2*x2 + x1 + x2",
+    "x1**2*x3 - 2*x1**2 + x3",
+    "x2 - x3*x4",
+    "x1**2*x3**2 - 2*x1*x3**2*x4 + 2*x1*x3*x4 + x3**2*x4**2 - 2*x3*x4**2 + x4**2 - 4*x5**2",
+    "-7*x1/10 + x5",
+    "-x1 + x6"
+  ],
+  "saturation_factors": [
+    "x3",
+    "x1",
+    "x1 - 1",
+    "x2**2 + x3**2",
+    "x1**2 + 1"
+  ],
+  "polynomial": "x6**4 - 10*x6**2 + 25",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/Bp:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_w**2 + 1"
+    },
+    {
+      "source": "construction[4]/Bp:Reflect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_w**2 + 1"
+    },
+    {
+      "source": "construction[5]/E:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "p1**2 + p2**2"
+    },
+    {
+      "source": "construction[5]/E:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_w**2"
+    },
+    {
+      "source": "construction[5]/E:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "p1**2 + p2**2"
+    },
+    {
+      "source": "construction[5]/E:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_w**2"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_w - 1"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t5"
+}

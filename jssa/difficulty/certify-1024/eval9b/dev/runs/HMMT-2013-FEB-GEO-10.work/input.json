@@ -1,0 +1,104 @@
+{
+  "id": "HMMT-2013-FEB-GEO-10",
+  "dsl": {
+    "id": "HMMT-2013-FEB-GEO-10",
+    "variables": [
+      "bx",
+      "cx",
+      "cy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(bx, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, B, C)"
+      },
+      {
+        "name": "Lbis",
+        "expression": "AngleBisector(B, A, C)"
+      },
+      {
+        "name": "E",
+        "expression": "Intersect(Lbis, Line(B, C))"
+      },
+      {
+        "name": "D",
+        "expression": "Intersect(Line(A, E), Gamma, exclude=A)"
+      },
+      {
+        "name": "Dp",
+        "expression": "Reflect(A, D)"
+      },
+      {
+        "name": "Cp",
+        "expression": "Reflect(A, C)"
+      },
+      {
+        "name": "P",
+        "expression": "Intersect(Tangent(A, Gamma), Line(B, C))"
+      },
+      {
+        "name": "Gamma2",
+        "expression": "Circumcircle(A, P, Dp)"
+      },
+      {
+        "name": "F",
+        "expression": "Intersect(Line(B, C), Gamma2, exclude=P)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "pi / 3"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "OnCircle(D, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(E, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "bx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(F, Cp)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(F, Cp)"
+  }
+}

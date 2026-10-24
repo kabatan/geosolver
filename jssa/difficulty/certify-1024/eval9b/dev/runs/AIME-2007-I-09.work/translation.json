@@ -1,0 +1,87 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "z1",
+    "z2",
+    "z3",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_r",
+    "x2": "v_x1",
+    "x3": "v_y2",
+    "x4": "s1",
+    "x5": "s2",
+    "x6": "s3",
+    "x7": "t4"
+  },
+  "target_variable": "x7",
+  "equations": [
+    "-225*x1**2/289 - 240*x1*x2/289 + 7200*x1/289 - 64*x2**2/289 + 3840*x2/289 + x4**2 - 57600/289",
+    "-x1 + x4",
+    "-64*x1**2/289 - 240*x1*x3/289 + 3840*x1/289 - 225*x3**2/289 + 7200*x3/289 + x5**2 - 57600/289",
+    "-x1 + x5",
+    "-2*x1**2 + 2*x1*x2 + 2*x1*x3 - x2**2 - x3**2 + x6**2",
+    "-2*x1 + x6",
+    "-x1 + x7"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x2 - 30",
+    "x3 - 16"
+  ],
+  "polynomial": "462400 - 3249*x7**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[0]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "1156"
+    },
+    {
+      "source": "condition[0]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "1156"
+    },
+    {
+      "source": "condition[1]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "1156"
+    },
+    {
+      "source": "condition[1]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "1156"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_r"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_x1 - 30"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_y2 - 16"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t4"
+}

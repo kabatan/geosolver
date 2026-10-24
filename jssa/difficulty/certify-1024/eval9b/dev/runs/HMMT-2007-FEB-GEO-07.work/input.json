@@ -1,0 +1,59 @@
+{
+  "id": "HMMT-2007-FEB-GEO-07",
+  "dsl": {
+    "id": "HMMT-2007-FEB-GEO-07",
+    "variables": [
+      "Dx",
+      "Dy"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(7, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(3.5, 3.5 * sqrt(3))"
+      },
+      {
+        "name": "D",
+        "expression": "Point(Dx, Dy)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "pi / 3"
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      }
+    ],
+    "target": "Distance(B, D)"
+  }
+}

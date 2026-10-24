@@ -1,0 +1,155 @@
+{
+  "id": "AIME-2014-I-13",
+  "dsl": {
+    "id": "AIME-2014-I-13",
+    "variables": [
+      "s",
+      "e",
+      "f",
+      "g",
+      "h",
+      "t"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(s, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(s, s)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(0, s)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(e, 0)"
+      },
+      {
+        "name": "F",
+        "expression": "Point(s, f)"
+      },
+      {
+        "name": "G",
+        "expression": "Point(g, s)"
+      },
+      {
+        "name": "H",
+        "expression": "Point(0, h)"
+      },
+      {
+        "name": "P",
+        "expression": "Intersect(Line(E, G), Line(F, H))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Perpendicular(Line(E, G), Line(F, H))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(E, G)",
+        "operator": "=",
+        "right": 34
+      },
+      {
+        "left": "Distance(F, H)",
+        "operator": "=",
+        "right": 34
+      },
+      {
+        "left": "Area(A, E, P, H)",
+        "operator": "=",
+        "right": "269 * t"
+      },
+      {
+        "left": "Area(B, F, P, E)",
+        "operator": "=",
+        "right": "275 * t"
+      },
+      {
+        "left": "Area(C, G, P, F)",
+        "operator": "=",
+        "right": "405 * t"
+      },
+      {
+        "left": "Area(D, H, P, G)",
+        "operator": "=",
+        "right": "411 * t"
+      },
+      {
+        "left": "OnSegment(P, E, G)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(P, F, H)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": "<",
+        "right": "s"
+      },
+      {
+        "left": "f",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "f",
+        "operator": "<",
+        "right": "s"
+      },
+      {
+        "left": "g",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g",
+        "operator": "<",
+        "right": "s"
+      },
+      {
+        "left": "h",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "h",
+        "operator": "<",
+        "right": "s"
+      }
+    ],
+    "target": "s * s"
+  }
+}

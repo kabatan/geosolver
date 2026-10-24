@@ -1,0 +1,132 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_d",
+    "x2": "v_gx",
+    "x3": "p2",
+    "x4": "p3",
+    "x5": "s1",
+    "x6": "s4",
+    "x7": "s5",
+    "x8": "s6",
+    "x9": "s7",
+    "x10": "s8",
+    "x11": "s9",
+    "x12": "t10"
+  },
+  "target_variable": "x12",
+  "equations": [
+    "x5**2 - 3",
+    "-x1 + x3*x5",
+    "x1 + x4*x5 - 840*x5",
+    "x1**2 - 840*x1*x5 + x4**2 - 840*x4 + 176400*x5**2 - x6**2 + 176400",
+    "x2**2 - 2*x2*x4 + x4**2 - x7**2",
+    "x6 - x7",
+    "x1**2*x2**2/176400 - x1**2*x2*x4/88200 + x1**2*x4**2/176400 - x1*x2**2*x5/210 + x1*x2*x4*x5/105 - x1*x4**2*x5/210 + x2**2*x5**2 - 2*x2*x4*x5**2 + x4**2*x5**2 - x8**2/44100",
+    "x1**2*x3**2 - 4*x9**2",
+    "x8 - 8*x9/9",
+    "-x10**2 + x3**2 - 2*x3*x4 + x4**2",
+    "-x11**2 + x2**2 - 2*x2*x3 + x3**2",
+    "x10 - x11 + x7",
+    "-x12 + x6"
+  ],
+  "saturation_factors": [
+    "x5",
+    "-x1/420 + x5",
+    "x8",
+    "x1",
+    "x2 - 420",
+    "x5**2 + 1"
+  ],
+  "polynomial": "112896 - x12**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/ell:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "1"
+    },
+    {
+      "source": "construction[5]/E:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "176400*s1**2 + 176400"
+    },
+    {
+      "source": "construction[5]/E:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "1"
+    },
+    {
+      "source": "construction[5]/E:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "176400*s1**2 + 176400"
+    },
+    {
+      "source": "construction[6]/F:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "176400*s1**2 + 176400"
+    },
+    {
+      "source": "construction[6]/F:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "1"
+    },
+    {
+      "source": "construction[6]/F:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "176400*s1**2 + 176400"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_d"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": "<",
+      "expression": "-420*s1 + v_d"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_gx - 420"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": ">",
+      "expression": "s6"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t10"
+}

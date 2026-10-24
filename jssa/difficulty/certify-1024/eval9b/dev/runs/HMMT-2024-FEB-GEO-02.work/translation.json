@@ -1,0 +1,149 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_e",
+    "x2": "v_s",
+    "x3": "v_u",
+    "x4": "v_v",
+    "x5": "s5",
+    "x6": "s6",
+    "x7": "s7",
+    "x8": "s8",
+    "x9": "s9",
+    "x10": "t10"
+  },
+  "target_variable": "x10",
+  "equations": [
+    "x2*x3 - x3**2 - x4**2",
+    "-x1**2*x4**2 + x5**2",
+    "-x1**2*x4**2 + 2*x1*x2*x4**2 - x2**2*x4**2 + x6**2",
+    "x1*x2*x5 - x1*x3*x5 + x1*x3*x6 - x2*x3*x5 + x3**2*x5 - x3**2*x6 + x4**2*x5 - x4**2*x6",
+    "-x1**2 + 2*x1*x3 - x3**2 + x7**2",
+    "x7 - 3",
+    "-x1**2 + x1*x2 - x2**2/4 + x8**2",
+    "x8 - 5",
+    "-x2**2 + x9**2",
+    "-x10 + x9"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - x2",
+    "x2",
+    "x2 - x3",
+    "x3",
+    "x4",
+    "x1**2 - 2*x1*x3 + x3**2 + x4**2",
+    "x2**2 - 2*x2*x3 + x3**2 + x4**2",
+    "x3**2 + x4**2"
+  ],
+  "polynomial": "400 - x10**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[0]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_u**2 + v_v**2"
+    },
+    {
+      "source": "condition[0]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_v**2 + (v_s - v_u)**2"
+    },
+    {
+      "source": "condition[0]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_u**2 + v_v**2"
+    },
+    {
+      "source": "condition[0]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_v**2 + (v_s - v_u)**2"
+    },
+    {
+      "source": "condition[1]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "v_u**2 + v_v**2"
+    },
+    {
+      "source": "condition[1]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_v**2 + (v_e - v_u)**2"
+    },
+    {
+      "source": "condition[1]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "v_v**2 + (v_e - v_u)**2"
+    },
+    {
+      "source": "condition[1]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_v**2 + (v_s - v_u)**2"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_s"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_v"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_u"
+    },
+    {
+      "source": "condition[7]:explicit_comparison",
+      "operator": "<",
+      "expression": "-v_s + v_u"
+    },
+    {
+      "source": "condition[8]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_e"
+    },
+    {
+      "source": "condition[9]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_e - v_s"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t10"
+}

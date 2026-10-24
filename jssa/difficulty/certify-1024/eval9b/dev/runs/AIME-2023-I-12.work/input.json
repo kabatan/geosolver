@@ -1,0 +1,118 @@
+{
+  "id": "AIME-2023-I-12",
+  "dsl": {
+    "id": "AIME-2023-I-12",
+    "variables": [
+      "px",
+      "py"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(55, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(55 / 2, 55 * sqrt(3) / 2)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(55 - 7 * (55 - 55 / 2) / 55, 7 * (55 * sqrt(3) / 2) / 55)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(55 / 2 * (1 - 30 / 55), 55 * sqrt(3) / 2 * (1 - 30 / 55))"
+      },
+      {
+        "name": "F",
+        "expression": "Point(40, 0)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(px, py)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 55
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 55
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 55
+      },
+      {
+        "left": "Distance(B, D)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(C, E)",
+        "operator": "=",
+        "right": 30
+      },
+      {
+        "left": "Distance(A, F)",
+        "operator": "=",
+        "right": 40
+      },
+      {
+        "left": "Angle(A, E, P)",
+        "operator": "=",
+        "right": "Angle(B, F, P)"
+      },
+      {
+        "left": "Angle(B, F, P)",
+        "operator": "=",
+        "right": "Angle(C, D, P)"
+      },
+      {
+        "left": "px",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "px",
+        "operator": "<",
+        "right": "55"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": "<",
+        "right": "55 * sqrt(3) / 2"
+      },
+      {
+        "left": "Vector(A, B).x * Vector(A, P).y - Vector(A, B).y * Vector(A, P).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(B, C).x * Vector(B, P).y - Vector(B, C).y * Vector(B, P).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(C, A).x * Vector(C, P).y - Vector(C, A).y * Vector(C, P).x",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "4 * Area(A, E, P) * Area(A, E, P) / (Dot(Vector(E, A), Vector(E, P)) * Dot(Vector(E, A), Vector(E, P)))"
+  }
+}

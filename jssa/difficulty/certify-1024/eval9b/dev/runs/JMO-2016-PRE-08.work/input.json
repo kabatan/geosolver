@@ -1,0 +1,70 @@
+{
+  "id": "JMO-2016-PRE-08",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "3 * Distance(A, X)",
+        "operator": "=",
+        "right": "Distance(X, D)"
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Radius(omega)",
+        "operator": "=",
+        "right": "1"
+      },
+      {
+        "left": "10*Distance(A,X)",
+        "operator": "=",
+        "right": "Distance(B,C)"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Incircle(A, B, C)",
+        "name": "omega"
+      },
+      {
+        "expression": "IncircleContactPoint(A, B, C, side='BC')",
+        "name": "D"
+      },
+      {
+        "expression": "Intersect(Line(A, D), omega, exclude=D)",
+        "name": "X"
+      }
+    ],
+    "id": "JMO-2016-PRE-08",
+    "target": "Distance(X, D)",
+    "variables": [
+      "b",
+      "cx",
+      "cy"
+    ]
+  }
+}

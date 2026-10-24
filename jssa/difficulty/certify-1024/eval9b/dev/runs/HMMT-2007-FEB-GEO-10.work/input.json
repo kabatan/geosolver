@@ -1,0 +1,95 @@
+{
+  "id": "HMMT-2007-FEB-GEO-10",
+  "dsl": {
+    "id": "HMMT-2007-FEB-GEO-10",
+    "variables": [
+      "Dx",
+      "Dy",
+      "Ix",
+      "Iy",
+      "r"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(2, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(0, 3)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(Dx, Dy)"
+      },
+      {
+        "name": "I",
+        "expression": "Point(Ix, Iy)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(I, r)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(I, Line(A, B))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(I, Line(B, C))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(I, Line(C, D))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(I, Line(D, A))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      }
+    ],
+    "target": "r"
+  }
+}

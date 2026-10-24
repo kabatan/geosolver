@@ -1,0 +1,161 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_cx",
+    "x2": "v_cy",
+    "x3": "v_qx",
+    "x4": "v_qy",
+    "x5": "p1",
+    "x6": "p2",
+    "x7": "p3",
+    "x8": "s10",
+    "x9": "s11",
+    "x10": "s12",
+    "x11": "s4",
+    "x12": "s5",
+    "x13": "t13"
+  },
+  "target_variable": "x13",
+  "equations": [
+    "-x1**2/2 + 13*x1/2 - x2**2/2 + x2*x5",
+    "-x1**2*x6/2 + 13*x1**2/2 + x1*x2*x5 - 13*x1*x6 + 169*x1 - x2**2*x6/2 + 13*x2*x5 - 169*x6/2 + 2197/2",
+    "-x1**2*x7/2 + 13*x1*x2/2 - 13*x1*x7 + x2**2*x5 - x2**2*x7/2 + 169*x2/2 - 169*x7/2",
+    "-x1**2 + 26*x1 + x11**2 - x2**2 - 169",
+    "x11 - 14",
+    "-x1**2 + x12**2 - x2**2",
+    "x12 - 15",
+    "x1*x4 - x2*x3 + 13*x4",
+    "x3**2*x7**2 - 2*x3*x4*x6*x7 + 26*x3*x4*x7 - 26*x3*x7**2 + x4**2*x6**2 - 26*x4**2*x6 + 169*x4**2 + 26*x4*x6*x7 - 338*x4*x7 + 169*x7**2 - x8**2",
+    "x1**2*x4**2 - 2*x1**2*x4*x7 + x1**2*x7**2 - 2*x1*x2*x3*x4 + 2*x1*x2*x3*x7 + 2*x1*x2*x4*x6 - 2*x1*x2*x6*x7 + 2*x1*x3*x4*x7 - 2*x1*x3*x7**2 - 2*x1*x4**2*x6 + 2*x1*x4*x6*x7 + x2**2*x3**2 - 2*x2**2*x3*x6 + x2**2*x6**2 - 2*x2*x3**2*x7 + 2*x2*x3*x4*x6 + 2*x2*x3*x6*x7 - 2*x2*x4*x6**2 + x3**2*x7**2 - 2*x3*x4*x6*x7 + x4**2*x6**2 - x9**2",
+    "-x1**2*x8 + x1*x3*x8 + x1*x6*x8 - x2**2*x8 + x2*x4*x8 + x2*x7*x8 - x3*x6*x8 + x3*x6*x9 - 13*x3*x9 - x4*x7*x8 + x4*x7*x9 - 13*x6*x9 + 169*x9",
+    "x10**2 - x3**2 - x4**2",
+    "x10 - x13"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x3",
+    "x4",
+    "x5**2 + 169/4",
+    "13*x1/2 + x2*x5 + 169/2",
+    "x1**2 - 2*x1*x6 + x2**2 - 2*x2*x7 + x6**2 + x7**2",
+    "x6**2 - 26*x6 + x7**2 + 169",
+    "x1**2 + 26*x1 + x2**2 + 169",
+    "x1**2 - 2*x1*x3 + x2**2 - 2*x2*x4 + x3**2 + x4**2",
+    "x3**2 - 26*x3 + x4**2 + 169"
+  ],
+  "polynomial": "21904*x13**4 - 2901096*x13**2 + 96059601",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/Gamma:Circumcircle:triangle",
+      "operator": "!=",
+      "expression": "13*v_cy"
+    },
+    {
+      "source": "construction[4]/Gamma:Circumcircle:result:radius_squared",
+      "operator": ">",
+      "expression": "p1**2 + 169/4"
+    },
+    {
+      "source": "construction[5]/P:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_cy**2/4 + (v_cx/2 + 13/2)**2"
+    },
+    {
+      "source": "construction[5]/P:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_cy**2/4 + (v_cx/2 + 13/2)**2"
+    },
+    {
+      "source": "construction[5]/P:Intersect:argument:radius_squared",
+      "operator": ">",
+      "expression": "p1**2 + 169/4"
+    },
+    {
+      "source": "construction[5]/P:Intersect:exclude",
+      "operator": "!=",
+      "expression": "v_cy**2*(p1*v_cy + 13*v_cx/2 + 169/2)**2/(4*(v_cy**2/4 + (v_cx/2 + 13/2)**2)**2) + (v_cx/2 + 13/2)**2*(p1*v_cy + 13*v_cx/2 + 169/2)**2/(v_cy**2/4 + (v_cx/2 + 13/2)**2)**2"
+    },
+    {
+      "source": "condition[3]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "v_cy**2/4 + (-v_cx/2 - 13/2)**2"
+    },
+    {
+      "source": "condition[4]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "p3**2 + (p2 - 13)**2"
+    },
+    {
+      "source": "condition[4]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_qy**2 + (v_qx - 13)**2"
+    },
+    {
+      "source": "condition[4]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "(p2 - v_cx)**2 + (p3 - v_cy)**2"
+    },
+    {
+      "source": "condition[4]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "(-v_cx + v_qx)**2 + (-v_cy + v_qy)**2"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_cy"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_qx"
+    },
+    {
+      "source": "condition[7]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_qy"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t13"
+}

@@ -1,0 +1,81 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "z1",
+    "z2",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_h",
+    "x2": "v_u",
+    "x3": "v_zx",
+    "x4": "v_zy",
+    "x5": "s1",
+    "x6": "s2",
+    "x7": "s3",
+    "x8": "s4",
+    "x9": "s5",
+    "x10": "s6",
+    "x11": "t7"
+  },
+  "target_variable": "x11",
+  "equations": [
+    "-x1**2 + x5**2 - 36",
+    "-x1**2 + 2*x1*x4 - x3**2 - x4**2 + x6**2",
+    "x5 - x6",
+    "-x1**2 - x2**2 + x7**2",
+    "x7 - 5",
+    "-x2**2 - 2*x2*x3 - x3**2 - x4**2 + x8**2",
+    "x8 - 5",
+    "-x2**2 + 2*x2*x3 - x3**2 - x4**2 + x9**2",
+    "x9 - 5",
+    "x10**2 - 4*x2**2",
+    "x10 - x11"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x4"
+  ],
+  "polynomial": "x11**4 - 104*x11**2 + 2704",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[7]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "condition[8]:OnSegment:segment",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "condition[9]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_u"
+    },
+    {
+      "source": "condition[10]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_zy"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t7"
+}

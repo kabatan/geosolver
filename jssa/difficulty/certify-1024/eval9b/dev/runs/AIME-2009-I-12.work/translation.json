@@ -1,0 +1,105 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_ix",
+    "x2": "v_iy",
+    "x3": "s1",
+    "x4": "s2",
+    "x5": "s3",
+    "x6": "s4",
+    "x7": "t5"
+  },
+  "target_variable": "x7",
+  "equations": [
+    "x1**2*x3**2 - 6350400*x1**2/1874161 - 45753120*x1*x2/1874161 - 24*x1*x3**2 + 152409600*x1/1874161 + x2**2*x3**2 - 82410084*x2**2/1874161 + 549037440*x2/1874161 + 144*x3**2 - 914457600/1874161",
+    "x3 - 210/37",
+    "x1**2*x4**2 - 2060706025*x1**2/1874161 - 667306500*x1*x2/1874161 + 23355727500*x1/1874161 + x2**2*x4**2 - 54022500*x2**2/1874161 - 70*x2*x4**2 + 3781575000*x2/1874161 + 1225*x4**2 - 66177562500/1874161",
+    "x4 - 210/37",
+    "-x1**2 + 24*x1 - x2**2 + x5**2 - 144",
+    "-x1**2 - x2**2 + 70*x2 + x6**2 - 1225",
+    "x5 + x6 - 37*x7 + 37"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x2",
+    "x1**2 + x2**2 - 70*x2 + 1225",
+    "x1**2 - 24*x1 + x2**2 + 144"
+  ],
+  "polynomial": "64 - 9*x7**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[3]/D:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "1369"
+    },
+    {
+      "source": "construction[3]/D:FootOfPerpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "1369"
+    },
+    {
+      "source": "construction[5]/omega:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "44100/1369"
+    },
+    {
+      "source": "construction[5]/omega:Circle:result:radius",
+      "operator": ">",
+      "expression": "210/37"
+    },
+    {
+      "source": "condition[0]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_iy**2 + (v_ix - 12)**2"
+    },
+    {
+      "source": "condition[0]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_iy**2 + (v_ix - 12)**2"
+    },
+    {
+      "source": "condition[1]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_ix**2 + (v_iy - 35)**2"
+    },
+    {
+      "source": "condition[1]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_ix**2 + (v_iy - 35)**2"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_ix"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_iy"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t5"
+}

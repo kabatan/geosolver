@@ -1,0 +1,165 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "x14",
+    "x15",
+    "x16",
+    "x17",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_ax",
+    "x2": "v_ay",
+    "x3": "v_bx",
+    "x4": "v_by",
+    "x5": "p4",
+    "x6": "p5",
+    "x7": "p6",
+    "x8": "p7",
+    "x9": "p8",
+    "x10": "p9",
+    "x11": "s1",
+    "x12": "s10",
+    "x13": "s11",
+    "x14": "s12",
+    "x15": "s2",
+    "x16": "s3",
+    "x17": "t13"
+  },
+  "target_variable": "x17",
+  "equations": [
+    "x11**2 - x3**2 - x4**2",
+    "-x1**2 + x15**2 - x2**2",
+    "-x1**2 + 2*x1*x3 + x16**2 - x2**2 + 2*x2*x4 - x3**2 - x4**2",
+    "-x1*x11 + x11*x5 - x15*x3 + x15*x5 + x16*x5",
+    "-x11*x2 + x11*x6 - x15*x4 + x15*x6 + x16*x6",
+    "x1*x4*x5 - x1*x6*x7 - x2*x3*x5 + x2*x5*x7 + x3*x6*x7 - x4*x5*x7",
+    "x1*x4*x6 - x1*x6*x8 - x2*x3*x6 + x2*x5*x8 + x3*x6*x8 - x4*x5*x8",
+    "x1*x4*x7 - x1*x8*x9 - x2*x3*x7 + x2*x7*x9 + 2*x3*x8*x9 - 2*x4*x7*x9",
+    "-x1*x10*x8 + x1*x4*x8 + x10*x2*x7 + 2*x10*x3*x8 - 2*x10*x4*x7 - x2*x3*x8",
+    "x15 - 450",
+    "x11 - 300",
+    "x10**2 - x12**2 + x9**2",
+    "x12 - 180",
+    "-x1**2*x4**2/4 + x1*x2*x3*x4/2 + x13**2 - x2**2*x3**2/4",
+    "x10**2 - 2*x10*x8 - x14**2 + x7**2 - 2*x7*x9 + x8**2 + x9**2",
+    "x14 - x17"
+  ],
+  "saturation_factors": [
+    "x11 + x15 + x16",
+    "x13",
+    "x2",
+    "x4",
+    "x5**2 + x6**2",
+    "-x1*x6 + x2*x5 + x3*x6 - x4*x5",
+    "x7**2 + x8**2",
+    "-x1*x8 + x2*x7 + 2*x3*x8 - 2*x4*x7",
+    "x1**2 - 2*x1*x3 + x2**2 - 2*x2*x4 + x3**2 + x4**2",
+    "x1**2 - 4*x1*x3 + x2**2 - 4*x2*x4 + 4*x3**2 + 4*x4**2",
+    "x1*x4 - x2*x3"
+  ],
+  "polynomial": "5184 - x17**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/I:Incenter:triangle",
+      "operator": "!=",
+      "expression": "v_ax*(-v_ay + v_by) - v_ay*(-v_ax + v_bx)"
+    },
+    {
+      "source": "construction[5]/L:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "p4**2 + p5**2"
+    },
+    {
+      "source": "construction[5]/L:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(-v_ax + v_bx)**2 + (-v_ay + v_by)**2"
+    },
+    {
+      "source": "construction[5]/L:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "p4**2 + p5**2"
+    },
+    {
+      "source": "construction[5]/L:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "(-v_ax + v_bx)**2 + (-v_ay + v_by)**2"
+    },
+    {
+      "source": "construction[6]/P:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(v_ax/2 - v_bx)**2 + (v_ay/2 - v_by)**2"
+    },
+    {
+      "source": "construction[6]/P:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "p6**2 + p7**2"
+    },
+    {
+      "source": "construction[6]/P:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "(v_ax/2 - v_bx)**2 + (v_ay/2 - v_by)**2"
+    },
+    {
+      "source": "construction[6]/P:Intersect:argument:line_direction",
+      "operator": "!=",
+      "expression": "p6**2 + p7**2"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_ay"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_by"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "s11"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t13"
+}

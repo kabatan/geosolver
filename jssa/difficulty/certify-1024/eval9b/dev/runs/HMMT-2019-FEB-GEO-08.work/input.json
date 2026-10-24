@@ -1,0 +1,69 @@
+{
+  "id": "HMMT-2019-FEB-GEO-08",
+  "dsl": {
+    "id": "HMMT-2019-FEB-GEO-08",
+    "variables": [
+      "ax",
+      "ay"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(1, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(ax, ay)"
+      },
+      {
+        "name": "H",
+        "expression": "Orthocenter(A, B, C)"
+      },
+      {
+        "name": "O",
+        "expression": "Circumcenter(A, B, C)"
+      },
+      {
+        "name": "N",
+        "expression": "Midpoint(O, H)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(A, B) + Distance(B, C) + Distance(C, A)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Area(B, C, N)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "<",
+        "right": "Distance(A, C)"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Area(A, B, C)"
+  }
+}

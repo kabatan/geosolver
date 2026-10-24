@@ -1,0 +1,73 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "z1",
+    "z2",
+    "z3",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_e",
+    "x2": "s1",
+    "x3": "s2",
+    "x4": "t3"
+  },
+  "target_variable": "x4",
+  "equations": [
+    "x1**2*x2**2 - x1**2/4 - 2*x1*x2**2 - x1/2 + 2*x2**2 - 1/4",
+    "x2 - 1/2",
+    "-x1**2/4 + x1/2 + x3**2 - 1/4",
+    "x3 - x4"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - 1",
+    "x1**2 - 2*x1 + 2"
+  ],
+  "polynomial": "9 - 64*x4**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[5]/omega:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "1/4"
+    },
+    {
+      "source": "construction[5]/omega:Circle:result:radius",
+      "operator": ">",
+      "expression": "1/2"
+    },
+    {
+      "source": "condition[0]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(v_e - 1)**2 + 1"
+    },
+    {
+      "source": "condition[0]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "(v_e - 1)**2 + 1"
+    },
+    {
+      "source": "condition[1]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_e"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_e - 1"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t3"
+}

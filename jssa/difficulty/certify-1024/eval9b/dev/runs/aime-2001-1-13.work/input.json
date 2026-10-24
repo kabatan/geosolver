@@ -1,0 +1,56 @@
+{
+  "id": "aime-2001-1-13",
+  "dsl": {
+    "id": "aime-2001-1-13",
+    "variables": [
+      "x",
+      "y",
+      "z",
+      "w"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(8, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(x, y)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(z, w)"
+      }
+    ],
+    "conditions": [
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      },
+      {
+        "left": "Angle(B, A, D)",
+        "operator": "=",
+        "right": "Angle(A, D, C)"
+      },
+      {
+        "left": "Angle(A, B, D)",
+        "operator": "=",
+        "right": "Angle(B, C, D)"
+      },
+      {
+        "left": "Distance(B, D)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 6
+      }
+    ],
+    "target": "Distance(C, D)"
+  }
+}

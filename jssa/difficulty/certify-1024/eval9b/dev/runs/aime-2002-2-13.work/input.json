@@ -1,0 +1,113 @@
+{
+  "id": "aime-2002-2-13",
+  "dsl": {
+    "id": "aime-2002-2-13",
+    "variables": [
+      "x",
+      "y",
+      "e",
+      "q",
+      "r"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(7, 0)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(5, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(x, y)"
+      },
+      {
+        "name": "E",
+        "expression": "PointOnSegment(C, A, e)"
+      },
+      {
+        "name": "Q",
+        "expression": "PointOnSegment(A, B, q)"
+      },
+      {
+        "name": "R",
+        "expression": "PointOnSegment(A, B, r)"
+      },
+      {
+        "name": "ad_line",
+        "expression": "Line(A, D)"
+      },
+      {
+        "name": "be_line",
+        "expression": "Line(B, E)"
+      },
+      {
+        "name": "P",
+        "expression": "Intersect(ad_line, be_line)"
+      },
+      {
+        "name": "ca_line",
+        "expression": "Line(C, A)"
+      },
+      {
+        "name": "cb_line",
+        "expression": "Line(C, B)"
+      },
+      {
+        "name": "pq_line",
+        "expression": "Line(P, Q)"
+      },
+      {
+        "name": "pr_line",
+        "expression": "Line(P, R)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "y",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "predicate": "Bound(e, (0, 1))"
+      },
+      {
+        "left": "Distance(C, E)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(E, A)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "predicate": "Bound(q, (0, 1))"
+      },
+      {
+        "predicate": "Bound(r, (0, 1))"
+      },
+      {
+        "left": "Parallel(pq_line, ca_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(pr_line, cb_line)",
+        "operator": "=",
+        "right": 0
+      }
+    ],
+    "target": "Area(P, Q, R) / Area(A, B, C)"
+  }
+}

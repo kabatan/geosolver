@@ -1,0 +1,101 @@
+{
+  "id": "AIME-2006-II-12",
+  "dsl": {
+    "id": "AIME-2006-II-12",
+    "variables": [
+      "dx",
+      "dy",
+      "ex",
+      "ey"
+    ],
+    "constructions": [
+      {
+        "name": "O",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(2, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(-1, sqrt(3))"
+      },
+      {
+        "name": "C",
+        "expression": "Point(-1, -sqrt(3))"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circle(O, 2)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(dx, dy)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(ex, ey)"
+      },
+      {
+        "name": "l1",
+        "expression": "ParallelLine(Line(A, E), D)"
+      },
+      {
+        "name": "l2",
+        "expression": "ParallelLine(Line(A, D), E)"
+      },
+      {
+        "name": "F",
+        "expression": "Intersect(l1, l2)"
+      },
+      {
+        "name": "G",
+        "expression": "Intersect(Line(A, F), Gamma, exclude=A)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Collinear(A, B, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Collinear(A, C, E)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 13
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": 11
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": ">",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": ">",
+        "right": "Distance(A, C)"
+      },
+      {
+        "left": "Dot(Vector(A, B), Vector(A, D))",
+        "operator": ">",
+        "right": "Distance(A, B) * Distance(A, B)"
+      },
+      {
+        "left": "Dot(Vector(A, C), Vector(A, E))",
+        "operator": ">",
+        "right": "Distance(A, C) * Distance(A, C)"
+      }
+    ],
+    "target": "Area(C, B, G)"
+  }
+}

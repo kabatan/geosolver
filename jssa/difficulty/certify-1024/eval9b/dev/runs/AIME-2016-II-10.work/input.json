@@ -1,0 +1,62 @@
+{
+  "id": "AIME-2016-II-10",
+  "dsl": {
+    "id": "AIME-2016-II-10",
+    "variables": [
+      "cx",
+      "cy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(13, 0)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(4, 0)"
+      },
+      {
+        "name": "Q",
+        "expression": "Point(7, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, B, C)"
+      },
+      {
+        "name": "S",
+        "expression": "Intersect(Line(C, P), Gamma, exclude=C)"
+      },
+      {
+        "name": "T",
+        "expression": "Intersect(Line(C, Q), Gamma, exclude=C)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(B, T)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(A, S)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(S, T)"
+  }
+}

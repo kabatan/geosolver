@@ -1,0 +1,91 @@
+{
+  "id": "HMMT-2017-FEB-GEO-06",
+  "dsl": {
+    "id": "HMMT-2017-FEB-GEO-06",
+    "variables": [
+      "cx",
+      "cy",
+      "dx",
+      "dy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(15, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(dx, dy)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, B, D)"
+      },
+      {
+        "name": "M",
+        "expression": "Circumcenter(A, B, D)"
+      },
+      {
+        "name": "F",
+        "expression": "Intersect(Line(C, B), Gamma, exclude=B)"
+      },
+      {
+        "name": "G",
+        "expression": "Intersect(Line(A, F), Line(M, C))"
+      },
+      {
+        "name": "E",
+        "expression": "Intersect(Line(G, D), Gamma, exclude=D)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 16
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "Distance(D, A)",
+        "operator": "=",
+        "right": 25
+      },
+      {
+        "left": "Distance(B, D)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      },
+      {
+        "left": "Area(A, B, C, D, E)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Area(A, B, C, D, E)"
+  }
+}

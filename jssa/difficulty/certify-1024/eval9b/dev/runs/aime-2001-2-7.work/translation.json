@@ -1,0 +1,260 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "x14",
+    "x15",
+    "x16",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_t",
+    "x2": "v_v",
+    "x3": "v_x",
+    "x4": "v_y",
+    "x5": "p10",
+    "x6": "p4",
+    "x7": "p5",
+    "x8": "p9",
+    "x9": "s1",
+    "x10": "s11",
+    "x11": "s2",
+    "x12": "s3",
+    "x13": "s6",
+    "x14": "s7",
+    "x15": "s8",
+    "x16": "t12"
+  },
+  "target_variable": "x16",
+  "equations": [
+    "-22500*x1**2 + 240*x1*x3 + 16200*x1 - x3**2 + x9**2 - 8100",
+    "-22500*x1**2 + 45000*x1 + x11**2 - 22500",
+    "x12**2 - x3**2 + 240*x3 - 14400",
+    "90*x1*x12 + x11*x6 + x12*x6 - 90*x12 + x6*x9",
+    "-120*x1*x12 - x11*x3 + x11*x7 + x12*x7 + x7*x9 - 120*x9",
+    "x13**2 - 22500*x2**2 - 180*x2*x4 + 16200*x2 - x4**2 + 180*x4 - 8100",
+    "x14**2 - 22500*x2**2",
+    "x15**2 - x4**2 + 180*x4 - 8100",
+    "x13*x8 - 90*x13 - x14*x4 + x14*x8 + 90*x15*x2 + x15*x8 - 90*x15",
+    "x13*x5 + x14*x5 - 120*x15*x2 + x15*x5",
+    "x1 - x3/120",
+    "x1**2*x3**2 - 140*x1**2*x3 + 2400*x1**2 - 4*x1*x3**2/3 + 180*x1*x3 - 2400*x1 + x3**2/3 - 40*x3",
+    "x2 + x4/90 - 1",
+    "x2**2*x4**2 - 105*x2**2*x4 + 1350*x2**2 - x2*x4**2/2 + 60*x2*x4 - 1350*x2",
+    "-x10**2 + x5**2 - 2*x5*x7 + x6**2 - 2*x6*x8 + x7**2 + x8**2",
+    "x10 - x16"
+  ],
+  "saturation_factors": [
+    "x11 + x12 + x9",
+    "x13 + x14 + x15",
+    "x1 - 1",
+    "x2",
+    "x3",
+    "x3 - 120",
+    "x4",
+    "x4 - 90",
+    "x1**2 - 4*x1*x3/375 - 18*x1/25 + x3**2/22500 + 9/25",
+    "x2**2 + x2*x4/125 - 18*x2/25 + x4**2/22500 - x4/125 + 9/25"
+  ],
+  "polynomial": "x16**4 - 14500*x16**2 + 52562500",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[3]/S:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[4]/T:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "22500"
+    },
+    {
+      "source": "construction[5]/U:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "8100"
+    },
+    {
+      "source": "construction[6]/V:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "22500"
+    },
+    {
+      "source": "construction[7]/pr_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "construction[8]/pq_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "8100"
+    },
+    {
+      "source": "construction[9]/st_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(90 - 90*v_t)**2 + (120*v_t - v_x)**2"
+    },
+    {
+      "source": "construction[10]/uv_line:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "14400*v_v**2 + (-90*v_v - v_y + 90)**2"
+    },
+    {
+      "source": "construction[11]/C1:Incircle:triangle",
+      "operator": "!=",
+      "expression": "10800"
+    },
+    {
+      "source": "construction[11]/C1:Incircle:result:radius_squared",
+      "operator": ">",
+      "expression": "900"
+    },
+    {
+      "source": "construction[12]/C2:Incircle:triangle",
+      "operator": "!=",
+      "expression": "-(90 - 90*v_t)*(v_x - 120)"
+    },
+    {
+      "source": "construction[12]/C2:Incircle:result:radius_squared",
+      "operator": ">",
+      "expression": "8100*(1 - v_t)**2*(v_x - 120)**2/(s1 + s2 + s3)**2"
+    },
+    {
+      "source": "construction[13]/C3:Incircle:triangle",
+      "operator": "!=",
+      "expression": "120*v_v*(v_y - 90)"
+    },
+    {
+      "source": "construction[13]/C3:Incircle:result:radius_squared",
+      "operator": ">",
+      "expression": "14400*v_v**2*(v_y - 90)**2/(s6 + s7 + s8)**2"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_x"
+    },
+    {
+      "source": "condition[1]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_x - 120"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_y"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_y - 90"
+    },
+    {
+      "source": "condition[4]:Bound:endpoint",
+      "operator": ">=",
+      "expression": "v_t"
+    },
+    {
+      "source": "condition[4]:Bound:endpoint",
+      "operator": "<=",
+      "expression": "v_t - 1"
+    },
+    {
+      "source": "condition[5]:Bound:endpoint",
+      "operator": ">=",
+      "expression": "v_v"
+    },
+    {
+      "source": "condition[5]:Bound:endpoint",
+      "operator": "<=",
+      "expression": "v_v - 1"
+    },
+    {
+      "source": "condition[6]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "(90 - 90*v_t)**2 + (120*v_t - v_x)**2"
+    },
+    {
+      "source": "condition[6]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "14400"
+    },
+    {
+      "source": "condition[7]:IsTangent:argument:line_direction",
+      "operator": "!=",
+      "expression": "(90 - 90*v_t)**2 + (120*v_t - v_x)**2"
+    },
+    {
+      "source": "condition[7]:IsTangent:argument:radius_squared",
+      "operator": ">",
+      "expression": "900"
+    },
+    {
+      "source": "condition[8]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "14400*v_v**2 + (-90*v_v - v_y + 90)**2"
+    },
+    {
+      "source": "condition[8]:Perpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "8100"
+    },
+    {
+      "source": "condition[9]:IsTangent:argument:line_direction",
+      "operator": "!=",
+      "expression": "14400*v_v**2 + (-90*v_v - v_y + 90)**2"
+    },
+    {
+      "source": "condition[9]:IsTangent:argument:radius_squared",
+      "operator": ">",
+      "expression": "900"
+    },
+    {
+      "source": "target:Center:argument:radius_squared",
+      "operator": ">",
+      "expression": "8100*(1 - v_t)**2*(v_x - 120)**2/(s1 + s2 + s3)**2"
+    },
+    {
+      "source": "target:Center:argument:radius_squared",
+      "operator": ">",
+      "expression": "14400*v_v**2*(v_y - 90)**2/(s6 + s7 + s8)**2"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t12"
+}

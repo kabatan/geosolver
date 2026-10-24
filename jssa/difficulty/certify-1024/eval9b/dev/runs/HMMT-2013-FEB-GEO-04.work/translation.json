@@ -1,0 +1,118 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_Ax",
+    "x2": "v_Ay",
+    "x3": "v_b",
+    "x4": "v_r1",
+    "x5": "v_r2",
+    "x6": "s1",
+    "x7": "s2",
+    "x8": "s3",
+    "x9": "s4",
+    "x10": "s5",
+    "x11": "s6",
+    "x12": "t7"
+  },
+  "target_variable": "x12",
+  "equations": [
+    "-x4**2 + x6**2",
+    "-x4 + x6",
+    "-x1**2 - x2**2 + x7**2",
+    "-x4 + x7",
+    "-x1**2 + 2*x1*x4 - x2**2 - x4**2 + x8**2",
+    "-x5 + x8",
+    "-x3**2 + 2*x3*x4 - x4**2 + x9**2",
+    "-x5 + x9",
+    "-x1**2 + 2*x1*x3 + x10**2 - x2**2 - x3**2",
+    "x10 - x4",
+    "x11**2 - x3**2",
+    "x12*x5 - x4"
+  ],
+  "saturation_factors": [
+    "x10",
+    "x11",
+    "x2",
+    "x4",
+    "x5"
+  ],
+  "polynomial": "x12**4 - 3*x12**2 + 1",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[2]/omega1:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "v_r1**2"
+    },
+    {
+      "source": "construction[2]/omega1:Circle:result:radius",
+      "operator": ">",
+      "expression": "v_r1"
+    },
+    {
+      "source": "construction[3]/omega2:Circle:result:radius_squared",
+      "operator": ">",
+      "expression": "v_r2**2"
+    },
+    {
+      "source": "construction[3]/omega2:Circle:result:radius",
+      "operator": ">",
+      "expression": "v_r2"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_r1"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_r2"
+    },
+    {
+      "source": "condition[7]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_Ay"
+    },
+    {
+      "source": "condition[8]:explicit_comparison",
+      "operator": "!=",
+      "expression": "s5"
+    },
+    {
+      "source": "condition[9]:explicit_comparison",
+      "operator": "!=",
+      "expression": "s6"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t7"
+}

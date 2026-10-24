@@ -1,0 +1,116 @@
+EVENT saturation begin
+EVENT saturation factor 1
+EVENT saturation factor 2
+EVENT saturation factor 3
+EVENT saturation factor 4
+EVENT saturation factor 5
+EVENT saturation factor 6
+EVENT saturation factor 7
+METRIC saturation_ms 2
+EVENT saturation end
+BLOCK J BEGIN
+x5-x9
+5*x1-3
+25*x9^2-81
+5*x8^2-36
+5*x7^2-9
+25*x6^2-36
+5*x4*x6+6*x3
+5*x3*x6+6*x4
+2*x4^2-1
+12*x3*x4+5*x6
+2*x3^2-1
+25*x2^2-36
+BLOCK J END
+EVENT power begin
+METRIC power_basis_ms 0
+METRIC power_basis_size 12
+METRIC unit_ideal 0
+BLOCK G BEGIN
+x5-x9
+5*x1-3
+25*x9^2-81
+5*x8^2-36
+5*x7^2-9
+25*x6^2-36
+5*x4*x6+6*x3
+5*x3*x6+6*x4
+2*x4^2-1
+12*x3*x4+5*x6
+2*x3^2-1
+25*x2^2-36
+BLOCK G END
+METRIC nf_1_zero 1
+BLOCK NF1 BEGIN
+0
+BLOCK NF1 END
+METRIC nf_2_zero 1
+BLOCK NF2 BEGIN
+0
+BLOCK NF2 END
+METRIC nf_3_zero 1
+BLOCK NF3 BEGIN
+0
+BLOCK NF3 END
+METRIC nf_4_zero 1
+BLOCK NF4 BEGIN
+0
+BLOCK NF4 END
+METRIC power_nf_ms 1
+EVENT power end
+EVENT rabinowitsch begin
+METRIC rab_basis_ms 0
+METRIC rab_basis_size 1
+METRIC rab_unit 1
+METRIC rab_nf_ms 0
+BLOCK RAB_G BEGIN
+1
+BLOCK RAB_G END
+BLOCK RAB_NF BEGIN
+0
+BLOCK RAB_NF END
+EVENT rabinowitsch end
+EVENT power_certificate begin
+BLOCK POWER_COEFF BEGIN
+45/2*x1*x3*x4*x6*z5-54*x3*x4*x6*z5-45*x1*x4^2+45/4*x1^2*z5+108*x4^2-27*x1*z5-225/4
+135/2*x1*x6^2*z5-162*x6^2*z5
+-90*x1^2+216*x1
+135/4*x1*z5-81*z5
+-135/2*x1*x3*x6*z5+162*x3*x6*z5+45*x1*x4-108*x4
+0
+0
+-25
+25*x5+25*x9
+0
+0
+0
+0
+-45*x1*x3*x4*x6+108*x3*x4*x6+45/4*x1^2-243/4*x1+81
+0
+0
+BLOCK POWER_COEFF END
+METRIC power_certificate_ms 2
+EVENT power_certificate end
+EVENT rab_certificate begin
+BLOCK RAB_COEFF BEGIN
+486/5*x3*x4*x6*z5*z7*yy-6/5*x3*x4*x6*z5*z7-54*x3*x4*x6*z5*yy-972/5*x4^2*z7*yy+243/5*x1*z5*z7*yy+12/5*x4^2*z7-3/5*x1*z5*z7+108*x4^2*yy-27*x1*z5*yy+135*x1*z7*yy-486*z7*yy+z7
+1458/5*x6^2*z5*z7*yy-18/5*x6^2*z5*z7-162*x6^2*z5*yy
+-1944/5*x1*z7*yy+24/5*x1*z7+216*x1*yy
+729/5*z5*z7*yy-9/5*z5*z7-81*z5*yy
+-1458/5*x3*x6*z5*z7*yy+18/5*x3*x6*z5*z7+162*x3*x6*z5*yy+972/5*x4*z7*yy-12/5*x4*z7-108*x4*yy
+0
+0
+-180*z7*yy
+180*x5*z7*yy+180*x9*z7*yy
+0
+0
+0
+0
+-972/5*x3*x4*x6*z7*yy+12/5*x3*x4*x6*z7+108*x3*x4*x6*yy+243/5*x1*z7*yy-3/5*x1*z7-27*x1*yy-729/5*z7*yy+9/5*z7+81*yy
+0
+135*x1*yy-81*yy+1
+36/5*z7
+BLOCK RAB_COEFF END
+METRIC rab_certificate_ms 2
+EVENT rab_certificate end
+EVENT finished end

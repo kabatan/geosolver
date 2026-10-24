@@ -1,0 +1,61 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "z1",
+    "z2",
+    "z3",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_g",
+    "x2": "v_h",
+    "x3": "p2",
+    "x4": "p3",
+    "x5": "s1",
+    "x6": "s4",
+    "x7": "t5"
+  },
+  "target_variable": "x7",
+  "equations": [
+    "x5**2 - 2",
+    "-x2 + x3*x5 + 2*x5**2 + x5",
+    "x1*x5 + x2 + x4*x5 - 2*x5**2 - 3*x5",
+    "x3**2 + x4**2 - x6**2",
+    "x6",
+    "-x1 - x2 + x7 - 14"
+  ],
+  "saturation_factors": [
+    "x5",
+    "x1",
+    "x2"
+  ],
+  "polynomial": "x7**4 - 804*x7**2 + 158404",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[1]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_g"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_h"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t5"
+}

@@ -1,0 +1,91 @@
+{
+  "id": "HMMT-2024-FEB-GEO-02",
+  "dsl": {
+    "id": "HMMT-2024-FEB-GEO-02",
+    "variables": [
+      "s",
+      "u",
+      "v",
+      "e"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(s, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(u, v)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(u, 0)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(e, 0)"
+      },
+      {
+        "name": "F",
+        "expression": "Midpoint(B, C)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Perpendicular(Line(A, B), Line(A, C))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Angle(B, A, E)",
+        "operator": "=",
+        "right": "Angle(E, A, C)"
+      },
+      {
+        "left": "Distance(D, E)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(E, F)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "v",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": "<",
+        "right": "s"
+      },
+      {
+        "left": "e",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": "<",
+        "right": "s"
+      }
+    ],
+    "target": "Distance(B, C)"
+  }
+}
