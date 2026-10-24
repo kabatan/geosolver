@@ -1,5 +1,5 @@
 {
-  "created_utc": "2026-10-24T08:04:56.334270+00:00",
+  "created_utc": "2026-10-24T09:28:01.653072+00:00",
   "population": 266,
   "fixed_classification_sha256": "5a95dccc24556c8d789381af939175286e2a5cdc9007d5ee1519861c639b5975",
   "measure_only_correction": {
@@ -135,7 +135,7 @@
   ],
   "execution_contract_status": "violations",
   "all_D_missing": false,
-  "runtime_receipts": 4226,
+  "runtime_receipts": 4237,
   "no_final_verification": true,
   "no_retries": true,
   "same_initial_candidates": true,
@@ -1942,6 +1942,20 @@
       }
     },
     {
+      "case_id": "HMMT-2023-FEB-GEO-07",
+      "receipt": {
+        "tangency_rows": [
+          6,
+          8,
+          9
+        ],
+        "no_distance_coordinate_rewrite": true,
+        "no_radius_auxiliary_rewrite": true,
+        "circle_branch": "fixed stage-(1) reference",
+        "analytic_plan": "finite differences when T1 rows exist; otherwise unchanged"
+      }
+    },
+    {
       "case_id": "HMMT-2023-FEB-GEO-08",
       "receipt": {
         "tangency_rows": [],
@@ -2966,16 +2980,6 @@
       "reason": "全候補の目標評価不能: ValueError 1件; details=/tmp/mechanism-S7-run2-vitdtysc/runs/AIME-2019-II-11/RAW.measure.json; sha256=023fc5e34de3854b006f705e1198c0da9236ea96c85b040b54450d9273bbc17a"
     },
     {
-      "case_id": "HMMT-2023-FEB-GEO-07",
-      "arm": "BASE",
-      "reason": "search: returncode=1, reason=None; OSError: [Errno 122] Disk quota exceeded; log=/tmp/mechanism-S7-run2-vitdtysc/runs/HMMT-2023-FEB-GEO-07/search.log"
-    },
-    {
-      "case_id": "HMMT-2023-FEB-GEO-07",
-      "arm": "RAW",
-      "reason": "search: returncode=1, reason=None; OSError: [Errno 122] Disk quota exceeded; log=/tmp/mechanism-S7-run2-vitdtysc/runs/HMMT-2023-FEB-GEO-07/search.log"
-    },
-    {
       "case_id": "JMO-2011-PRE-11",
       "arm": "RAW",
       "reason": "refine.RAW: returncode=1, reason=None; geosolver.problem.ir.errors.IRCompileError: 評価エラー (HP モード): circle radius must be positive (expr: 'Circle(O, r)'); log=/tmp/mechanism-S7-run2-vitdtysc/runs/JMO-2011-PRE-11/refine.RAW.log"
@@ -2991,9 +2995,9 @@
       "reason": "refine.RAW: returncode=1, reason=None; geosolver.problem.ir.errors.IRCompileError: 評価エラー (HP モード): circle radius must be positive (expr: 'Circle(O, r)'); log=/tmp/mechanism-S7-run2-vitdtysc/runs/JMO-2017-PRE-04/refine.RAW.log"
     }
   ],
-  "unattempted_candidates": 151,
+  "unattempted_candidates": 166,
   "candidate_answer_missing": 58,
-  "raw_file_count": 14186,
+  "raw_file_count": 14228,
   "max_raw_file_bytes": 1319206,
   "oversized": [],
   "raw_directory": "/tmp/mechanism-S7-run2-vitdtysc",
@@ -3002,6 +3006,163 @@
     76.251953125
   ],
   "preflight": "passed",
-  "failure_log_annotations": 5,
-  "reporting_note": "annotate_failures.py added after campaign start; expands missing reasons only; no measurements or judgments changed"
+  "failure_log_annotations": 3,
+  "reporting_note": "annotate_failures.py added after campaign start; expands missing reasons only; no measurements or judgments changed",
+  "environment_quota_replacement": {
+    "utc": "2026-10-24T09:27:34.657046+00:00",
+    "passed": true,
+    "case_id": "HMMT-2023-FEB-GEO-07",
+    "interrupted_status": "interrupted_env_quota",
+    "original_files_preserved": true,
+    "other_265_runs_unchanged": true,
+    "immutable_files_unchanged": true,
+    "analyze_sha256": "4ca60768da70a8c331e29083b0523e3af44fed69149342734ca8209ffcc0c98d",
+    "worker_sha256": "f9570afb2adfdc52856c97283aacf92ad4df127e64c4da3d958862cadfea38c3",
+    "parallel": 1,
+    "cpu": 31,
+    "seed": 0,
+    "all_processes_waited": true,
+    "same_initial_candidates": true,
+    "stages": [
+      {
+        "name": "search",
+        "seconds": 7.315374636091292,
+        "observations": [
+          {
+            "threads": 1,
+            "affinity": [
+              31
+            ]
+          },
+          {
+            "threads": 2,
+            "affinity": [
+              31
+            ]
+          }
+        ]
+      },
+      {
+        "name": "scales",
+        "seconds": 0.6060175178572536,
+        "observations": [
+          {
+            "threads": 1,
+            "affinity": [
+              31
+            ]
+          }
+        ]
+      },
+      {
+        "name": "refine.BASE",
+        "seconds": 90.65501225693151,
+        "observations": [
+          {
+            "threads": 1,
+            "affinity": [
+              31
+            ]
+          },
+          {
+            "threads": 2,
+            "affinity": [
+              31
+            ]
+          }
+        ]
+      },
+      {
+        "name": "refine.RAW",
+        "seconds": 82.68471486587077,
+        "observations": [
+          {
+            "threads": 1,
+            "affinity": [
+              31
+            ]
+          }
+        ]
+      },
+      {
+        "name": "measure-corrected.BASE",
+        "seconds": 0.6065236360300332,
+        "observations": [
+          {
+            "threads": 1,
+            "affinity": [
+              31
+            ]
+          }
+        ]
+      },
+      {
+        "name": "measure-corrected.RAW",
+        "seconds": 0.6564138419926167,
+        "observations": [
+          {
+            "threads": 1,
+            "affinity": [
+              31
+            ]
+          }
+        ]
+      }
+    ],
+    "resume_inventory_only_relocated": true,
+    "historical_events_unchanged": true,
+    "thread_environment": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "BLIS_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "runtime_start_end_threads": 1,
+    "live_thread_violations": [
+      {
+        "stage": "search",
+        "threads": 2,
+        "affinity": [
+          31
+        ]
+      },
+      {
+        "stage": "refine.BASE",
+        "threads": 2,
+        "affinity": [
+          31
+        ]
+      }
+    ],
+    "execution_contract_status": "violations",
+    "D_base": "484.53438515817004",
+    "D_raw": "160.89844175205795",
+    "judgments": {
+      "W1": {
+        "old": "当たり",
+        "new": "当たり"
+      },
+      "W2": {
+        "old": "外れ",
+        "new": "外れ"
+      },
+      "W3": {
+        "old": "当たり",
+        "new": "当たり"
+      },
+      "W4": {
+        "old": "当たり",
+        "new": "当たり"
+      }
+    },
+    "changed_judgments": {},
+    "non_singular_success": {
+      "old": 208,
+      "new": 209,
+      "total": 228
+    }
+  },
+  "event_audit_scope": "Original campaign only; quota replacement recorded in separate exclusive per-stage receipts"
 }

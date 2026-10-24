@@ -1,0 +1,156 @@
+{
+  "utc": "2026-10-24T09:27:34.657046+00:00",
+  "passed": true,
+  "case_id": "HMMT-2023-FEB-GEO-07",
+  "interrupted_status": "interrupted_env_quota",
+  "original_files_preserved": true,
+  "other_265_runs_unchanged": true,
+  "immutable_files_unchanged": true,
+  "analyze_sha256": "4ca60768da70a8c331e29083b0523e3af44fed69149342734ca8209ffcc0c98d",
+  "worker_sha256": "f9570afb2adfdc52856c97283aacf92ad4df127e64c4da3d958862cadfea38c3",
+  "parallel": 1,
+  "cpu": 31,
+  "seed": 0,
+  "all_processes_waited": true,
+  "same_initial_candidates": true,
+  "stages": [
+    {
+      "name": "search",
+      "seconds": 7.315374636091292,
+      "observations": [
+        {
+          "threads": 1,
+          "affinity": [
+            31
+          ]
+        },
+        {
+          "threads": 2,
+          "affinity": [
+            31
+          ]
+        }
+      ]
+    },
+    {
+      "name": "scales",
+      "seconds": 0.6060175178572536,
+      "observations": [
+        {
+          "threads": 1,
+          "affinity": [
+            31
+          ]
+        }
+      ]
+    },
+    {
+      "name": "refine.BASE",
+      "seconds": 90.65501225693151,
+      "observations": [
+        {
+          "threads": 1,
+          "affinity": [
+            31
+          ]
+        },
+        {
+          "threads": 2,
+          "affinity": [
+            31
+          ]
+        }
+      ]
+    },
+    {
+      "name": "refine.RAW",
+      "seconds": 82.68471486587077,
+      "observations": [
+        {
+          "threads": 1,
+          "affinity": [
+            31
+          ]
+        }
+      ]
+    },
+    {
+      "name": "measure-corrected.BASE",
+      "seconds": 0.6065236360300332,
+      "observations": [
+        {
+          "threads": 1,
+          "affinity": [
+            31
+          ]
+        }
+      ]
+    },
+    {
+      "name": "measure-corrected.RAW",
+      "seconds": 0.6564138419926167,
+      "observations": [
+        {
+          "threads": 1,
+          "affinity": [
+            31
+          ]
+        }
+      ]
+    }
+  ],
+  "resume_inventory_only_relocated": true,
+  "historical_events_unchanged": true,
+  "thread_environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "runtime_start_end_threads": 1,
+  "live_thread_violations": [
+    {
+      "stage": "search",
+      "threads": 2,
+      "affinity": [
+        31
+      ]
+    },
+    {
+      "stage": "refine.BASE",
+      "threads": 2,
+      "affinity": [
+        31
+      ]
+    }
+  ],
+  "execution_contract_status": "violations",
+  "D_base": "484.53438515817004",
+  "D_raw": "160.89844175205795",
+  "judgments": {
+    "W1": {
+      "old": "当たり",
+      "new": "当たり"
+    },
+    "W2": {
+      "old": "外れ",
+      "new": "外れ"
+    },
+    "W3": {
+      "old": "当たり",
+      "new": "当たり"
+    },
+    "W4": {
+      "old": "当たり",
+      "new": "当たり"
+    }
+  },
+  "changed_judgments": {},
+  "non_singular_success": {
+    "old": 208,
+    "new": 209,
+    "total": 228
+  }
+}

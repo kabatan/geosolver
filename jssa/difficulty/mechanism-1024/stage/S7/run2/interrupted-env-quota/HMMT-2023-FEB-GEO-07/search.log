@@ -1,0 +1,29 @@
+Warning: DiscoMads is used to reveal hidden constraints, so the detection radius and limit rate will not be considered. Detection radius is forced to 0.
+Warning: INITIAL_FRAME_SIZE > 1.1*REVEALING_POLL_RADIUS,  this may lead to poor convergence. Choose an INITIAL_FRAME_SIZE similar to REVEALING_POLL_RADIUS may help.
+Warning: it is currently not recommended to activate QUAD_MODEL_SEARCH or QUAD_MODEL_SEARCH_SIMPLE_MADS with DiscoMads as it may be much slower.
+Traceback (most recent call last):
+  File "/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/mechanism-1024/stage/S7/run2/worker.py", line 106, in <module>
+    pipeline.run_external_pipeline(doc(), seed=0,
+  File "/tmp/mechanism-S7-run2-vitdtysc/final/src/geosolver/engine/standard/orchestration/run_external_pipeline.py", line 999, in run_external_pipeline
+    return uses_deadline(_run_external_pipeline)(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mechanism-S7-run2-vitdtysc/final/src/geosolver/runtime/deadline.py", line 81, in scoped
+    return function(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mechanism-S7-run2-vitdtysc/final/src/geosolver/engine/standard/orchestration/run_external_pipeline.py", line 1059, in _run_external_pipeline
+    attempt_selection = _run_ordered_search_attempts(
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mechanism-S7-run2-vitdtysc/final/src/geosolver/engine/standard/orchestration/run_external_pipeline.py", line 751, in _run_ordered_search_attempts
+    primary_outcome = _execute_ordered_search_attempt(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mechanism-S7-run2-vitdtysc/final/src/geosolver/engine/standard/orchestration/run_external_pipeline.py", line 549, in _execute_ordered_search_attempt
+    stage_state = _run_pipeline_stage(
+                  ^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/mechanism-S7-run2-vitdtysc/final/src/geosolver/engine/standard/orchestration/run_external_pipeline.py", line 413, in _run_pipeline_stage
+    refinement_result = run_refinement(
+                        ^^^^^^^^^^^^^^^
+  File "/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/mechanism-1024/stage/S7/run2/worker.py", line 94, in capture
+    dump("initial.pkl", (candidates, kw["refiner"].config))
+  File "/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/jssa/difficulty/mechanism-1024/stage/S7/run2/worker.py", line 49, in dump
+    pickle.dump(obj, f, protocol=5)
+OSError: [Errno 122] Disk quota exceeded
