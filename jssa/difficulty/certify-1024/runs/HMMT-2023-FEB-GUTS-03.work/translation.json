@@ -1,0 +1,142 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_a",
+    "x2": "v_cx",
+    "x3": "v_cy",
+    "x4": "v_d",
+    "x5": "s3",
+    "x6": "s4",
+    "x7": "s5",
+    "x8": "t6"
+  },
+  "target_variable": "x8",
+  "equations": [
+    "x2**2 - x2*x4 + x3**2",
+    "-x2**2 + x2*x4 - x3**2 - x4**2/4 + x5**2",
+    "x5 - 2",
+    "-x1**2 - x4**2/4 + x6**2",
+    "x6 - 3",
+    "-x1**2 - x4**2 + x7**2",
+    "x7 - x8"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x1**2 + x4**2",
+    "x1**2 - 2*x1*x3 + x2**2 + x3**2",
+    "x1*x2 - x1*x4 + x3*x4",
+    "x2**2 + x3**2",
+    "x2**2 - 2*x2*x4 + x3**2 + x4**2"
+  ],
+  "polynomial": "x8**2 - 21",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[0]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "v_cx**2 + v_cy**2"
+    },
+    {
+      "source": "condition[0]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_cy**2 + (-v_cx + v_d)**2"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_d"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_a"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_a**2"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_cx**2 + (v_a - v_cy)**2"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_a**2 + v_d**2"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_cx**2 + v_cy**2"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_d**2"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_cy**2 + (v_cx - v_d)**2"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "v_a*v_cx"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "-v_cx*v_cy - v_cy*(-v_cx + v_d)"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "v_a*(-v_cx + v_d) - v_cy*v_d"
+    },
+    {
+      "source": "condition[5]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "v_a*v_d"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t6"
+}
