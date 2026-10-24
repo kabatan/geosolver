@@ -1,0 +1,68 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "z1",
+    "z2",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_h",
+    "x2": "p1",
+    "x3": "p2",
+    "x4": "s3",
+    "x5": "t4"
+  },
+  "target_variable": "x5",
+  "equations": [
+    "x1**2*x2 + 9*x1**2 + 196*x2 - 4900",
+    "x1**2*x3 - 476*x1 + 196*x3",
+    "x2",
+    "-x1**2 + x4**2",
+    "x4 - x5/2 + 25"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1**2 + 196"
+  ],
+  "polynomial": "84100 - 9*x5**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[6]/Bp:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_h**2 + 196"
+    },
+    {
+      "source": "construction[6]/Bp:Reflect:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_h**2 + 196"
+    },
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_h"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": ">=",
+      "expression": "p2"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": "<=",
+      "expression": "p2 - v_h"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t4"
+}

@@ -1,0 +1,504 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_s",
+    "x2": "v_u",
+    "x3": "v_v",
+    "x4": "v_w",
+    "x5": "s1",
+    "x6": "s2",
+    "x7": "s3",
+    "x8": "s4",
+    "x9": "s5",
+    "x10": "t6"
+  },
+  "target_variable": "x10",
+  "equations": [
+    "-x1**2 + x5**2",
+    "x5 - 2",
+    "-x2**2 + 2*x2 - x3**2 + 2*x3 + x6**2 - 2",
+    "x6 - 2",
+    "-x1**2 + 2*x1*x2 - 2*x1 - x2**2 + 2*x2 - x3**2 + 2*x3 + x7**2 - 2",
+    "x7 - 2",
+    "-x2**2 + 2*x2 - x3**2 + 2*x3*x4 - x4**2 + x8**2 - 1",
+    "x8 - 2",
+    "-x1**2 + 2*x1*x2 - 2*x1 - x2**2 + 2*x2 - x3**2 + 2*x3*x4 - x4**2 + x9**2 - 1",
+    "x9 - 2",
+    "-6*x1 + x10*x4 + x10 - 2"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - x2 + 1",
+    "x1 - x4/6 + 1/6",
+    "x2 - 1",
+    "x3 - 1",
+    "x3 - x4",
+    "x4 + 1"
+  ],
+  "polynomial": "4*x10**4 - 392*x10**2 + 2401",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_s"
+    },
+    {
+      "source": "condition[1]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_u - 1"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": "<",
+      "expression": "-v_s + v_u - 1"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_v - 1"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "-v_v + v_w"
+    },
+    {
+      "source": "condition[46]:explicit_comparison",
+      "operator": ">=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[47]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-6*v_s"
+    },
+    {
+      "source": "condition[48]:explicit_comparison",
+      "operator": ">=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[49]:explicit_comparison",
+      "operator": "<=",
+      "expression": "1 - v_w"
+    },
+    {
+      "source": "condition[50]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_s"
+    },
+    {
+      "source": "condition[51]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-5*v_s"
+    },
+    {
+      "source": "condition[52]:explicit_comparison",
+      "operator": ">=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[53]:explicit_comparison",
+      "operator": "<=",
+      "expression": "1 - v_w"
+    },
+    {
+      "source": "condition[54]:explicit_comparison",
+      "operator": ">=",
+      "expression": "2*v_s"
+    },
+    {
+      "source": "condition[55]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-4*v_s"
+    },
+    {
+      "source": "condition[56]:explicit_comparison",
+      "operator": ">=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[57]:explicit_comparison",
+      "operator": "<=",
+      "expression": "1 - v_w"
+    },
+    {
+      "source": "condition[58]:explicit_comparison",
+      "operator": ">=",
+      "expression": "3*v_s"
+    },
+    {
+      "source": "condition[59]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-3*v_s"
+    },
+    {
+      "source": "condition[60]:explicit_comparison",
+      "operator": ">=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[61]:explicit_comparison",
+      "operator": "<=",
+      "expression": "1 - v_w"
+    },
+    {
+      "source": "condition[62]:explicit_comparison",
+      "operator": ">=",
+      "expression": "4*v_s"
+    },
+    {
+      "source": "condition[63]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-2*v_s"
+    },
+    {
+      "source": "condition[64]:explicit_comparison",
+      "operator": ">=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[65]:explicit_comparison",
+      "operator": "<=",
+      "expression": "1 - v_w"
+    },
+    {
+      "source": "condition[66]:explicit_comparison",
+      "operator": ">=",
+      "expression": "5*v_s"
+    },
+    {
+      "source": "condition[67]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-v_s"
+    },
+    {
+      "source": "condition[68]:explicit_comparison",
+      "operator": ">=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[69]:explicit_comparison",
+      "operator": "<=",
+      "expression": "1 - v_w"
+    },
+    {
+      "source": "condition[70]:explicit_comparison",
+      "operator": ">=",
+      "expression": "6*v_s"
+    },
+    {
+      "source": "condition[71]:explicit_comparison",
+      "operator": "<=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[72]:explicit_comparison",
+      "operator": ">=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[73]:explicit_comparison",
+      "operator": "<=",
+      "expression": "1 - v_w"
+    },
+    {
+      "source": "condition[74]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_u - 1"
+    },
+    {
+      "source": "condition[75]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-6*v_s + v_u - 1"
+    },
+    {
+      "source": "condition[76]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_v - 1"
+    },
+    {
+      "source": "condition[77]:explicit_comparison",
+      "operator": "<=",
+      "expression": "v_v - v_w"
+    },
+    {
+      "source": "condition[78]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_s + v_u - 1"
+    },
+    {
+      "source": "condition[79]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-5*v_s + v_u - 1"
+    },
+    {
+      "source": "condition[80]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_v - 1"
+    },
+    {
+      "source": "condition[81]:explicit_comparison",
+      "operator": "<=",
+      "expression": "v_v - v_w"
+    },
+    {
+      "source": "condition[82]:explicit_comparison",
+      "operator": ">=",
+      "expression": "2*v_s + v_u - 1"
+    },
+    {
+      "source": "condition[83]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-4*v_s + v_u - 1"
+    },
+    {
+      "source": "condition[84]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_v - 1"
+    },
+    {
+      "source": "condition[85]:explicit_comparison",
+      "operator": "<=",
+      "expression": "v_v - v_w"
+    },
+    {
+      "source": "condition[86]:explicit_comparison",
+      "operator": ">=",
+      "expression": "3*v_s + v_u - 1"
+    },
+    {
+      "source": "condition[87]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-3*v_s + v_u - 1"
+    },
+    {
+      "source": "condition[88]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_v - 1"
+    },
+    {
+      "source": "condition[89]:explicit_comparison",
+      "operator": "<=",
+      "expression": "v_v - v_w"
+    },
+    {
+      "source": "condition[90]:explicit_comparison",
+      "operator": ">=",
+      "expression": "4*v_s + v_u - 1"
+    },
+    {
+      "source": "condition[91]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-2*v_s + v_u - 1"
+    },
+    {
+      "source": "condition[92]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_v - 1"
+    },
+    {
+      "source": "condition[93]:explicit_comparison",
+      "operator": "<=",
+      "expression": "v_v - v_w"
+    },
+    {
+      "source": "condition[94]:explicit_comparison",
+      "operator": ">=",
+      "expression": "5*v_s + v_u - 1"
+    },
+    {
+      "source": "condition[95]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-v_s + v_u - 1"
+    },
+    {
+      "source": "condition[96]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_v - 1"
+    },
+    {
+      "source": "condition[97]:explicit_comparison",
+      "operator": "<=",
+      "expression": "v_v - v_w"
+    },
+    {
+      "source": "condition[98]:explicit_comparison",
+      "operator": ">=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[99]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-6*v_s"
+    },
+    {
+      "source": "condition[100]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_w - 1"
+    },
+    {
+      "source": "condition[101]:explicit_comparison",
+      "operator": "<=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[102]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_s"
+    },
+    {
+      "source": "condition[103]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-5*v_s"
+    },
+    {
+      "source": "condition[104]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_w - 1"
+    },
+    {
+      "source": "condition[105]:explicit_comparison",
+      "operator": "<=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[106]:explicit_comparison",
+      "operator": ">=",
+      "expression": "2*v_s"
+    },
+    {
+      "source": "condition[107]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-4*v_s"
+    },
+    {
+      "source": "condition[108]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_w - 1"
+    },
+    {
+      "source": "condition[109]:explicit_comparison",
+      "operator": "<=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[110]:explicit_comparison",
+      "operator": ">=",
+      "expression": "3*v_s"
+    },
+    {
+      "source": "condition[111]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-3*v_s"
+    },
+    {
+      "source": "condition[112]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_w - 1"
+    },
+    {
+      "source": "condition[113]:explicit_comparison",
+      "operator": "<=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[114]:explicit_comparison",
+      "operator": ">=",
+      "expression": "4*v_s"
+    },
+    {
+      "source": "condition[115]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-2*v_s"
+    },
+    {
+      "source": "condition[116]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_w - 1"
+    },
+    {
+      "source": "condition[117]:explicit_comparison",
+      "operator": "<=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[118]:explicit_comparison",
+      "operator": ">=",
+      "expression": "5*v_s"
+    },
+    {
+      "source": "condition[119]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-v_s"
+    },
+    {
+      "source": "condition[120]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_w - 1"
+    },
+    {
+      "source": "condition[121]:explicit_comparison",
+      "operator": "<=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[122]:explicit_comparison",
+      "operator": ">=",
+      "expression": "6*v_s"
+    },
+    {
+      "source": "condition[123]:explicit_comparison",
+      "operator": "<=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[124]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_w - 1"
+    },
+    {
+      "source": "condition[125]:explicit_comparison",
+      "operator": "<=",
+      "expression": "0"
+    },
+    {
+      "source": "condition[126]:explicit_comparison",
+      "operator": ">",
+      "expression": "6*v_s - v_w + 1"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t6"
+}

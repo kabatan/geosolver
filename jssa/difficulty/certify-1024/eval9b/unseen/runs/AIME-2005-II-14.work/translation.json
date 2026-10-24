@@ -1,0 +1,110 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_t",
+    "x2": "v_x",
+    "x3": "v_y",
+    "x4": "s1",
+    "x5": "s2",
+    "x6": "s7",
+    "x7": "s8",
+    "x8": "s9",
+    "x9": "t10"
+  },
+  "target_variable": "x9",
+  "equations": [
+    "-x2**2 - x3**2 + x4**2",
+    "x4 - 13",
+    "-x2**2 + 30*x2 - x3**2 + x5**2 - 225",
+    "x5 - 14",
+    "-36*x3**2 + x6**2",
+    "-225*x1**2*x3**2 + x7**2",
+    "x1*x2*x6 - x2**2*x6/15 + x2**2*x7/15 - 8*x2*x7/5 - x3**2*x6/15 + x3**2*x7/15 + 9*x7",
+    "-225*x1**2 + x8**2",
+    "x8 - x9"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - 1",
+    "x3",
+    "x1**2 - 2*x1*x2/15 + x2**2/225 + x3**2/225",
+    "x2**2 + x3**2",
+    "x2**2 - 18*x2 + x3**2 + 81",
+    "x2**2 - 30*x2 + x3**2 + 225"
+  ],
+  "polynomial": "6426225 - 214369*x9**2",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[4]/E:PointOnSegment:segment",
+      "operator": "!=",
+      "expression": "225"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_y"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_t"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_t - 1"
+    },
+    {
+      "source": "condition[5]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "v_x**2 + v_y**2"
+    },
+    {
+      "source": "condition[5]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_y**2 + (15*v_t - v_x)**2"
+    },
+    {
+      "source": "condition[5]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "v_y**2 + (15 - v_x)**2"
+    },
+    {
+      "source": "condition[5]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "v_y**2 + (9 - v_x)**2"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t10"
+}
