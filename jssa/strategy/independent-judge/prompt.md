@@ -1,8 +1,8 @@
 # 独立判定プロンプト（毎回、まったく新しいチャットで。過去の相談の文脈・判定は一切渡さない）
 
 添付：
-1. report-draft-v13.md（本文）
-2. supplement-v13.md（補足資料。審査で読まれるとは限らない）
+1. report-draft-v14.md（本文）
+2. supplement-v14.md（補足資料。審査で読まれるとは限らない）
 3. figures/fig0_pipeline_example.png、figures/fig2_tangency_digits.png
 4. award-benchmark/ の調査資料（審査要項と、過去の受賞作の一覧・要旨・較正表）
 

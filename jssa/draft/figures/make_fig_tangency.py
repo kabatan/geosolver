@@ -20,15 +20,16 @@ rows.sort(key=lambda r:(r['T2']-r['T0'],r['T2']))
 fig,ax=plt.subplots(figsize=(6.4,4.1))
 y=list(range(len(rows)))
 for i,r in enumerate(rows):
-    ax.plot([min(r['T0'],r['T1'],r['T2']),max(r['T0'],r['T1'],r['T2'])],[i,i],color='#d0d0d0',lw=2,zorder=1)
-sty=[('T0','元の残差（絶対値）','#d95f02','o'),('T1','絶対値だけ除く（接点を使わない）','#7a7a7a','s'),('T2','接点を使う（既定）','#1b6ca8','D')]
+    if 'HMMT-2022' not in r['case_id']: ax.plot([min(r['T0'],r['T1'],r['T2']),max(r['T0'],r['T1'],r['T2'])],[i,i],color='#d0d0d0',lw=2,zorder=1)
+sty=[('T0','元の残差','#d95f02','o'),('T1','接点を使わない符号付き残差','#7a7a7a','s'),('T2','接点を使う残差（既定）','#1b6ca8','D')]
+fail=lambda r:'HMMT-2022' in r['case_id']
 for k,lab,c,m in sty:
-    ax.scatter([r[k] for r in rows],y,s=40,color=c,marker=m,label=lab,zorder=3 if k=='T2' else 2,edgecolor='white',linewidth=1.2)
+    ax.scatter([r[k] if not fail(r) else float('nan') for r in rows],y,s=40,color=c,marker=m,label=lab,zorder=3 if k=='T2' else 2,edgecolor='white',linewidth=1.2)
 ax.set_yticks(y); ax.set_yticklabels([name(r['case_id']) for r in rows])
 ax.set_xlabel('目標値の正しい桁数（精密化直後の最良候補、90秒）'); ax.set_xlim(-10,520)
 for s in ['top','right']: ax.spines[s].set_visible(False)
 ax.grid(axis='x',color='#eeeeee'); ax.set_axisbelow(True)
 ax.legend(loc='lower center',bbox_to_anchor=(0.42,1.0),ncol=3,frameon=False,fontsize=8,handletextpad=0.3,columnspacing=1.0)
 i=[k for k,r in enumerate(rows) if 'HMMT-2022' in r['case_id']][0]
-ax.annotate('3通りとも候補が通らない',(0,i),xytext=(30,i),va='center',fontsize=8,color='#555')
+ax.text(5,i,'3通りとも候補が通らない（桁数なし）',va='center',fontsize=8,color='#555')
 fig.tight_layout(); fig.savefig('fig2_tangency_digits.png',dpi=200)
