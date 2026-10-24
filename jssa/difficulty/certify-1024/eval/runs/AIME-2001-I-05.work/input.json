@@ -1,0 +1,47 @@
+{
+  "id": "AIME-2001-I-05",
+  "dsl": {
+    "id": "AIME-2001-I-05",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 1)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(x, y)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(-x, y)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "x**2 + 4*y**2",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "x",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "y",
+        "operator": "<",
+        "right": 1
+      }
+    ],
+    "target": "Distance(B, C)"
+  }
+}

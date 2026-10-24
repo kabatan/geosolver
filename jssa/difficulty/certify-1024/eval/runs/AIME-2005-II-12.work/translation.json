@@ -1,0 +1,104 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_e",
+    "x2": "v_f",
+    "x3": "k6",
+    "x4": "k7",
+    "x5": "s1",
+    "x6": "s2",
+    "x7": "s3",
+    "x8": "s8",
+    "x9": "t9"
+  },
+  "target_variable": "x9",
+  "equations": [
+    "-x1**2 + x5**2",
+    "-x2**2 + 1800*x2 + x6**2 - 810000",
+    "-x1**2 + 2*x1*x2 - x2**2 + x7**2",
+    "x7 - 400",
+    "x3**2 - 1/2",
+    "x4**2 - 1/2",
+    "-202500*x1**2 + 405000*x1*x2 - 202500*x2**2 + x8**2",
+    "x1*x2*x4 - 450*x1*x4 - 450*x2*x4 + x3*x8 + 405000*x4",
+    "x6 - x9"
+  ],
+  "saturation_factors": [
+    "x5 - x6",
+    "x1 - x2",
+    "x1**2 - 900*x1 + 405000",
+    "x2**2 - 900*x2 + 405000"
+  ],
+  "polynomial": "x9**2 - 500*x9 + 45000",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "condition[0]:explicit_comparison",
+      "operator": ">=",
+      "expression": "v_e"
+    },
+    {
+      "source": "condition[1]:explicit_comparison",
+      "operator": "<=",
+      "expression": "v_f - 900"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_e - v_f"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": "<",
+      "expression": "s1 - s2"
+    },
+    {
+      "source": "condition[5]:Angle:first_ray",
+      "operator": "!=",
+      "expression": "(v_e - 450)**2 + 202500"
+    },
+    {
+      "source": "condition[5]:Angle:second_ray",
+      "operator": "!=",
+      "expression": "(v_f - 450)**2 + 202500"
+    }
+  ],
+  "algebraic_constants": [
+    {
+      "symbol": "k6",
+      "expression": "sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    },
+    {
+      "symbol": "k7",
+      "expression": "-sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "-0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    }
+  ],
+  "original_target_variable": "t9"
+}

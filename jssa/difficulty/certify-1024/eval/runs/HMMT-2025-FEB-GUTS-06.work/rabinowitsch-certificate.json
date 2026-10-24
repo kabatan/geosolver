@@ -1,0 +1,59 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "z1",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_ax",
+    "x2": "v_ay",
+    "x3": "v_t",
+    "x4": "v_u",
+    "x5": "s1",
+    "x6": "s2",
+    "x7": "s3",
+    "x8": "t4"
+  },
+  "target_variable": "x8",
+  "equations": [
+    "-x1**2 - x2**2 + x5**2",
+    "x5 - 5",
+    "-x1**2 + 10*x1 - x2**2 + x6**2 - 25",
+    "x6 - 5",
+    "x1*x3 + x1*x4 - 2*x1 - 5*x3 + 2",
+    "x2*x3 + x2*x4 - 2*x2",
+    "-x1**2*x3**2 + 2*x1**2*x3*x4 - x1**2*x4**2 + 10*x1*x3**2 - 10*x1*x3*x4 - x2**2*x3**2 + 2*x2**2*x3*x4 - x2**2*x4**2 - 25*x3**2 + x7**2",
+    "x7 - x8"
+  ],
+  "saturation_factors": [
+    "x2"
+  ],
+  "polynomial": "x8**2 - 52",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "method": "rabinowitsch",
+  "coefficients": [
+    "2*x3*x4*yy-2*x4^2*yy-2/5*x3*yy+14/5*x4*yy-12/5*yy",
+    "-2*x3*x4*x5*yy+2*x4^2*x5*yy-10*x3*x4*yy+10*x4^2*yy+2/5*x3*x5*yy-14/5*x4*x5*yy+2*x3*yy-14*x4*yy+12/5*x5*yy+12*yy",
+    "-2*x3*x4*yy-2*x4^2*yy+2/5*x3*yy+26/5*x4*yy-8/5*yy",
+    "2*x3*x4*x6*yy+2*x4^2*x6*yy+10*x3*x4*yy+10*x4^2*yy-2/5*x3*x6*yy-26/5*x4*x6*yy-2*x3*yy-26*x4*yy+8/5*x6*yy+8*yy",
+    "x1*x3*yy-3*x1*x4*yy+2*x1*yy-5*x3*yy+20*x4*yy-6*yy",
+    "x2*x3*yy-3*x2*x4*yy+50*x4*z1*yy+2*x2*yy-10*z1*yy",
+    "yy",
+    "-x7*yy-x8*yy",
+    "50*x3*x4*yy+50*x4^2*yy-10*x3*yy-110*x4*yy+20*yy",
+    "1"
+  ],
+  "exponent": null
+}

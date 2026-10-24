@@ -1,0 +1,144 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_ex",
+    "x2": "v_ey",
+    "x3": "p1",
+    "x4": "p2",
+    "x5": "s3",
+    "x6": "s4",
+    "x7": "s5",
+    "x8": "t6"
+  },
+  "target_variable": "x8",
+  "equations": [
+    "30*x1 + x2*x3 - 20*x2 - 30*x3",
+    "18*x1 + x2*x4 - 20*x2 - 30*x4 + 240",
+    "-x2**2 + x5**2",
+    "x5 - 6",
+    "-x1**2 + x6**2",
+    "x6 - 6",
+    "x3**2 + 2*x3*x4 + x4**2 - x7**2/36",
+    "x7 - x8"
+  ],
+  "saturation_factors": [
+    "x1",
+    "x1 - 20",
+    "x2",
+    "x2 - 12",
+    "x2 - 30",
+    "x1**2 - 40*x1 + x2**2 - 60*x2 + 1300"
+  ],
+  "polynomial": "x8 - 72",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[6]/X:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(20 - v_ex)**2 + (30 - v_ey)**2"
+    },
+    {
+      "source": "construction[6]/X:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "400"
+    },
+    {
+      "source": "construction[6]/X:IntersectLines:argument:line_direction",
+      "operator": "!=",
+      "expression": "(20 - v_ex)**2 + (30 - v_ey)**2"
+    },
+    {
+      "source": "construction[6]/X:IntersectLines:argument:line_direction",
+      "operator": "!=",
+      "expression": "400"
+    },
+    {
+      "source": "construction[7]/Y:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "(20 - v_ex)**2 + (30 - v_ey)**2"
+    },
+    {
+      "source": "construction[7]/Y:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "400"
+    },
+    {
+      "source": "construction[7]/Y:IntersectLines:argument:line_direction",
+      "operator": "!=",
+      "expression": "(20 - v_ex)**2 + (30 - v_ey)**2"
+    },
+    {
+      "source": "construction[7]/Y:IntersectLines:argument:line_direction",
+      "operator": "!=",
+      "expression": "400"
+    },
+    {
+      "source": "condition[0]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "400"
+    },
+    {
+      "source": "condition[0]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "400"
+    },
+    {
+      "source": "condition[1]:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "condition[1]:Distance:argument:line_direction",
+      "operator": "!=",
+      "expression": "144"
+    },
+    {
+      "source": "condition[2]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_ex"
+    },
+    {
+      "source": "condition[3]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_ex - 20"
+    },
+    {
+      "source": "condition[4]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_ey"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": "<",
+      "expression": "v_ey - 12"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t6"
+}

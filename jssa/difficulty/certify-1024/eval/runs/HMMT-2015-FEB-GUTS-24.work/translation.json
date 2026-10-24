@@ -1,0 +1,258 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "x5",
+    "x6",
+    "x7",
+    "x8",
+    "x9",
+    "x10",
+    "x11",
+    "x12",
+    "x13",
+    "x14",
+    "x15",
+    "x16",
+    "x17",
+    "x18",
+    "x19",
+    "x20",
+    "x21",
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_cx",
+    "x2": "v_cy",
+    "x3": "v_dx",
+    "x4": "v_dy",
+    "x5": "v_r",
+    "x6": "v_wx",
+    "x7": "v_wy",
+    "x8": "p1",
+    "x9": "p2",
+    "x10": "p3",
+    "x11": "p4",
+    "x12": "p5",
+    "x13": "s10",
+    "x14": "s11",
+    "x15": "s12",
+    "x16": "s13",
+    "x17": "s6",
+    "x18": "s7",
+    "x19": "s8",
+    "x20": "s9",
+    "x21": "t14"
+  },
+  "target_variable": "x21",
+  "equations": [
+    "-x1**2/2 + 5*x1 - x2**2/2 + x2*x8",
+    "-x3**2*x6 + x3**2*x9 - x3*x4*x7 + x4**2*x9",
+    "x10*x3**2 + x10*x4**2 - x3*x4*x6 - x4**2*x7",
+    "x1**2*x11 - x1**2*x6 - 20*x1*x11 - x1*x2*x7 + 20*x1*x6 + x11*x2**2 + 100*x11 - 10*x2**2 + 10*x2*x7 - 100*x6",
+    "x1**2*x12 - 20*x1*x12 - x1*x2*x6 + 10*x1*x2 + x12*x2**2 + 100*x12 - x2**2*x7 + 10*x2*x6 - 100*x2",
+    "-x1**2 + 20*x1 + x17**2 - x2**2 - 100",
+    "x17 - 8",
+    "-x1**2 + 2*x1*x3 + x18**2 - x2**2 + 2*x2*x4 - x3**2 - x4**2",
+    "x18 - 25",
+    "x19**2 - x3**2 - x4**2",
+    "x19 - 12",
+    "-x20**2 + x3**2 - 10*x3 + x4**2 - 2*x4*x8 + x8**2 + 25",
+    "-x13**2 + x8**2 + 25",
+    "x13 - x20",
+    "x10**2 - 2*x10*x7 - x14**2 + x6**2 - 2*x6*x9 + x7**2 + x9**2",
+    "x14 - x5",
+    "x15**2 - x7**2",
+    "x15 - x5",
+    "x11**2 - 2*x11*x6 + x12**2 - 2*x12*x7 - x16**2 + x6**2 + x7**2",
+    "x16 - x5",
+    "x21 - x5"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x4",
+    "x5",
+    "x8**2 + 25",
+    "x1**2 + x2**2",
+    "x1**2 - 2*x1*x3 + x2**2 - 2*x2*x4 + x3**2 + x4**2",
+    "x1**2 - 20*x1 + x2**2 + 100",
+    "x1*x4 - x2*x3",
+    "x1*x4 - x2*x3 + 10*x2 - 10*x4",
+    "x3**2 + x4**2",
+    "x3**2 - 20*x3 + x4**2 + 100"
+  ],
+  "polynomial": "7*x21**2 - 1209",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3",
+    "z4",
+    "z5",
+    "z6",
+    "z7",
+    "z8",
+    "z9",
+    "z10",
+    "z11"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "guards": [
+    {
+      "source": "construction[5]/Gamma:Circumcircle:triangle",
+      "operator": "!=",
+      "expression": "10*v_cy"
+    },
+    {
+      "source": "construction[5]/Gamma:Circumcircle:result:radius_squared",
+      "operator": ">",
+      "expression": "p1**2 + 25"
+    },
+    {
+      "source": "construction[6]/T0:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_dx**2 + v_dy**2"
+    },
+    {
+      "source": "construction[6]/T0:FootOfPerpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_dx**2 + v_dy**2"
+    },
+    {
+      "source": "construction[7]/T1:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "100"
+    },
+    {
+      "source": "construction[7]/T1:FootOfPerpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "100"
+    },
+    {
+      "source": "construction[8]/T2:Line:result:line_direction",
+      "operator": "!=",
+      "expression": "v_cy**2 + (v_cx - 10)**2"
+    },
+    {
+      "source": "construction[8]/T2:FootOfPerpendicular:argument:line_direction",
+      "operator": "!=",
+      "expression": "v_cy**2 + (v_cx - 10)**2"
+    },
+    {
+      "source": "condition[3]:Center:argument:radius_squared",
+      "operator": ">",
+      "expression": "p1**2 + 25"
+    },
+    {
+      "source": "condition[3]:Radius:argument:radius_squared",
+      "operator": ">",
+      "expression": "p1**2 + 25"
+    },
+    {
+      "source": "condition[5]:explicit_comparison",
+      "operator": ">=",
+      "expression": "-v_dx*(p2 - v_dx) - v_dy*(p3 - v_dy)"
+    },
+    {
+      "source": "condition[6]:explicit_comparison",
+      "operator": "<=",
+      "expression": "-s8**2 - v_dx*(p2 - v_dx) - v_dy*(p3 - v_dy)"
+    },
+    {
+      "source": "condition[8]:explicit_comparison",
+      "operator": ">=",
+      "expression": "10*v_wx"
+    },
+    {
+      "source": "condition[9]:explicit_comparison",
+      "operator": "<=",
+      "expression": "10*v_wx - 100"
+    },
+    {
+      "source": "condition[11]:explicit_comparison",
+      "operator": ">=",
+      "expression": "p5*v_cy + (p4 - 10)*(v_cx - 10)"
+    },
+    {
+      "source": "condition[12]:explicit_comparison",
+      "operator": "<=",
+      "expression": "p5*v_cy - s6**2 + (p4 - 10)*(v_cx - 10)"
+    },
+    {
+      "source": "condition[13]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "100"
+    },
+    {
+      "source": "condition[13]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_cx**2 + v_cy**2"
+    },
+    {
+      "source": "condition[13]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_dx**2 + v_dy**2"
+    },
+    {
+      "source": "condition[13]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_cy**2 + (10 - v_cx)**2"
+    },
+    {
+      "source": "condition[13]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "v_dy**2 + (10 - v_dx)**2"
+    },
+    {
+      "source": "condition[13]:ConvexPolygon:distinct_vertices",
+      "operator": "!=",
+      "expression": "(v_cx - v_dx)**2 + (v_cy - v_dy)**2"
+    },
+    {
+      "source": "condition[13]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "10*v_cy"
+    },
+    {
+      "source": "condition[13]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "-v_cy*(-v_cx + v_dx) + (v_cx - 10)*(-v_cy + v_dy)"
+    },
+    {
+      "source": "condition[13]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "v_dx*(-v_cy + v_dy) - v_dy*(-v_cx + v_dx)"
+    },
+    {
+      "source": "condition[13]:ConvexPolygon:strict_turn",
+      "operator": "!=",
+      "expression": "10*v_dy"
+    },
+    {
+      "source": "condition[14]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_dy"
+    },
+    {
+      "source": "condition[15]:explicit_comparison",
+      "operator": ">",
+      "expression": "v_r"
+    }
+  ],
+  "algebraic_constants": [],
+  "original_target_variable": "t14"
+}

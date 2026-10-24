@@ -1,0 +1,50 @@
+{
+  "variables": [
+    "x1",
+    "x2",
+    "x3",
+    "x4",
+    "z1",
+    "z2",
+    "z3",
+    "yy"
+  ],
+  "variable_mapping": {
+    "x1": "v_x",
+    "x2": "s1",
+    "x3": "s2",
+    "x4": "t3"
+  },
+  "target_variable": "x4",
+  "equations": [
+    "x1**6 - 58*x1**5 + 1222*x1**4 - 10796*x1**3 + 60281*x1**2 - 457138*x1 - 8825740",
+    "-x1**4 + 40*x1**3 - 642*x1**2 + 4840*x1 + x2**2 - 63041",
+    "-x1**8 + 76*x1**7 - 2610*x1**6 + 52744*x1**5 - 781941*x1**4 + 9534580*x1**3 - 88810296*x1**2 + 516097912*x1 + x3**2 - 3707062964",
+    "-x1 + x4"
+  ],
+  "saturation_factors": [
+    "x2",
+    "x3",
+    "x1"
+  ],
+  "polynomial": "x4**2 - 18*x4 - 140",
+  "saturation_encoding": "factorwise_inverses",
+  "inverse_variables": [
+    "z1",
+    "z2",
+    "z3"
+  ],
+  "certificate_extension": "K=<original equations, 1-z_i*h_i for each saturation factor>",
+  "order": "dp (degree reverse lexicographic)",
+  "method": "power",
+  "coefficients": [
+    "x4*z1^2*z3",
+    "x4^3*z1^2*z3-18*x4^2*z1^2*z3-140*x4*z1^2*z3",
+    "0",
+    "x1^5*x4*z1^2*z3+x1^4*x4^2*z1^2*z3-58*x1^4*x4*z1^2*z3-40*x1^3*x4^2*z1^2*z3+1362*x1^3*x4*z1^2*z3+642*x1^2*x4^2*z1^2*z3-x2^2*x4^2*z1^2*z3-16396*x1^2*x4*z1^2*z3+18*x2^2*x4*z1^2*z3-4840*x1*x4^2*z1^2*z3+150161*x1*x4*z1^2*z3+63041*x4^2*z1^2*z3-1134738*x4*z1^2*z3+140*z3",
+    "x2*x4^2*z1-140*x2*x4*z1*z3-18*x2*x4*z1+x4^2-140*x4*z3-18*x4",
+    "0",
+    "x2^2*x4^2*z1^2-18*x2^2*x4*z1^2-140"
+  ],
+  "exponent": 1
+}
