@@ -1,0 +1,214 @@
+diff --git a/src/geosolver/engine-lock.json b/src/geosolver/engine-lock.json
+--- a/src/geosolver/engine-lock.json
++++ b/src/geosolver/engine-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 2,
+   "artifact_protocol_version": 4,
+-  "source_tree_hash": "sha256:03a44bfbb743b972d95306c63a14c04b78c7d12b96a1ba83d147c56eea7f86a3",
++  "source_tree_hash": "sha256:add5afaf829806ca3cbd11fb07b69d956102752e1c6738b0630581a3ceb121eb",
+   "resolved_config_hash": "sha256:98810edcd2beb35fb7d31ba65620de8f3cebd3fc289c11a526b8a623adf6d70f",
+   "dependency_lock_hash": "sha256:aa93c94b893ed67b359af271ca6fb62e97d3551fc874a4b9e45a66c8c5e52930",
+   "engines": {
+     "standard": {
+-      "hash": "sha256:03a44bfbb743b972d95306c63a14c04b78c7d12b96a1ba83d147c56eea7f86a3",
++      "hash": "sha256:add5afaf829806ca3cbd11fb07b69d956102752e1c6738b0630581a3ceb121eb",
+       "platforms": [
+         "linux",
+         "windows",
+diff --git a/src/geosolver/engine/standard/refinement/analytic_jacobian.py b/src/geosolver/engine/standard/refinement/analytic_jacobian.py
+--- a/src/geosolver/engine/standard/refinement/analytic_jacobian.py
++++ b/src/geosolver/engine/standard/refinement/analytic_jacobian.py
+@@ -16,6 +16,8 @@
+ from geosolver.runtime.ablation import ablated
+ from geosolver.runtime.deadline import check_deadline, count_event
+ 
++from .s3_tangency import distance_radius_sources, tangency_mode
++
+ 
+ def compile_jacobian(payload):
+     """Compile in the solve-owned, time-bounded symbolic worker."""
+@@ -24,8 +26,14 @@
+     from geosolver.engine.standard.problem.zero_test_source import zero_test_call
+     from geosolver.engine.standard.search.cartesian_polynomials import CartesianPolynomials
+ 
+-    names, construction, constraints, targets = payload
++    names, construction, constraints, targets = payload[:4]
++    mode = payload[4] if len(payload) == 5 else "T2"
+     construction = tuple((name, source) for name, source in construction)
++    # Frozen plans do not differentiate the T1 Distance=radius replacement.
++    if mode == "T1" and distance_radius_sources(
++        construction, tuple(zip(constraints, targets, strict=True))
++    ):
++        return None
+     supported = {
+         "Point",
+         "Midpoint",
+@@ -83,7 +91,7 @@
+                         right,
+                         tuple(construction),
+                         tuple(zip(constraints, targets, strict=True)),
+-                    )
++                    ) if mode == "T2" else None
+                     if contact is not None:
+                         expression = geometry.scalar(geometry.parse(contact))
+                     else:
+@@ -164,14 +172,17 @@
+         return None
+     if bundle is None or not 2 <= len(bundle.var_names) <= 12 or bundle.spec.logical_plans:
+         return None
+-    plan = _plan(
+-        (
+-            tuple(bundle.var_names),
+-            tuple((item.name, item.expr) for item in bundle.spec.construction),
+-            tuple(bundle.spec.constraints),
+-            tuple(str(target) for target in bundle.targets),
+-        )
++    key = (
++        tuple(bundle.var_names),
++        tuple((item.name, item.expr) for item in bundle.spec.construction),
++        tuple(bundle.spec.constraints),
++        tuple(str(target) for target in bundle.targets),
+     )
++    # Include T1 in the symbolic-worker payload/cache key.  T0's frozen
++    # smoothing-dependent plan is rejected by the refiner adoption gate.
++    if tangency_mode() == "T1":
++        key = (*key, "T1")
++    plan = _plan(key)
+     count_event("analytic_jacobian_plan_requests")
+     count_event(
+         "analytic_jacobian_plan_available"
+diff --git a/src/geosolver/engine/standard/refinement/mpmath_refiner.py b/src/geosolver/engine/standard/refinement/mpmath_refiner.py
+--- a/src/geosolver/engine/standard/refinement/mpmath_refiner.py
++++ b/src/geosolver/engine/standard/refinement/mpmath_refiner.py
+@@ -47,6 +47,7 @@
+ from .levenberg_marquardt_step import compute_levenberg_marquardt_step
+ from .line_search import _point_within_bounds, run_line_search
+ from .refiner_config import RefinerConfig
++from .s3_tangency import distance_radius_sources, tangency_mode
+ 
+ NON_FINITE_INITIAL = "non_finite_initial"
+ BRANCH_INSTABILITY = "branch_instability"
+@@ -572,12 +573,19 @@
+     """
+     from geosolver.engine.standard.problem.tangency_contacts import distance_contact_sources
+ 
++    mode = tangency_mode()
+     equalities = tuple(
+         zip(bundle.spec.constraints, (str(target) for target in bundle.targets), strict=True)
+     )
+     contact_sources = distance_contact_sources(
+         tuple((item.name, item.expr) for item in bundle.spec.construction), equalities
+     )
++    if mode == "T0":
++        contact_sources = {}
++    elif mode == "T1":
++        contact_sources = distance_radius_sources(
++            tuple((item.name, item.expr) for item in bundle.spec.construction), equalities
++        )
+     from geosolver.engine.standard.problem.positive_radius_contacts import (
+         positive_radius_contact_sources,
+     )
+@@ -626,6 +634,9 @@
+                         )
+                         continue
+                 else:
++                    if mode == "T0":
++                        rewritten.append(mp.mpf(residual))
++                        continue
+                     from geosolver.engine.standard.problem.tangency_contacts import (
+                         contact_tangency_source,
+                     )
+@@ -641,7 +652,7 @@
+                                 strict=True,
+                             )
+                         ),
+-                    )
++                    ) if mode == "T2" else None
+                     if contact_source is not None:
+                         rewritten.append(mp.mpf(safe_eval_expr_hp(contact_source, context)))
+                         continue
+@@ -1033,6 +1044,7 @@
+                 isinstance(residual_fn, partial)
+                 and residual_fn.keywords.get("smooth_zero_constraints")
+                 and not ablated("NO_RESIDUAL_REWRITE")
++                and tangency_mode() != "T0"
+             )
+         )
+     ):
+diff --git a/src/geosolver/engine/standard/refinement/s3_tangency.py b/src/geosolver/engine/standard/refinement/s3_tangency.py
+new file mode 100644
+--- /dev/null
++++ b/src/geosolver/engine/standard/refinement/s3_tangency.py
+@@ -0,0 +1,71 @@
++"""S3 refinement-only tangency switch; the absent switch is frozen T2."""
++
++import ast
++import os
++from functools import lru_cache
++
++
++def tangency_mode():
++    mode = os.environ.get("GEOSOLVER_S3_TANGENCY_MODE", "T2")
++    if mode not in {"T0", "T1", "T2"}:
++        raise ValueError("GEOSOLVER_S3_TANGENCY_MODE must be T0, T1 or T2")
++    return mode
++
++
++@lru_cache(maxsize=256)
++def distance_radius_sources(constructions, equalities):
++    """Match the frozen Distance/Line/Circle syntax, without requiring contact.
++
++    T1 uses the normalized line coefficients, not a contact point.  Resolve
++    aliases exactly as distance_contact_sources does; do not infer incidence.
++    """
++    from geosolver.engine.standard.problem.tangency_contacts import _parse
++    from geosolver.problem.expression_source import source_expression
++
++    definitions = {name: _parse(source) for name, source in constructions}
++
++    def resolve(node):
++        seen = set()
++        while isinstance(node, ast.Name) and node.id in definitions:
++            if node.id in seen:
++                raise ValueError("cyclic construction")
++            seen.add(node.id)
++            node = definitions[node.id]
++        return node
++
++    def call(node, name):
++        return (
++            isinstance(node, ast.Call)
++            and isinstance(node.func, ast.Name)
++            and node.func.id == name
++            and len(node.args) == 2
++            and not node.keywords
++        )
++
++    def same(a, b):
++        return source_expression(resolve(a)) == source_expression(resolve(b))
++
++    result = {}
++    try:
++        circles = [(name, resolve(node)) for name, node in definitions.items()]
++        circles = [(name, node) for name, node in circles if call(node, "Circle")]
++        for index, (lhs, rhs) in enumerate(equalities):
++            a, b = _parse(lhs), _parse(str(rhs))
++            for distance, radius in ((resolve(a), b), (resolve(b), a)):
++                if not call(distance, "Distance"):
++                    continue
++                for point, line in (distance.args, distance.args[::-1]):
++                    if not call(resolve(line), "Line"):
++                        continue
++                    for name, circle in circles:
++                        if not same(point, circle.args[0]) or not same(radius, circle.args[1]):
++                            continue
++                        line_source = f"({source_expression(line)})"
++                        delta = (
++                            f"({line_source}.a*Center({name}).x"
++                            f"+{line_source}.b*Center({name}).y+{line_source}.c)"
++                        )
++                        result[index] = f"{delta}**2-Radius({name})**2"
++        return result
++    except (ValueError, TypeError, RecursionError):
++        return {}
