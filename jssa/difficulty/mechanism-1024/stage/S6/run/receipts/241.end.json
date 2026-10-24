@@ -1,0 +1,200 @@
+{
+  "queue_index": 241,
+  "case_id": "JMO-2017-PRE-04",
+  "identity": "JMO-2017-PRE-4",
+  "dsl_path": "benchmarks/dsl/JMO-2017-PRE-04.json",
+  "input_sha256": "d33998af2497dff131b777db9a1fe35b8445b21b0afbd65afb493f9a65fce7b2",
+  "seed": 501,
+  "configuration": "T1",
+  "tangency_mode_environment": "T1",
+  "time_limit_seconds": 180,
+  "cores": 1,
+  "internal_threads": 1,
+  "state": "completed",
+  "cpu": 11,
+  "pid": 1209,
+  "start_utc": "2026-10-24T06:57:32.641150+00:00",
+  "end_utc": "2026-10-24T06:57:34.718059+00:00",
+  "start_monotonic": 1357290.680566431,
+  "deadline_monotonic": 1357470.680566431,
+  "wall_seconds": 2.075912364060059,
+  "cleanup_seconds": 0.00021859887056052685,
+  "exit_code": 0,
+  "spawn_error": null,
+  "result_eligible": true,
+  "result_path": "/tmp/mechanism-S6-prereg13-raw-20261024T064436Z/241/result.json",
+  "files": {
+    "process-samples.jsonl": {
+      "path": "/tmp/mechanism-S6-prereg13-raw-20261024T064436Z/241/process-samples.jsonl",
+      "size_bytes": 1231,
+      "sha256": "0940e9fe3dbe9d9a33b9b2abc32bb3181dff2aca75097efc5e57e11e267c1a79"
+    },
+    "result.json": {
+      "path": "/tmp/mechanism-S6-prereg13-raw-20261024T064436Z/241/result.json",
+      "size_bytes": 239471,
+      "sha256": "b448f8d6599c67987e82f4e1d6ca7ede85cdb83df5017c155930d5b307a9aa17"
+    },
+    "stderr.log": {
+      "path": "/tmp/mechanism-S6-prereg13-raw-20261024T064436Z/241/stderr.log",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout.log": {
+      "path": "/tmp/mechanism-S6-prereg13-raw-20261024T064436Z/241/stdout.log",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "source_hash": "sha256:add5afaf829806ca3cbd11fb07b69d956102752e1c6738b0630581a3ceb121eb",
+  "input_sha256_verified": "d33998af2497dff131b777db9a1fe35b8445b21b0afbd65afb493f9a65fce7b2",
+  "actual_environment": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "BLIS_NUM_THREADS": "1",
+    "OMP_THREAD_LIMIT": "1",
+    "PYTHONPATH": "/tmp/s3-impl/src",
+    "GEOSOLVER_S3_TANGENCY_MODE": "T1"
+  },
+  "reference_set_sha256": "1045b43f4910aabfe74a22d9ed6fd1a35820fb005ac8b997d9e7bdab3f56761a",
+  "python_sha256": "ccc93c55c24bb92866cc2f9eff61b124abf5d1ee6c8da0ef9b5eed4d78a21f07",
+  "peak_tree_rss_bytes": 218361856,
+  "observed_processes": [
+    {
+      "pid": 1209,
+      "ppid": 2,
+      "create_time": 1792825051.68,
+      "name": "python",
+      "cmdline": [
+        "/home/kabatan/work/solver/.venv/bin/python",
+        "-B",
+        "-m",
+        "geosolver.application.cli",
+        "solve",
+        "/tmp/claude-1000/-home-kabatan-work-solver/d461234c-f155-4314-9ede-192e5987bbce/scratchpad/wt/benchmarks/dsl/JMO-2017-PRE-04.json",
+        "--time-limit-seconds",
+        "180",
+        "--cores",
+        "1",
+        "--seed",
+        "501",
+        "--output",
+        "/tmp/mechanism-S6-prereg13-raw-20261024T064436Z/241/result.json"
+      ],
+      "actual_environment": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "BLIS_NUM_THREADS": "1",
+        "OMP_THREAD_LIMIT": "1",
+        "PYTHONPATH": "/tmp/s3-impl/src",
+        "GEOSOLVER_S3_TANGENCY_MODE": "T1"
+      },
+      "first_seen_utc": "2026-10-24T06:57:32.668010+00:00",
+      "affinity_sets": [
+        [
+          11
+        ]
+      ],
+      "peak_rss_bytes": 42217472,
+      "max_os_threads": 1,
+      "thread_affinity_sets": [
+        [
+          11
+        ]
+      ],
+      "last_seen_utc": "2026-10-24T06:57:34.198712+00:00",
+      "cpu_seconds": 0.26
+    },
+    {
+      "pid": 1210,
+      "ppid": 1209,
+      "create_time": 1792825051.91,
+      "name": "python",
+      "cmdline": [
+        "/home/kabatan/work/solver/.venv/bin/python",
+        "-m",
+        "geosolver.runtime.worker",
+        "--input",
+        "/tmp/geosolver-713z2_gg/request.json",
+        "--output",
+        "/tmp/geosolver-713z2_gg/artifact.json"
+      ],
+      "actual_environment": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "BLIS_NUM_THREADS": "1",
+        "OMP_THREAD_LIMIT": "1",
+        "PYTHONPATH": "/tmp/s3-impl/src",
+        "GEOSOLVER_S3_TANGENCY_MODE": "T1",
+        "GEOSOLVER_MEMORY_LIMIT_BYTES": "34490400768"
+      },
+      "first_seen_utc": "2026-10-24T06:57:33.175601+00:00",
+      "affinity_sets": [
+        [
+          11
+        ]
+      ],
+      "peak_rss_bytes": 91340800,
+      "max_os_threads": 2,
+      "thread_affinity_sets": [
+        [
+          11
+        ]
+      ],
+      "last_seen_utc": "2026-10-24T06:57:34.198814+00:00",
+      "cpu_seconds": 0.74
+    },
+    {
+      "pid": 1211,
+      "ppid": 1210,
+      "create_time": 1792825052.52,
+      "name": "python",
+      "cmdline": [
+        "/home/kabatan/work/solver/.venv/bin/python",
+        "-m",
+        "geosolver.runtime.symbolic_worker"
+      ],
+      "actual_environment": {
+        "PYTHONDONTWRITEBYTECODE": "1",
+        "OMP_NUM_THREADS": "1",
+        "OPENBLAS_NUM_THREADS": "1",
+        "MKL_NUM_THREADS": "1",
+        "NUMEXPR_NUM_THREADS": "1",
+        "VECLIB_MAXIMUM_THREADS": "1",
+        "BLIS_NUM_THREADS": "1",
+        "OMP_THREAD_LIMIT": "1",
+        "PYTHONPATH": "/tmp/s3-impl/src",
+        "GEOSOLVER_S3_TANGENCY_MODE": "T1",
+        "GEOSOLVER_MEMORY_LIMIT_BYTES": "34490400768",
+        "GEOSOLVER_SYMBOLIC_PARENT": "1210"
+      },
+      "first_seen_utc": "2026-10-24T06:57:33.681046+00:00",
+      "affinity_sets": [
+        [
+          11
+        ]
+      ],
+      "peak_rss_bytes": 84803584,
+      "max_os_threads": 2,
+      "thread_affinity_sets": [
+        [
+          11
+        ]
+      ],
+      "last_seen_utc": "2026-10-24T06:57:34.198892+00:00",
+      "cpu_seconds": 0.52
+    }
+  ],
+  "resource_violations": []
+}

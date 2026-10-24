@@ -1,0 +1,302 @@
+- 2026-10-24T06:44:36.688084+00:00 実行前固定完了。準備・ソース・入力・Python・依存lock照合、採点コード/独立参照集合hashをfreeze.jsonに固定。新規参照計算なし。
+- 2026-10-24T06:44:41.871206+00:00 本計測開始: FIFO残り264件、固定CPU slot=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]、最大12並列、180秒。参照集合はsolverへ渡さない。
+- 2026-10-24T06:44:47.084132+00:00 完了 005/264 queue=4: aime-2001-2-7 seed=503 T2 state=completed, wall=5.207221e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:47.087720+00:00 完了 006/264 queue=5: aime-2001-2-7 seed=503 T1 state=completed, wall=5.210149e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:47.855419+00:00 完了 001/264 queue=0: aime-2001-2-7 seed=501 T2 state=completed, wall=5.980306e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:47.884797+00:00 完了 002/264 queue=1: aime-2001-2-7 seed=501 T1 state=completed, wall=6.009473e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:48.323572+00:00 完了 004/264 queue=3: aime-2001-2-7 seed=502 T2 state=completed, wall=6.446191e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:48.971210+00:00 完了 003/264 queue=2: aime-2001-2-7 seed=502 T1 state=completed, wall=7.094837e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:54.544506+00:00 完了 013/264 queue=12: aime-2002-2-15 seed=501 T2 state=completed, wall=7.455058e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:54.755503+00:00 完了 014/264 queue=13: aime-2002-2-15 seed=501 T1 state=completed, wall=7.665469e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:55.164605+00:00 完了 017/264 queue=16: aime-2002-2-15 seed=503 T2 state=completed, wall=6.839379e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:55.909814+00:00 完了 018/264 queue=17: aime-2002-2-15 seed=503 T1 state=completed, wall=6.936695e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:56.037689+00:00 完了 020/264 queue=19: AIME-2006-II-09 seed=501 T2 state=completed, wall=1.281180e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:56.091152+00:00 完了 019/264 queue=18: AIME-2006-II-09 seed=501 T1 state=completed, wall=1.544817e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:56.452066+00:00 完了 021/264 queue=20: AIME-2006-II-09 seed=502 T2 state=completed, wall=1.286280e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:57.145460+00:00 完了 023/264 queue=22: AIME-2006-II-09 seed=503 T1 state=completed, wall=1.106848e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:57.200222+00:00 完了 022/264 queue=21: AIME-2006-II-09 seed=502 T1 state=completed, wall=1.289352e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:44:57.584498+00:00 完了 024/264 queue=23: AIME-2006-II-09 seed=503 T2 state=completed, wall=1.492259e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:45:11.872249+00:00 稼働中: 完了receipt=16/264、実行中=12、load1=1.547363e+01。
+- 2026-10-24T06:45:19.436172+00:00 完了 007/264 queue=6: aime-2002-2-14 seed=501 T1 state=completed, wall=3.755516e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:45:20.074266+00:00 完了 008/264 queue=7: aime-2002-2-14 seed=501 T2 state=completed, wall=3.819601e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:45:24.471199+00:00 完了 011/264 queue=10: aime-2002-2-14 seed=503 T1 state=completed, wall=4.259070e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:45:25.472723+00:00 完了 029/264 queue=28: AIME-2007-II-15 seed=503 T2 state=completed, wall=6.029599e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:45:25.706894+00:00 完了 010/264 queue=9: aime-2002-2-14 seed=502 T1 state=completed, wall=4.382722e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:45:26.101198+00:00 完了 030/264 queue=29: AIME-2007-II-15 seed=503 T1 state=completed, wall=6.020815e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:45:27.678654+00:00 完了 009/264 queue=8: aime-2002-2-14 seed=502 T2 state=completed, wall=4.579954e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:45:29.733590+00:00 完了 012/264 queue=11: aime-2002-2-14 seed=503 T2 state=completed, wall=4.785314e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:45:33.859290+00:00 完了 034/264 queue=33: AIME-2008-II-11 seed=502 T1 state=completed, wall=7.752068e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:45:41.807811+00:00 完了 035/264 queue=34: AIME-2008-II-11 seed=503 T1 state=completed, wall=1.412513e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:45:41.886327+00:00 稼働中: 完了receipt=26/264、実行中=12、load1=2.036377e+01。
+- 2026-10-24T06:45:43.350410+00:00 完了 036/264 queue=35: AIME-2008-II-11 seed=503 T2 state=completed, wall=1.361282e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:45:57.651105+00:00 完了 039/264 queue=38: AIME-2009-I-12 seed=502 T1 state=completed, wall=1.429827e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:46:10.975656+00:00 完了 040/264 queue=39: AIME-2009-I-12 seed=502 T2 state=completed, wall=1.332282e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:46:11.911786+00:00 稼働中: 完了receipt=29/264、実行中=12、load1=2.636865e+01。
+- 2026-10-24T06:46:22.069721+00:00 完了 041/264 queue=40: AIME-2009-I-12 seed=503 T2 state=completed, wall=1.109252e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:46:37.060557+00:00 完了 042/264 queue=41: AIME-2009-I-12 seed=503 T1 state=completed, wall=1.498798e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:46:39.906563+00:00 完了 016/264 queue=15: aime-2002-2-15 seed=502 T2 state=completed, wall=1.120124e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:46:40.206019+00:00 完了 015/264 queue=14: aime-2002-2-15 seed=502 T1 state=completed, wall=1.123467e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:46:41.595195+00:00 完了 026/264 queue=25: AIME-2007-II-15 seed=501 T1 state=completed, wall=1.044366e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:46:41.912223+00:00 稼働中: 完了receipt=34/264、実行中=12、load1=2.628369e+01。
+- 2026-10-24T06:46:43.011286+00:00 完了 043/264 queue=42: AIME-2015-II-15 seed=501 T1 state=completed, wall=5.946325e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:46:43.874188+00:00 完了 028/264 queue=27: AIME-2007-II-15 seed=502 T2 state=completed, wall=1.062792e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:46:44.165496+00:00 完了 044/264 queue=43: AIME-2015-II-15 seed=501 T2 state=completed, wall=4.250626e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:46:44.585256+00:00 完了 025/264 queue=24: AIME-2007-II-15 seed=501 T2 state=completed, wall=1.081244e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:46:44.848913+00:00 完了 045/264 queue=44: AIME-2015-II-15 seed=502 T2 state=completed, wall=4.637010e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:46:44.958972+00:00 完了 027/264 queue=26: AIME-2007-II-15 seed=502 T1 state=completed, wall=1.077522e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:46:46.778453+00:00 完了 046/264 queue=45: AIME-2015-II-15 seed=502 T1 state=completed, wall=5.179009e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:46:48.071302+00:00 完了 048/264 queue=47: AIME-2015-II-15 seed=503 T2 state=completed, wall=4.192112e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:46:48.155881+00:00 完了 047/264 queue=46: AIME-2015-II-15 seed=503 T1 state=completed, wall=5.139592e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:46:56.052200+00:00 完了 037/264 queue=36: AIME-2009-I-12 seed=501 T2 state=completed, wall=8.218974e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:47:11.920042+00:00 稼働中: 完了receipt=44/264、実行中=12、load1=3.117969e+01。
+- 2026-10-24T06:47:16.577082+00:00 完了 038/264 queue=37: AIME-2009-I-12 seed=501 T1 state=completed, wall=9.476179e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:47:21.303023+00:00 完了 033/264 queue=32: AIME-2008-II-11 seed=502 T2 state=completed, wall=1.155902e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:47:27.370965+00:00 完了 032/264 queue=31: AIME-2008-II-11 seed=501 T2 state=completed, wall=1.218948e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:47:29.626250+00:00 完了 056/264 queue=55: AIME-2018-II-14 seed=501 T2 state=completed, wall=3.357093e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:47:37.197383+00:00 完了 031/264 queue=30: AIME-2008-II-11 seed=501 T1 state=completed, wall=1.327214e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:47:37.775706+00:00 完了 060/264 queue=59: AIME-2018-II-14 seed=503 T2 state=completed, wall=8.143711e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:47:38.890031+00:00 完了 051/264 queue=50: AIME-2016-I-15 seed=502 T1 state=completed, wall=5.403872e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:47:39.724966+00:00 完了 052/264 queue=51: AIME-2016-I-15 seed=502 T2 state=completed, wall=5.475972e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:47:41.946811+00:00 稼働中: 完了receipt=52/264、実行中=12、load1=3.186816e+01。
+- 2026-10-24T06:47:43.935122+00:00 完了 057/264 queue=56: AIME-2018-II-14 seed=502 T2 state=completed, wall=2.735225e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:47:52.828811+00:00 完了 064/264 queue=63: AIME-2020-II-13 seed=502 T2 state=completed, wall=1.309745e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:47:54.472721+00:00 完了 063/264 queue=62: AIME-2020-II-13 seed=502 T1 state=completed, wall=1.557432e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:47:54.685730+00:00 完了 062/264 queue=61: AIME-2020-II-13 seed=501 T1 state=completed, wall=1.690300e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:47:56.383400+00:00 完了 053/264 queue=52: AIME-2016-I-15 seed=503 T2 state=completed, wall=6.960094e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:47:58.247657+00:00 完了 054/264 queue=53: AIME-2016-I-15 seed=503 T1 state=completed, wall=7.017351e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:00.327586+00:00 完了 065/264 queue=64: AIME-2020-II-13 seed=503 T2 state=completed, wall=1.638613e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:02.004891+00:00 完了 061/264 queue=60: AIME-2020-II-13 seed=501 T2 state=completed, wall=2.479937e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:02.520876+00:00 完了 068/264 queue=67: AIME-2022-I-11 seed=501 T2 state=completed, wall=7.832468e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:02.654239+00:00 完了 067/264 queue=66: AIME-2022-I-11 seed=501 T1 state=completed, wall=8.178514e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:04.821751+00:00 完了 073/264 queue=72: AIME-2022-I-08 seed=501 T2 state=completed, wall=2.299091e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:05.028258+00:00 完了 074/264 queue=73: AIME-2022-I-08 seed=501 T1 state=completed, wall=2.372330e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:05.725486+00:00 完了 069/264 queue=68: AIME-2022-I-11 seed=502 T2 state=completed, wall=9.338051e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:07.194527+00:00 完了 070/264 queue=69: AIME-2022-I-11 seed=502 T1 state=completed, wall=8.944613e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:07.694451+00:00 完了 075/264 queue=74: AIME-2022-I-08 seed=502 T1 state=completed, wall=2.870790e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:07.930863+00:00 完了 076/264 queue=75: AIME-2022-I-08 seed=502 T2 state=completed, wall=2.900658e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:08.572867+00:00 完了 077/264 queue=76: AIME-2022-I-08 seed=503 T2 state=completed, wall=2.846087e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:08.676530+00:00 完了 079/264 queue=78: AIME-2022-II-07 seed=501 T1 state=completed, wall=9.807473e-01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:08.936094+00:00 完了 080/264 queue=79: AIME-2022-II-07 seed=501 T2 state=completed, wall=1.004198e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:09.386049+00:00 完了 066/264 queue=65: AIME-2020-II-13 seed=503 T1 state=completed, wall=1.655070e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:09.785046+00:00 完了 081/264 queue=80: AIME-2022-II-07 seed=502 T2 state=completed, wall=1.211228e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:09.841938+00:00 完了 082/264 queue=81: AIME-2022-II-07 seed=502 T1 state=completed, wall=1.164233e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:10.104363+00:00 完了 083/264 queue=82: AIME-2022-II-07 seed=503 T1 state=completed, wall=1.166917e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:10.574311+00:00 完了 078/264 queue=77: AIME-2022-I-08 seed=503 T1 state=completed, wall=3.376483e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:10.575120+00:00 完了 084/264 queue=83: AIME-2022-II-07 seed=503 T2 state=completed, wall=1.188206e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:11.952299+00:00 稼働中: 完了receipt=77/264、実行中=12、load1=3.129883e+01。
+- 2026-10-24T06:48:12.291723+00:00 完了 071/264 queue=70: AIME-2022-I-11 seed=503 T1 state=completed, wall=1.196126e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:14.789554+00:00 完了 072/264 queue=71: AIME-2022-I-11 seed=503 T2 state=completed, wall=1.277990e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:17.108862+00:00 完了 091/264 queue=90: AIME-2025-I-06 seed=501 T1 state=completed, wall=2.318037e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:19.460228+00:00 完了 092/264 queue=91: AIME-2025-I-06 seed=501 T2 state=completed, wall=2.350044e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:21.787305+00:00 完了 093/264 queue=92: AIME-2025-I-06 seed=502 T2 state=completed, wall=2.325692e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:23.579034+00:00 完了 094/264 queue=93: AIME-2025-I-06 seed=502 T1 state=completed, wall=1.790526e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:25.469767+00:00 完了 095/264 queue=94: AIME-2025-I-06 seed=503 T1 state=completed, wall=1.889261e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:25.553313+00:00 完了 089/264 queue=88: AIME-2023-I-08 seed=503 T2 state=completed, wall=1.497415e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:27.197200+00:00 完了 085/264 queue=84: AIME-2023-I-08 seed=501 T2 state=completed, wall=1.741025e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:27.535478+00:00 完了 096/264 queue=95: AIME-2025-I-06 seed=503 T2 state=completed, wall=2.064511e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:27.619638+00:00 完了 086/264 queue=85: AIME-2023-I-08 seed=501 T1 state=completed, wall=1.777548e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:30.042585+00:00 完了 090/264 queue=89: AIME-2023-I-08 seed=503 T1 state=completed, wall=1.774893e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:31.677768+00:00 完了 087/264 queue=86: AIME-2023-I-08 seed=502 T1 state=completed, wall=2.157171e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:38.770893+00:00 完了 097/264 queue=96: HMMT-2007-FEB-GEO-10 seed=501 T2 state=completed, wall=1.321454e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:39.068159+00:00 完了 100/264 queue=99: HMMT-2007-FEB-GEO-10 seed=502 T2 state=completed, wall=1.144319e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:40.452000+00:00 完了 103/264 queue=102: HMMT-2007-FEB-GEO-04 seed=501 T1 state=completed, wall=1.679240e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:40.587672+00:00 完了 104/264 queue=103: HMMT-2007-FEB-GEO-04 seed=501 T2 state=completed, wall=1.517247e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:40.623485+00:00 完了 098/264 queue=97: HMMT-2007-FEB-GEO-10 seed=501 T1 state=completed, wall=1.342176e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:41.770134+00:00 完了 105/264 queue=104: HMMT-2007-FEB-GEO-04 seed=502 T2 state=completed, wall=1.316358e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:41.878336+00:00 完了 099/264 queue=98: HMMT-2007-FEB-GEO-10 seed=502 T1 state=completed, wall=1.433785e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:41.879671+00:00 完了 106/264 queue=105: HMMT-2007-FEB-GEO-04 seed=502 T1 state=completed, wall=1.290485e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:41.881695+00:00 完了 107/264 queue=106: HMMT-2007-FEB-GEO-04 seed=503 T1 state=completed, wall=1.255475e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:41.969281+00:00 稼働中: 完了receipt=99/264、実行中=12、load1=2.754834e+01。
+- 2026-10-24T06:48:43.222257+00:00 完了 108/264 queue=107: HMMT-2007-FEB-GEO-04 seed=503 T2 state=completed, wall=1.450893e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:44.452592+00:00 完了 101/264 queue=100: HMMT-2007-FEB-GEO-10 seed=503 T2 state=completed, wall=1.440447e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:45.686372+00:00 完了 109/264 queue=108: HMMT-2008-FEB-GEO-09 seed=501 T2 state=completed, wall=3.801045e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:46.051070+00:00 完了 110/264 queue=109: HMMT-2008-FEB-GEO-09 seed=501 T1 state=completed, wall=4.162142e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:47.602509+00:00 完了 102/264 queue=101: HMMT-2007-FEB-GEO-10 seed=503 T1 state=completed, wall=1.591866e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:48.647026+00:00 完了 088/264 queue=87: AIME-2023-I-08 seed=502 T2 state=completed, wall=3.806797e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:48:49.811922+00:00 完了 114/264 queue=113: HMMT-2008-FEB-GEO-09 seed=503 T1 state=completed, wall=4.121618e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:48:50.408654+00:00 完了 113/264 queue=112: HMMT-2008-FEB-GEO-09 seed=503 T2 state=completed, wall=5.951635e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:02.009229+00:00 完了 115/264 queue=114: HMMT-2009-FEB-GEO-10 seed=501 T1 state=completed, wall=1.595326e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:49:05.454582+00:00 完了 116/264 queue=115: HMMT-2009-FEB-GEO-10 seed=501 T2 state=completed, wall=1.784841e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:49:08.642344+00:00 完了 119/264 queue=118: HMMT-2009-FEB-GEO-10 seed=503 T1 state=completed, wall=1.822820e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:49:09.946358+00:00 完了 117/264 queue=116: HMMT-2009-FEB-GEO-10 seed=502 T2 state=completed, wall=2.129593e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:49:10.232341+00:00 完了 118/264 queue=117: HMMT-2009-FEB-GEO-10 seed=502 T1 state=completed, wall=2.041738e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:49:11.975189+00:00 稼働中: 完了receipt=112/264、実行中=12、load1=2.597949e+01。
+- 2026-10-24T06:49:14.223583+00:00 完了 121/264 queue=120: HMMT-2010-FEB-GEO-09 seed=501 T2 state=completed, wall=8.764393e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:17.464376+00:00 完了 120/264 queue=119: HMMT-2009-FEB-GEO-10 seed=503 T2 state=completed, wall=1.545119e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:49:18.111735+00:00 完了 122/264 queue=121: HMMT-2010-FEB-GEO-09 seed=501 T1 state=completed, wall=9.465788e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:19.199322+00:00 完了 124/264 queue=123: HMMT-2010-FEB-GEO-09 seed=502 T2 state=completed, wall=8.963072e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:20.273358+00:00 完了 123/264 queue=122: HMMT-2010-FEB-GEO-09 seed=502 T1 state=completed, wall=1.032553e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:49:20.380718+00:00 完了 127/264 queue=126: HMMT-2011-two-circles-tangent-line seed=501 T1 state=completed, wall=2.266538e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:20.742416+00:00 完了 128/264 queue=127: HMMT-2011-two-circles-tangent-line seed=501 T2 state=completed, wall=1.541105e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:21.544013+00:00 完了 129/264 queue=128: HMMT-2011-two-circles-tangent-line seed=502 T2 state=completed, wall=1.268222e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:21.983588+00:00 完了 131/264 queue=130: HMMT-2011-two-circles-tangent-line seed=503 T1 state=completed, wall=1.240226e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:22.220584+00:00 完了 049/264 queue=48: AIME-2016-I-15 seed=501 T2 state=completed, wall=1.580511e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:49:22.224327+00:00 完了 050/264 queue=49: AIME-2016-I-15 seed=501 T1 state=completed, wall=1.576325e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:49:22.587725+00:00 完了 130/264 queue=129: HMMT-2011-two-circles-tangent-line seed=502 T1 state=completed, wall=2.205488e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:22.930903+00:00 完了 132/264 queue=131: HMMT-2011-two-circles-tangent-line seed=503 T2 state=completed, wall=1.385822e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:23.937446+00:00 完了 125/264 queue=124: HMMT-2010-FEB-GEO-09 seed=503 T2 state=completed, wall=9.712370e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:25.933199+00:00 完了 126/264 queue=125: HMMT-2010-FEB-GEO-09 seed=503 T1 state=completed, wall=8.463860e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:27.814406+00:00 完了 139/264 queue=138: HMMT-2014-FEB-GEO-08 seed=501 T1 state=completed, wall=1.879739e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:29.396978+00:00 完了 140/264 queue=139: HMMT-2014-FEB-GEO-08 seed=501 T2 state=completed, wall=1.581498e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:29.841220+00:00 完了 133/264 queue=132: HMMT-2013-FEB-TEAM-03 seed=501 T2 state=completed, wall=7.852149e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:30.976475+00:00 完了 141/264 queue=140: HMMT-2014-FEB-GEO-08 seed=502 T2 state=completed, wall=1.578220e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:31.702887+00:00 完了 137/264 queue=136: HMMT-2013-FEB-TEAM-03 seed=503 T2 state=completed, wall=8.766660e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:31.806706+00:00 完了 142/264 queue=141: HMMT-2014-FEB-GEO-08 seed=502 T1 state=completed, wall=1.964376e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:32.914924+00:00 完了 143/264 queue=142: HMMT-2014-FEB-GEO-08 seed=503 T1 state=completed, wall=1.937446e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:33.121594+00:00 完了 144/264 queue=143: HMMT-2014-FEB-GEO-08 seed=503 T2 state=completed, wall=1.416883e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:49:36.040709+00:00 完了 136/264 queue=135: HMMT-2013-FEB-TEAM-03 seed=502 T2 state=completed, wall=1.344959e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:49:42.003881+00:00 稼働中: 完了receipt=136/264、実行中=12、load1=3.477148e+01。
+- 2026-10-24T06:49:47.138833+00:00 完了 055/264 queue=54: AIME-2018-II-14 seed=501 T1 state=completed, wall=1.789794e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:50:00.185853+00:00 完了 145/264 queue=144: HMMT-2016-FEB-GEO-10 seed=501 T2 state=completed, wall=2.837722e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:50:01.754822+00:00 完了 146/264 queue=145: HMMT-2016-FEB-GEO-10 seed=501 T1 state=completed, wall=2.883819e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:50:12.013450+00:00 稼働中: 完了receipt=139/264、実行中=12、load1=3.556104e+01。
+- 2026-10-24T06:50:20.599127+00:00 完了 058/264 queue=57: AIME-2018-II-14 seed=502 T1 state=completed, wall=1.792873e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:50:26.165161+00:00 完了 059/264 queue=58: AIME-2018-II-14 seed=503 T1 state=completed, wall=1.787761e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:50:32.828208+00:00 完了 151/264 queue=150: HMMT-2017-FEB-GEO-05 seed=501 T1 state=completed, wall=3.106421e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:50:35.356212+00:00 完了 135/264 queue=134: HMMT-2013-FEB-TEAM-03 seed=502 T1 state=completed, wall=7.312286e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:50:37.841089+00:00 完了 112/264 queue=111: HMMT-2008-FEB-GEO-09 seed=502 T2 state=completed, wall=1.146147e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:50:42.029698+00:00 稼働中: 完了receipt=144/264、実行中=12、load1=5.381641e+01。
+- 2026-10-24T06:50:45.669055+00:00 完了 111/264 queue=110: HMMT-2008-FEB-GEO-09 seed=502 T1 state=completed, wall=1.237814e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:50:48.222412+00:00 完了 157/264 queue=156: HMMT-2019-FEB-GEO-07 seed=501 T2 state=completed, wall=2.547912e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:50:50.589136+00:00 完了 158/264 queue=157: HMMT-2019-FEB-GEO-07 seed=501 T1 state=completed, wall=2.364349e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:50:52.481381+00:00 完了 138/264 queue=137: HMMT-2013-FEB-TEAM-03 seed=503 T1 state=completed, wall=8.853374e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:50:52.886786+00:00 完了 159/264 queue=158: HMMT-2019-FEB-GEO-07 seed=502 T1 state=completed, wall=2.296502e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:50:54.158046+00:00 完了 160/264 queue=159: HMMT-2019-FEB-GEO-07 seed=502 T2 state=completed, wall=1.675292e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:50:55.108888+00:00 完了 161/264 queue=160: HMMT-2019-FEB-GEO-07 seed=503 T2 state=completed, wall=2.220920e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:50:56.040724+00:00 完了 162/264 queue=161: HMMT-2019-FEB-GEO-07 seed=503 T1 state=completed, wall=1.881590e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:50:56.460024+00:00 完了 149/264 queue=148: HMMT-2016-FEB-GEO-10 seed=503 T2 state=completed, wall=6.931876e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:50:56.987211+00:00 完了 153/264 queue=152: HMMT-2017-FEB-GEO-05 seed=502 T2 state=completed, wall=3.080252e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:50:57.226288+00:00 完了 134/264 queue=133: HMMT-2013-FEB-TEAM-03 seed=501 T1 state=completed, wall=9.497691e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:50:57.321255+00:00 完了 152/264 queue=151: HMMT-2017-FEB-GEO-05 seed=501 T2 state=completed, wall=3.670848e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:50:59.668515+00:00 完了 150/264 queue=149: HMMT-2016-FEB-GEO-10 seed=503 T1 state=completed, wall=5.947995e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:51:02.116191+00:00 完了 169/264 queue=168: HMMT-2020-FEB-GEO-07 seed=501 T2 state=completed, wall=2.445769e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:02.860802+00:00 完了 154/264 queue=153: HMMT-2017-FEB-GEO-05 seed=502 T1 state=completed, wall=3.001879e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:51:03.065512+00:00 完了 156/264 queue=155: HMMT-2017-FEB-GEO-05 seed=503 T2 state=completed, wall=2.520559e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:51:03.234756+00:00 完了 163/264 queue=162: HMMT-2020-FEB-GEO-04 seed=501 T1 state=completed, wall=8.116845e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:03.426921+00:00 完了 165/264 queue=164: HMMT-2020-FEB-GEO-04 seed=502 T2 state=completed, wall=6.959655e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:03.825424+00:00 完了 155/264 queue=154: HMMT-2017-FEB-GEO-05 seed=503 T1 state=completed, wall=2.844826e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:51:03.830018+00:00 完了 164/264 queue=163: HMMT-2020-FEB-GEO-04 seed=501 T2 state=completed, wall=7.784555e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:04.056772+00:00 完了 170/264 queue=169: HMMT-2020-FEB-GEO-07 seed=501 T1 state=completed, wall=1.939277e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:04.644467+00:00 完了 168/264 queue=167: HMMT-2020-FEB-GEO-04 seed=503 T2 state=completed, wall=7.315336e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:04.740701+00:00 完了 167/264 queue=166: HMMT-2020-FEB-GEO-04 seed=503 T1 state=completed, wall=7.505384e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:05.011612+00:00 完了 172/264 queue=171: HMMT-2020-FEB-GEO-07 seed=502 T2 state=completed, wall=1.944181e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:05.435086+00:00 完了 171/264 queue=170: HMMT-2020-FEB-GEO-07 seed=502 T1 state=completed, wall=2.572388e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:05.525747+00:00 完了 166/264 queue=165: HMMT-2020-FEB-GEO-04 seed=502 T1 state=completed, wall=8.530591e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:05.896080+00:00 完了 173/264 queue=172: HMMT-2020-FEB-GEO-07 seed=503 T2 state=completed, wall=2.659421e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:05.963102+00:00 完了 174/264 queue=173: HMMT-2020-FEB-GEO-07 seed=503 T1 state=completed, wall=2.530705e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:09.102416+00:00 完了 177/264 queue=176: HMMT-2020-FEB-GEO-09 seed=502 T2 state=completed, wall=5.043927e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:10.038094+00:00 完了 180/264 queue=179: HMMT-2020-FEB-GEO-09 seed=503 T2 state=completed, wall=5.024861e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:12.040801+00:00 稼働中: 完了receipt=174/264、実行中=12、load1=8.113867e+01。
+- 2026-10-24T06:51:14.271766+00:00 完了 176/264 queue=175: HMMT-2020-FEB-GEO-09 seed=501 T2 state=completed, wall=1.042963e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:51:14.338332+00:00 完了 175/264 queue=174: HMMT-2020-FEB-GEO-09 seed=501 T1 state=completed, wall=1.050123e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:51:14.582747+00:00 完了 179/264 queue=178: HMMT-2020-FEB-GEO-09 seed=503 T1 state=completed, wall=9.836021e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:15.533063+00:00 完了 178/264 queue=177: HMMT-2020-FEB-GEO-09 seed=502 T1 state=completed, wall=1.087950e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:51:17.334832+00:00 完了 185/264 queue=184: HMMT-2022-FEB-GEO-10 seed=503 T2 state=completed, wall=8.222032e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:51:17.974785+00:00 完了 184/264 queue=183: HMMT-2022-FEB-GEO-10 seed=502 T2 state=completed, wall=1.200295e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:51:38.700591+00:00 完了 189/264 queue=188: HMMT-2022-FEB-TEAM-03 seed=502 T2 state=completed, wall=2.411406e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:51:42.056184+00:00 稼働中: 完了receipt=181/264、実行中=12、load1=6.705273e+01。
+- 2026-10-24T06:51:44.068459+00:00 完了 190/264 queue=189: HMMT-2022-FEB-TEAM-03 seed=502 T1 state=completed, wall=2.853065e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:51:49.304120+00:00 完了 188/264 queue=187: HMMT-2022-FEB-TEAM-03 seed=501 T2 state=completed, wall=3.496365e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:51:49.386886+00:00 完了 187/264 queue=186: HMMT-2022-FEB-TEAM-03 seed=501 T1 state=completed, wall=3.510723e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:52:12.079755+00:00 稼働中: 完了receipt=184/264、実行中=12、load1=7.047217e+01。
+- 2026-10-24T06:52:19.662542+00:00 完了 183/264 queue=182: HMMT-2022-FEB-GEO-10 seed=502 T1 state=completed, wall=7.375809e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:52:19.780129+00:00 完了 186/264 queue=185: HMMT-2022-FEB-GEO-10 seed=503 T1 state=completed, wall=6.973440e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:52:32.143616+00:00 完了 147/264 queue=146: HMMT-2016-FEB-GEO-10 seed=502 T1 state=completed, wall=1.790171e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:52:35.140260+00:00 完了 148/264 queue=147: HMMT-2016-FEB-GEO-10 seed=502 T2 state=completed, wall=1.790902e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:52:42.081755+00:00 稼働中: 完了receipt=188/264、実行中=12、load1=8.102881e+01。
+- 2026-10-24T06:52:46.079573+00:00 完了 199/264 queue=198: HMMT-2025-FEB-GEO-04 seed=501 T1 state=completed, wall=1.392950e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:52:48.247776+00:00 完了 200/264 queue=199: HMMT-2025-FEB-GEO-04 seed=501 T2 state=completed, wall=1.309590e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:52:55.235189+00:00 完了 201/264 queue=200: HMMT-2025-FEB-GEO-04 seed=502 T2 state=completed, wall=9.152301e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:53:03.043085+00:00 完了 202/264 queue=201: HMMT-2025-FEB-GEO-04 seed=502 T1 state=completed, wall=1.478942e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:53:05.028821+00:00 完了 181/264 queue=180: HMMT-2022-FEB-GEO-10 seed=501 T2 state=completed, wall=1.195868e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:53:06.836205+00:00 完了 203/264 queue=202: HMMT-2025-FEB-GEO-04 seed=503 T1 state=completed, wall=1.159799e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:53:12.094501+00:00 稼働中: 完了receipt=194/264、実行中=12、load1=8.095654e+01。
+- 2026-10-24T06:53:14.993623+00:00 完了 204/264 queue=203: HMMT-2025-FEB-GEO-04 seed=503 T2 state=completed, wall=1.194593e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:53:37.111498+00:00 完了 182/264 queue=181: HMMT-2022-FEB-GEO-10 seed=501 T1 state=completed, wall=1.515810e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:53:42.108926+00:00 稼働中: 完了receipt=196/264、実行中=12、load1=7.564600e+01。
+- 2026-10-24T06:53:43.921618+00:00 完了 191/264 queue=190: HMMT-2022-FEB-TEAM-03 seed=503 T1 state=completed, wall=1.465829e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:53:54.725008+00:00 完了 192/264 queue=191: HMMT-2022-FEB-TEAM-03 seed=503 T2 state=completed, wall=1.567460e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:54:12.120125+00:00 稼働中: 完了receipt=198/264、実行中=12、load1=7.243213e+01。
+- 2026-10-24T06:54:14.047877+00:00 完了 193/264 queue=192: HMMT-2023-FEB-GEO-07 seed=501 T2 state=completed, wall=1.553458e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:54:15.451673+00:00 完了 211/264 queue=210: JMO-2008-PRE-02 seed=501 T1 state=completed, wall=1.401992e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:54:16.830684+00:00 完了 212/264 queue=211: JMO-2008-PRE-02 seed=501 T2 state=completed, wall=1.377673e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:54:18.095539+00:00 完了 213/264 queue=212: JMO-2008-PRE-02 seed=502 T2 state=completed, wall=1.263676e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:54:19.459782+00:00 完了 214/264 queue=213: JMO-2008-PRE-02 seed=502 T1 state=completed, wall=1.363026e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:54:20.647122+00:00 完了 215/264 queue=214: JMO-2008-PRE-02 seed=503 T1 state=completed, wall=1.186460e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:54:21.918295+00:00 完了 216/264 queue=215: JMO-2008-PRE-02 seed=503 T2 state=completed, wall=1.270086e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:54:29.314000+00:00 完了 217/264 queue=216: JMO-2011-PRE-11 seed=501 T2 state=completed, wall=7.392236e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:54:37.027168+00:00 完了 218/264 queue=217: JMO-2011-PRE-11 seed=501 T1 state=completed, wall=7.705001e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:54:42.140624+00:00 稼働中: 完了receipt=207/264、実行中=12、load1=6.848828e+01。
+- 2026-10-24T06:54:42.791026+00:00 完了 194/264 queue=193: HMMT-2023-FEB-GEO-07 seed=501 T1 state=completed, wall=1.787201e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:54:47.396249+00:00 完了 219/264 queue=218: JMO-2011-PRE-11 seed=502 T1 state=completed, wall=1.036503e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:54:47.813982+00:00 完了 195/264 queue=194: HMMT-2023-FEB-GEO-07 seed=502 T1 state=completed, wall=1.785076e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:54:47.974545+00:00 完了 196/264 queue=195: HMMT-2023-FEB-GEO-07 seed=502 T2 state=completed, wall=1.785862e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:54:52.144468+00:00 完了 220/264 queue=219: JMO-2011-PRE-11 seed=502 T2 state=completed, wall=9.348919e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:54:59.412544+00:00 完了 221/264 queue=220: JMO-2011-PRE-11 seed=503 T2 state=completed, wall=1.200932e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:55:02.041133+00:00 完了 222/264 queue=221: JMO-2011-PRE-11 seed=503 T1 state=completed, wall=1.422042e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:55:12.164989+00:00 稼働中: 完了receipt=214/264、実行中=12、load1=6.164258e+01。
+- 2026-10-24T06:55:15.909473+00:00 完了 225/264 queue=224: JMO-2013-PRE-05 seed=502 T2 state=completed, wall=1.649142e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:55:18.319023+00:00 完了 198/264 queue=197: HMMT-2023-FEB-GEO-07 seed=503 T1 state=completed, wall=1.785365e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:55:18.432043+00:00 完了 197/264 queue=196: HMMT-2023-FEB-GEO-07 seed=503 T2 state=completed, wall=1.787680e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:55:35.532949+00:00 完了 205/264 queue=204: HMMT-2026-FEB-GEO-09 seed=501 T2 state=completed, wall=1.505016e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:55:37.227705+00:00 完了 206/264 queue=205: HMMT-2026-FEB-GEO-09 seed=501 T1 state=completed, wall=1.503901e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:55:42.177162+00:00 稼働中: 完了receipt=219/264、実行中=12、load1=6.237158e+01。
+- 2026-10-24T06:55:42.309606+00:00 完了 224/264 queue=223: JMO-2013-PRE-05 seed=501 T2 state=completed, wall=5.015945e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:55:46.351953+00:00 完了 207/264 queue=206: HMMT-2026-FEB-GEO-09 seed=502 T1 state=completed, wall=1.513565e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:56:03.826018+00:00 完了 232/264 queue=231: JMO-2014-PRE-01 seed=502 T2 state=completed, wall=2.151288e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:56:07.937997+00:00 完了 208/264 queue=207: HMMT-2026-FEB-GEO-09 seed=502 T2 state=completed, wall=1.508250e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:56:12.078753+00:00 完了 228/264 queue=227: JMO-2013-PRE-05 seed=503 T2 state=completed, wall=5.375547e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:56:12.191262+00:00 稼働中: 完了receipt=224/264、実行中=12、load1=6.493457e+01。
+- 2026-10-24T06:56:19.492633+00:00 完了 229/264 queue=228: JMO-2014-PRE-01 seed=501 T2 state=completed, wall=6.105843e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:56:38.893650+00:00 完了 209/264 queue=208: HMMT-2026-FEB-GEO-09 seed=503 T2 state=completed, wall=1.749683e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:56:42.192708+00:00 稼働中: 完了receipt=226/264、実行中=12、load1=5.481934e+01。
+- 2026-10-24T06:56:49.481230+00:00 完了 233/264 queue=232: JMO-2014-PRE-01 seed=503 T2 state=completed, wall=6.312469e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:56:50.890710+00:00 完了 210/264 queue=209: HMMT-2026-FEB-GEO-09 seed=503 T1 state=completed, wall=1.761637e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:57:12.213051+00:00 稼働中: 完了receipt=228/264、実行中=12、load1=5.166455e+01。
+- 2026-10-24T06:57:30.579699+00:00 完了 240/264 queue=239: JMO-2015-PRE-02 seed=503 T2 state=completed, wall=3.968256e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:57:32.640819+00:00 完了 241/264 queue=240: JMO-2017-PRE-04 seed=501 T2 state=completed, wall=2.059927e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:57:34.718408+00:00 完了 242/264 queue=241: JMO-2017-PRE-04 seed=501 T1 state=completed, wall=2.075912e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:57:37.045307+00:00 完了 243/264 queue=242: JMO-2017-PRE-04 seed=502 T1 state=completed, wall=2.325797e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:57:39.313321+00:00 完了 244/264 queue=243: JMO-2017-PRE-04 seed=502 T2 state=completed, wall=2.266842e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:57:41.471069+00:00 完了 245/264 queue=244: JMO-2017-PRE-04 seed=503 T2 state=completed, wall=2.156544e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:57:42.232723+00:00 稼働中: 完了receipt=234/264、実行中=12、load1=5.459131e+01。
+- 2026-10-24T06:57:43.534069+00:00 完了 246/264 queue=245: JMO-2017-PRE-04 seed=503 T1 state=completed, wall=2.061706e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:57:46.781472+00:00 完了 223/264 queue=222: JMO-2013-PRE-05 seed=501 T1 state=completed, wall=1.787985e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:57:52.658066+00:00 完了 247/264 queue=246: JMO-2022-PRE-02 seed=501 T1 state=completed, wall=9.117778e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:57:54.027009+00:00 完了 248/264 queue=247: JMO-2022-PRE-02 seed=501 T2 state=completed, wall=7.237442e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:58:00.644206+00:00 完了 226/264 queue=225: JMO-2013-PRE-05 seed=502 T1 state=completed, wall=1.785967e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:58:01.149510+00:00 完了 249/264 queue=248: JMO-2022-PRE-02 seed=502 T2 state=completed, wall=8.482715e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:58:01.728275+00:00 完了 250/264 queue=249: JMO-2022-PRE-02 seed=502 T1 state=completed, wall=7.697340e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:58:08.403796+00:00 完了 252/264 queue=251: JMO-2022-PRE-02 seed=503 T2 state=completed, wall=7.250557e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:58:08.517124+00:00 完了 251/264 queue=250: JMO-2022-PRE-02 seed=503 T1 state=completed, wall=7.868863e+00s, resource_violations=0。未採点。
+- 2026-10-24T06:58:12.234364+00:00 稼働中: 完了receipt=243/264、実行中=12、load1=4.964893e+01。
+- 2026-10-24T06:58:14.711568+00:00 完了 227/264 queue=226: JMO-2013-PRE-05 seed=503 T1 state=completed, wall=1.787947e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:58:14.901660+00:00 完了 236/264 queue=235: JMO-2015-PRE-02 seed=501 T2 state=completed, wall=1.228178e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:58:26.867872+00:00 完了 253/264 queue=252: JMO-2024-PRE-06 seed=501 T2 state=completed, wall=2.513703e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:58:32.732448+00:00 完了 230/264 queue=229: JMO-2014-PRE-01 seed=501 T1 state=completed, wall=1.771962e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:58:35.453542+00:00 完了 231/264 queue=230: JMO-2014-PRE-01 seed=502 T1 state=completed, wall=1.782226e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:58:36.501617+00:00 完了 235/264 queue=234: JMO-2015-PRE-02 seed=501 T1 state=completed, wall=1.485600e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:58:38.345690+00:00 完了 237/264 queue=236: JMO-2015-PRE-02 seed=502 T2 state=completed, wall=1.388508e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:58:39.492496+00:00 完了 257/264 queue=256: JMO-2024-PRE-06 seed=503 T2 state=completed, wall=2.458759e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:58:40.461510+00:00 完了 256/264 queue=255: JMO-2024-PRE-06 seed=502 T2 state=completed, wall=2.574464e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:58:42.259812+00:00 稼働中: 完了receipt=252/264、実行中=12、load1=4.928418e+01。
+- 2026-10-24T06:58:50.068185+00:00 完了 239/264 queue=238: JMO-2015-PRE-02 seed=503 T1 state=completed, wall=1.205801e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:58:51.478418+00:00 完了 259/264 queue=258: JMO-2025-PRE-05 seed=501 T1 state=completed, wall=1.873631e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:58:51.518294+00:00 完了 260/264 queue=259: JMO-2025-PRE-05 seed=501 T2 state=completed, wall=1.604984e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:58:53.241634+00:00 完了 261/264 queue=260: JMO-2025-PRE-05 seed=502 T2 state=completed, wall=1.672551e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:59:01.541417+00:00 完了 263/264 queue=262: JMO-2025-PRE-05 seed=503 T1 state=completed, wall=2.203895e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:59:01.730019+00:00 完了 264/264 queue=263: JMO-2025-PRE-05 seed=503 T2 state=completed, wall=2.125993e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:59:02.168649+00:00 完了 234/264 queue=233: JMO-2014-PRE-01 seed=503 T1 state=completed, wall=1.783404e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:59:04.091353+00:00 完了 262/264 queue=261: JMO-2025-PRE-05 seed=502 T1 state=completed, wall=2.573755e+01s, resource_violations=0。未採点。
+- 2026-10-24T06:59:12.260808+00:00 稼働中: 完了receipt=260/264、実行中=4、load1=4.371436e+01。
+- 2026-10-24T06:59:35.401716+00:00 完了 238/264 queue=237: JMO-2015-PRE-02 seed=502 T1 state=completed, wall=1.765062e+02s, resource_violations=0。未採点。
+- 2026-10-24T06:59:42.277348+00:00 稼働中: 完了receipt=261/264、実行中=3、load1=3.881592e+01。
+- 2026-10-24T07:00:12.302061+00:00 稼働中: 完了receipt=261/264、実行中=3、load1=3.414014e+01。
+- 2026-10-24T07:00:42.308251+00:00 稼働中: 完了receipt=261/264、実行中=3、load1=3.278906e+01。
+- 2026-10-24T07:01:06.947092+00:00 完了 255/264 queue=254: JMO-2024-PRE-06 seed=502 T1 state=completed, wall=1.784283e+02s, resource_violations=0。未採点。
+- 2026-10-24T07:01:07.174773+00:00 完了 254/264 queue=253: JMO-2024-PRE-06 seed=501 T1 state=completed, wall=1.787688e+02s, resource_violations=0。未採点。
+- 2026-10-24T07:01:12.312022+00:00 稼働中: 完了receipt=263/264、実行中=1、load1=4.028955e+01。
+- 2026-10-24T07:01:24.513901+00:00 完了 258/264 queue=257: JMO-2024-PRE-06 seed=503 T1 state=completed, wall=1.776433e+02s, resource_violations=0。未採点。
+- 2026-10-24T07:01:24.582151+00:00 264ジョブの本計測終了。source_hash再照合一致。これ以降に独立採点・集計を行う。
+- 2026-10-24T07:01:29.587957+00:00 採点・集計完了: {'runs': 264, 'problems': 44, 'ok_true': 230, 'ok_false': 22, 'ungradable': 12, 'reasons': {'exact_whole_set_match': 230, 'solver_no_answer_found': 16, 'answer_set_mismatch': 6, 'reference_missing': 12}}; V1=supported, V2=indeterminate_missing_reference, V3=supported_despite_missing
+- 2026-10-24T07:03:40.147698+00:00 最終検証完了: 原本hash・固定コード/ソース/入力/群/参照/キュー・264一意キー・FIFO・slot非重複・資源/費用計算を確認。switch-scope.mdの外部文書追補のみを差分記録。commit/pushなし。
