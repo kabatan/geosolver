@@ -1,0 +1,104 @@
+{
+  "extracted_syntax_helpers": {
+    "problem/expression_source.py": {
+      "sha256": "c8e6724cf2b9a934bf4564c3c7db3e91731c5c84987e6c48ded42d42c86edfee",
+      "functions": [
+        {
+          "name": "annotate_source",
+          "line": 11,
+          "end_line": 18,
+          "source": "def annotate_source(tree: ast.AST, source: str) -> ast.AST:\n    for node in ast.walk(tree):\n        if isinstance(node, ast.Constant) and type(node.value) in (int, float):\n            node.numeric_lexeme = ast.get_source_segment(source, node)\n        if isinstance(node, ast.Call):\n            location = f\"{source}\\0{node.lineno}:{node.col_offset}:{node.end_col_offset}\"\n            node.call_site_id = hashlib.sha256(location.encode()).hexdigest()[:24]\n    return tree"
+        },
+        {
+          "name": "source_expression",
+          "line": 21,
+          "end_line": 42,
+          "source": "def source_expression(node: ast.AST, source: str | None = None) -> str:\n    \"\"\"Unparse syntax, never the rounded float stored by Python's parser.\"\"\"\n    tree = copy.deepcopy(node)\n    if source is not None:\n        annotate_source(tree, source)\n    names = {item.id for item in ast.walk(tree) if isinstance(item, ast.Name)}\n    replacements = {}\n\n    class Tokens(ast.NodeTransformer):\n        def visit_Constant(self, item):\n            token = getattr(item, \"numeric_lexeme\", None)\n            if token is None:\n                return item\n            name = f\"_numeric_token_{len(replacements)}\"\n            while name in names:\n                name += \"_\"\n            names.add(name)\n            replacements[name] = token\n            return ast.copy_location(ast.Name(id=name, ctx=ast.Load()), item)\n\n    rendered = ast.unparse(Tokens().visit(tree))\n    return re.sub(r\"\\b_numeric_token_\\d+_*\\b\", lambda m: replacements.get(m[0], m[0]), rendered)"
+        }
+      ]
+    },
+    "engine/standard/problem/zero_test_source.py": {
+      "sha256": "88dcd49b32a8935668575c2423ab1a9ff9ecb323a242c13893e05d483b5c1c60",
+      "functions": [
+        {
+          "name": "rational_constant",
+          "line": 9,
+          "end_line": 32,
+          "source": "def rational_constant(node):\n    if isinstance(node, ast.Constant) and type(node.value) in (int, float):\n        if type(node.value) is int:\n            return Fraction(node.value)\n        token = getattr(node, \"numeric_lexeme\", None)\n        if token is not None:\n            return Fraction(token)\n        # An unannotated Python float has already lost the original literal.\n        # Decline a proof rather than guess that rounded value was intended.\n        raise ValueError(\"missing exact numeric token\")\n    if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.UAdd | ast.USub):\n        value = rational_constant(node.operand)\n        return value if isinstance(node.op, ast.UAdd) else -value\n    if isinstance(node, ast.BinOp):\n        left, right = rational_constant(node.left), rational_constant(node.right)\n        if isinstance(node.op, ast.Add):\n            return left + right\n        if isinstance(node.op, ast.Sub):\n            return left - right\n        if isinstance(node.op, ast.Mult):\n            return left * right\n        if isinstance(node.op, ast.Div):\n            return left / right\n    raise ValueError(\"not a rational constant\")"
+        },
+        {
+          "name": "zero_test_call",
+          "line": 35,
+          "end_line": 72,
+          "source": "def zero_test_call(expression):\n    \"\"\"Remove only rational operations preserving the entire residual's zeros.\"\"\"\n    try:\n        node = annotate_source(ast.parse(expression, mode=\"eval\"), expression).body\n    except (SyntaxError, TypeError):\n        return None\n\n    def constant(node):\n        try:\n            return rational_constant(node)\n        except (ValueError, ArithmeticError):\n            return None\n\n    while True:\n        if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.UAdd | ast.USub):\n            node = node.operand\n        elif isinstance(node, ast.BinOp):\n            left, right = constant(node.left), constant(node.right)\n            if isinstance(node.op, ast.Mult):\n                if left is not None and left != 0:\n                    node = node.right\n                elif right is not None and right != 0:\n                    node = node.left\n                else:\n                    return None\n            elif isinstance(node.op, ast.Div) and right is not None and right != 0:\n                node = node.left\n            elif isinstance(node.op, ast.Add | ast.Sub):\n                if right == 0:\n                    node = node.left\n                elif left == 0:\n                    node = node.right\n                else:\n                    return None\n            else:\n                return None\n        else:\n            return node if isinstance(node, ast.Call) else None"
+        }
+      ]
+    },
+    "engine/standard/problem/tangency_contacts.py": {
+      "sha256": "7c04c7a9c40ee164861e4a5cdc55959da62bc8e055b6baf9f21a2554cac1b650",
+      "functions": [
+        {
+          "name": "_parse",
+          "line": 16,
+          "end_line": 17,
+          "source": "def _parse(source):\n    return annotate_source(ast.parse(source, mode=\"eval\"), source).body"
+        },
+        {
+          "name": "contact_tangency_source",
+          "line": 21,
+          "end_line": 213,
+          "source": "def contact_tangency_source(left, right, constructions, equalities=()):\n    \"\"\"Return a contact-radius dot product, or None without proven incidence.\"\"\"\n    definitions = {name: _parse(source) for name, source in constructions}\n\n    def resolve(node):\n        seen = set()\n        while isinstance(node, ast.Name) and node.id in definitions:\n            if node.id in seen:\n                raise ValueError(\"cyclic construction\")\n            seen.add(node.id)\n            node = definitions[node.id]\n        return node\n\n    def canonical(node, active=frozenset()):\n        if isinstance(node, ast.Name) and node.id in definitions:\n            if node.id in active:\n                raise ValueError(\"cyclic construction\")\n            return canonical(definitions[node.id], active | {node.id})\n        try:\n            return (\"rational\", rational_constant(node))\n        except (ValueError, ArithmeticError):\n            if isinstance(node, ast.Constant) and type(node.value) is float:\n                raise ValueError(\"missing exact numeric token\") from None\n        if isinstance(node, ast.AST):\n            return (\n                type(node).__name__,\n                tuple(\n                    (name, canonical(value, active))\n                    for name, value in ast.iter_fields(node)\n                    if name not in {\"ctx\"}\n                ),\n            )\n        if isinstance(node, list):\n            return tuple(canonical(value, active) for value in node)\n        return node\n\n    def call(node, name, arity):\n        return (\n            isinstance(node, ast.Call)\n            and isinstance(node.func, ast.Name)\n            and node.func.id == name\n            and len(node.args) == arity\n            and not node.keywords\n        )\n\n    equations, zero_calls, candidates = [], [], []\n    for lhs, rhs in equalities:\n        a, b = _parse(lhs), _parse(str(rhs))\n        equations.extend(((a, b), (b, a)))\n        try:\n            is_zero = rational_constant(b) == 0\n        except (ValueError, ArithmeticError):\n            is_zero = False\n        if is_zero:\n            node = zero_test_call(lhs)\n            if node is not None:\n                zero_calls.append(node)\n                if node.args:\n                    candidates.append(node.args[0])\n    candidates.extend(ast.Name(id=name, ctx=ast.Load()) for name in definitions)\n\n    def same(a, b):\n        return canonical(a) == canonical(b)\n\n    def circle_contains(point, circle_source):\n        circle_ast = _parse(circle_source)\n        circle_node = resolve(circle_ast)\n        center_ast = (\n            circle_node.args[0]\n            if call(circle_node, \"Circle\", 2)\n            else _parse(f\"Center({circle_source})\")\n        )\n        radius_ast = (\n            circle_node.args[1]\n            if call(circle_node, \"Circle\", 2)\n            else _parse(f\"Radius({circle_source})\")\n        )\n        if call(circle_node, \"Circumcircle\", 3) and any(same(point, p) for p in circle_node.args):\n            return True\n        built = resolve(point)\n        if isinstance(built, ast.Call) and isinstance(built.func, ast.Name):\n            if built.func.id == \"Intersect\" and any(same(arg, circle_ast) for arg in built.args):\n                return True\n            if (\n                built.func.id == \"IncircleContactPoint\"\n                and call(circle_node, \"Incircle\", 3)\n                and len(built.args) >= 3\n                and all(same(a, b) for a, b in zip(built.args[:3], circle_node.args, strict=True))\n            ):\n                return True\n        if any(\n            call(n, \"OnCircle\", 2) and same(n.args[0], point) and same(n.args[1], circle_ast)\n            for n in zero_calls\n        ):\n            return True\n        return any(\n            call(resolve(a), \"Distance\", 2)\n            and same(b, radius_ast)\n            and {canonical(arg) for arg in resolve(a).args}\n            == {canonical(point), canonical(center_ast)}\n            for a, b in equations\n        )\n\n    try:\n        left_node, right_node = (\n            _parse(left),\n            _parse(right),\n        )\n        for line_node, circle_node, circle_source in (\n            (resolve(left_node), resolve(right_node), right),\n            (resolve(right_node), resolve(left_node), left),\n        ):\n            if not call(line_node, \"Line\", 2):\n                continue\n            if not (\n                call(circle_node, \"Circle\", 2)\n                or call(circle_node, \"Circumcircle\", 3)\n                or call(circle_node, \"Incircle\", 3)\n            ):\n                continue\n\n            def line_contains(point, line_node=line_node):\n                if any(same(point, p) for p in line_node.args):\n                    return True\n                built = resolve(point)\n                if (\n                    isinstance(built, ast.Call)\n                    and isinstance(built.func, ast.Name)\n                    and built.func.id == \"Intersect\"\n                    and any(same(arg, line_node) for arg in built.args)\n                ):\n                    return True\n                for n in zero_calls:\n                    if (\n                        call(n, \"OnLine\", 2)\n                        and same(n.args[0], point)\n                        and same(n.args[1], line_node)\n                    ):\n                        return True\n                    if (\n                        call(n, \"OnLine\", 3)\n                        and same(n.args[0], point)\n                        and {canonical(arg) for arg in n.args[1:]}\n                        == {canonical(arg) for arg in line_node.args}\n                    ):\n                        return True\n                    if call(n, \"Collinear\", 3) and {canonical(arg) for arg in n.args} == {\n                        canonical(point),\n                        *(canonical(arg) for arg in line_node.args),\n                    }:\n                        return True\n                return False\n\n            contact = next(\n                (\n                    p\n                    for p in (*line_node.args, *candidates)\n                    if circle_contains(p, circle_source) and line_contains(p)\n                ),\n                None,\n            )\n            if contact is None:\n                continue\n            a, b = (f\"({source_expression(point)})\" for point in line_node.args)\n            p = f\"({source_expression(contact)})\"\n            center = f\"Center({circle_source})\"\n            return (\n                f\"(({center}.x-{p}.x)*({b}.x-{a}.x)+({center}.y-{p}.y)*({b}.y-{a}.y))\"\n                f\"/Distance({a},{b})\"\n            )\n\n        def is_circle(node):\n            return (\n                call(node, \"Circle\", 2)\n                or call(node, \"Circumcircle\", 3)\n                or call(node, \"Incircle\", 3)\n            )\n\n        if is_circle(resolve(left_node)) and is_circle(resolve(right_node)):\n            contact = next(\n                (p for p in candidates if circle_contains(p, left) and circle_contains(p, right)),\n                None,\n            )\n            if contact is not None:\n                p = f\"({source_expression(contact)})\"\n                a, b = f\"Center({left})\", f\"Center({right})\"\n                # Given a shared point, tangent circles have collinear radii.\n                # This cross product has a simple zero at a contact, whereas\n                # the distance between centers has a double zero.\n                return f\"(({a}.x-{p}.x)*({b}.y-{p}.y)-({a}.y-{p}.y)*({b}.x-{p}.x))/Radius({left})\"\n    except (ValueError, TypeError, RecursionError):\n        return None\n    return None"
+        },
+        {
+          "name": "distance_contact_sources",
+          "line": 217,
+          "end_line": 271,
+          "source": "def distance_contact_sources(constructions, equalities):\n    \"\"\"Prove contacts expressed as Distance(center,line)=circle radius.\n\n    Only an exactly matching Circle(center,radius) construction supplies the\n    circle. The contact itself still needs an independent incidence proof.\n    \"\"\"\n    definitions = {name: _parse(source) for name, source in constructions}\n\n    def resolve(node):\n        seen = set()\n        while isinstance(node, ast.Name) and node.id in definitions:\n            if node.id in seen:\n                raise ValueError(\"cyclic construction\")\n            seen.add(node.id)\n            node = definitions[node.id]\n        return node\n\n    def call(node, name, count):\n        return (\n            isinstance(node, ast.Call)\n            and isinstance(node.func, ast.Name)\n            and node.func.id == name\n            and len(node.args) == count\n            and not node.keywords\n        )\n\n    def same(a, b):\n        return source_expression(resolve(a)) == source_expression(resolve(b))\n\n    result = {}\n    try:\n        circles = [(name, resolve(node)) for name, node in definitions.items()]\n        circles = [(name, node) for name, node in circles if call(node, \"Circle\", 2)]\n        for index, (lhs, rhs) in enumerate(equalities):\n            a, b = _parse(lhs), _parse(str(rhs))\n            for distance, radius in ((resolve(a), b), (resolve(b), a)):\n                if not call(distance, \"Distance\", 2):\n                    continue\n                for point, line in (\n                    (distance.args[0], distance.args[1]),\n                    (distance.args[1], distance.args[0]),\n                ):\n                    if not call(resolve(line), \"Line\", 2):\n                        continue\n                    for name, circle in circles:\n                        if not same(point, circle.args[0]) or not same(radius, circle.args[1]):\n                            continue\n                        source = contact_tangency_source(\n                            source_expression(line), name, constructions, equalities\n                        )\n                        if source is not None:\n                            result[index] = source\n        return result\n    except (ValueError, TypeError, RecursionError):\n        return {}"
+        }
+      ]
+    },
+    "engine/standard/refinement/s3_tangency.py": {
+      "sha256": "1b02b38c63219b0f8c50cd3ed006b5312a7eb900d94831f287e75f31db71c4e7",
+      "functions": [
+        {
+          "name": "distance_radius_sources",
+          "line": 16,
+          "end_line": 71,
+          "source": "def distance_radius_sources(constructions, equalities):\n    \"\"\"Match the frozen Distance/Line/Circle syntax, without requiring contact.\n\n    T1 uses the normalized line coefficients, not a contact point.  Resolve\n    aliases exactly as distance_contact_sources does; do not infer incidence.\n    \"\"\"\n    from geosolver.engine.standard.problem.tangency_contacts import _parse\n    from geosolver.problem.expression_source import source_expression\n\n    definitions = {name: _parse(source) for name, source in constructions}\n\n    def resolve(node):\n        seen = set()\n        while isinstance(node, ast.Name) and node.id in definitions:\n            if node.id in seen:\n                raise ValueError(\"cyclic construction\")\n            seen.add(node.id)\n            node = definitions[node.id]\n        return node\n\n    def call(node, name):\n        return (\n            isinstance(node, ast.Call)\n            and isinstance(node.func, ast.Name)\n            and node.func.id == name\n            and len(node.args) == 2\n            and not node.keywords\n        )\n\n    def same(a, b):\n        return source_expression(resolve(a)) == source_expression(resolve(b))\n\n    result = {}\n    try:\n        circles = [(name, resolve(node)) for name, node in definitions.items()]\n        circles = [(name, node) for name, node in circles if call(node, \"Circle\")]\n        for index, (lhs, rhs) in enumerate(equalities):\n            a, b = _parse(lhs), _parse(str(rhs))\n            for distance, radius in ((resolve(a), b), (resolve(b), a)):\n                if not call(distance, \"Distance\"):\n                    continue\n                for point, line in (distance.args, distance.args[::-1]):\n                    if not call(resolve(line), \"Line\"):\n                        continue\n                    for name, circle in circles:\n                        if not same(point, circle.args[0]) or not same(radius, circle.args[1]):\n                            continue\n                        line_source = f\"({source_expression(line)})\"\n                        delta = (\n                            f\"({line_source}.a*Center({name}).x\"\n                            f\"+{line_source}.b*Center({name}).y+{line_source}.c)\"\n                        )\n                        result[index] = f\"{delta}**2-Radius({name})**2\"\n        return result\n    except (ValueError, TypeError, RecursionError):\n        return {}"
+        }
+      ]
+    },
+    "engine/standard/refinement/mpmath_refiner.py": {
+      "sha256": "486835d2f5b8804e50d8b2b74fa5d188bc9ba60ad45f905fdc9df0fcda746963",
+      "functions": [
+        {
+          "name": "_zero_constraint_plans",
+          "line": 532,
+          "end_line": 547,
+          "source": "def _zero_constraint_plans(constraints, targets):\n    from geosolver.engine.standard.problem.zero_test_source import zero_test_call\n\n    plans = {}\n    for index, expression in enumerate(constraints):\n        if index >= len(targets) or not _is_zero_target(targets[index]):\n            continue\n        node = zero_test_call(expression)\n        if not isinstance(node, ast.Call) or node.keywords or len(node.args) != _BINARY_ARITY:\n            continue\n        if not isinstance(node.func, ast.Name):\n            continue\n        kind = node.func.id.lower()\n        if kind in {\"distance\", \"istangent\"}:\n            plans[index] = kind, tuple(ast.get_source_segment(expression, arg) for arg in node.args)\n    return plans"
+        }
+      ]
+    }
+  },
+  "caveat": "No new numerical byte check: S3 uses saved first-candidate evidence; syntax proof is independent of candidate availability. No target values, errors, sigma or run results consulted.",
+  "syntax_formula_discrepancies": [
+    "AIME-2007-II-15",
+    "AIME-2008-II-11",
+    "AIME-2009-I-12",
+    "AIME-2020-II-13",
+    "AIME-2022-I-08",
+    "AIME-2023-I-08",
+    "AIME-2025-I-06",
+    "HMMT-2007-FEB-GEO-10",
+    "HMMT-2017-FEB-GEO-05",
+    "HMMT-2020-FEB-GEO-04",
+    "HMMT-2025-FEB-GEO-04",
+    "JMO-2008-PRE-02",
+    "JMO-2011-PRE-11",
+    "JMO-2022-PRE-02",
+    "JMO-2025-PRE-05"
+  ],
+  "solver_executed": false,
+  "refinement_executed": false,
+  "seeds_executed": []
+}
