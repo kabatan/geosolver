@@ -1,0 +1,89 @@
+{
+  "case_id": "AIME-2022-II-07",
+  "dsl": {
+    "id": "AIME-2022-II-07",
+    "variables": [
+      "m",
+      "b"
+    ],
+    "constructions": [
+      {
+        "name": "O1",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(30, 0)"
+      },
+      {
+        "name": "C1",
+        "expression": "Circle(O1, 6)"
+      },
+      {
+        "name": "C2",
+        "expression": "Circle(O2, 24)"
+      },
+      {
+        "name": "T",
+        "expression": "Point(6, 0)"
+      },
+      {
+        "name": "l0",
+        "expression": "Line(Point(6, 0), Point(6, 1))"
+      },
+      {
+        "name": "l1",
+        "expression": "Line(m, -1, b)"
+      },
+      {
+        "name": "l2",
+        "expression": "Line(-m, -1, -b)"
+      },
+      {
+        "name": "V",
+        "expression": "Intersect(l1, l2)"
+      },
+      {
+        "name": "W1",
+        "expression": "Intersect(l0, l1)"
+      },
+      {
+        "name": "W2",
+        "expression": "Intersect(l0, l2)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "IsTangent(l1, C1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(l1, C2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(l2, C1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(l2, C2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "m",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Area(V, W1, W2)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "192"
+  ],
+  "reference_parse_error": null
+}

@@ -1,0 +1,51 @@
+{
+  "constraints": [
+    "Distance(A, B)",
+    "Distance(A, C)",
+    "Distance(A, D)",
+    "Collinear(B, E, C)",
+    "OnSegment(E, B, C)",
+    "Distance(O, B)",
+    "OnCircle(E, omega)",
+    "IsTangent(Line(A, B), omega)",
+    "IsTangent(omega, Gamma)",
+    "Distance(C, F)"
+  ],
+  "targets": [
+    5,
+    5,
+    3,
+    0,
+    0,
+    "r",
+    0,
+    0,
+    0,
+    10
+  ],
+  "scales": [
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0"
+  ],
+  "finite_counts": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "rule": "max(1,finite |lhs|,finite |rhs|) over saved first ordinary search candidates; never reference solution"
+}

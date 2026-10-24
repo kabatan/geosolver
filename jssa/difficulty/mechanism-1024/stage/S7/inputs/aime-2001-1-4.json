@@ -1,0 +1,75 @@
+{
+  "case_id": "aime-2001-1-4",
+  "dsl": {
+    "id": "aime-2001-1-4",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(x, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(y, z)"
+      },
+      {
+        "name": "bc_line",
+        "expression": "Line(B, C)"
+      },
+      {
+        "name": "a_angle_bisector",
+        "expression": "AngleBisector(B, A, C)"
+      },
+      {
+        "name": "T",
+        "expression": "Intersect(a_angle_bisector, bc_line)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "x",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "z",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "pi / 3"
+      },
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "pi / 4"
+      },
+      {
+        "left": "OnSegment(T, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, T)",
+        "operator": "=",
+        "right": 24
+      }
+    ],
+    "target": "Area(A, B, C)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "216+72*sqrt(3)"
+  ],
+  "reference_parse_error": null
+}

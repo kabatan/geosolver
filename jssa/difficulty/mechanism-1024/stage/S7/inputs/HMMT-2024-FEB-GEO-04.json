@@ -1,0 +1,73 @@
+{
+  "case_id": "HMMT-2024-FEB-GEO-04",
+  "dsl": {
+    "id": "HMMT-2024-FEB-GEO-04",
+    "variables": [
+      "s",
+      "p"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(s, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(s, s)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(0, s)"
+      },
+      {
+        "name": "M",
+        "expression": "Midpoint(A, B)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(s, p)"
+      },
+      {
+        "name": "l",
+        "expression": "Line(M, P)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, l)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "Distance(C, l)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "p",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "p",
+        "operator": "<",
+        "right": "s"
+      }
+    ],
+    "target": "Area(A, B, C, D)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "185"
+  ],
+  "reference_parse_error": null
+}

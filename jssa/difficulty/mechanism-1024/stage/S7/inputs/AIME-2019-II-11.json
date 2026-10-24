@@ -1,0 +1,117 @@
+{
+  "case_id": "AIME-2019-II-11",
+  "dsl": {
+    "id": "AIME-2019-II-11",
+    "variables": [
+      "cx",
+      "cy",
+      "o1x",
+      "o1y",
+      "r1",
+      "o2y",
+      "r2"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(7, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "O1",
+        "expression": "Point(o1x, o1y)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(0, o2y)"
+      },
+      {
+        "name": "omega1",
+        "expression": "Circle(O1, r1)"
+      },
+      {
+        "name": "omega2",
+        "expression": "Circle(O2, r2)"
+      },
+      {
+        "name": "K",
+        "expression": "Intersect(omega1, omega2, exclude=A)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 9
+      },
+      {
+        "left": "Distance(O1, A)",
+        "operator": "=",
+        "right": "r1"
+      },
+      {
+        "left": "Distance(O1, B)",
+        "operator": "=",
+        "right": "r1"
+      },
+      {
+        "left": "Perpendicular(Line(O1, A), Line(A, C))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(O2, A)",
+        "operator": "=",
+        "right": "r2"
+      },
+      {
+        "left": "Distance(O2, C)",
+        "operator": "=",
+        "right": "r2"
+      },
+      {
+        "left": "Perpendicular(Line(O2, A), Line(A, B))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r1",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r2",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(A, K)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "9/2"
+  ],
+  "reference_parse_error": null
+}

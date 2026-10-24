@@ -1,0 +1,78 @@
+{
+  "case_id": "HMMT-2007-FEB-GEO-06",
+  "dsl": {
+    "id": "HMMT-2007-FEB-GEO-06",
+    "variables": [
+      "b",
+      "c"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(b, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(0, c)"
+      },
+      {
+        "name": "omega",
+        "expression": "Incircle(A, B, C)"
+      },
+      {
+        "name": "I",
+        "expression": "Center(omega)"
+      },
+      {
+        "name": "M",
+        "expression": "FootOfPerpendicular(I, Line(A, C))"
+      },
+      {
+        "name": "L",
+        "expression": "Intersect(Line(B, M), omega, exclude=M)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 25
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": "=",
+        "right": 150
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "c",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": ">",
+        "right": "Distance(A, C)"
+      }
+    ],
+    "target": "Distance(B, L)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "45*sqrt(17)/17"
+  ],
+  "reference_parse_error": null
+}

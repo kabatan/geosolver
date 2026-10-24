@@ -1,0 +1,131 @@
+{
+  "case_id": "AIME-2023-II-09",
+  "dsl": {
+    "id": "AIME-2023-II-09",
+    "variables": [
+      "k"
+    ],
+    "constructions": [
+      {
+        "name": "P",
+        "expression": "Point(0, k)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(-5, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(7, 0)"
+      },
+      {
+        "name": "r1",
+        "expression": "(25 + k * k) / (2 * k)"
+      },
+      {
+        "name": "r2",
+        "expression": "(49 + k * k) / (2 * k)"
+      },
+      {
+        "name": "O1",
+        "expression": "Point(-5, r1)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(7, r2)"
+      },
+      {
+        "name": "omega1",
+        "expression": "Circle(O1, r1)"
+      },
+      {
+        "name": "omega2",
+        "expression": "Circle(O2, r2)"
+      },
+      {
+        "name": "L",
+        "expression": "ParallelLine(P, Line(A, B))"
+      },
+      {
+        "name": "X",
+        "expression": "Point(2 * A.x - P.x, P.y)"
+      },
+      {
+        "name": "Y",
+        "expression": "Point(2 * B.x - P.x, P.y)"
+      },
+      {
+        "name": "Q",
+        "expression": "Intersect(omega1, omega2, exclude=P)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "OnCircle(P, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(P, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(Q, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(Q, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(P, X)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(P, Y)",
+        "operator": "=",
+        "right": 14
+      },
+      {
+        "left": "Distance(P, Q)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(O1, A)",
+        "operator": "=",
+        "right": "r1"
+      },
+      {
+        "left": "Distance(O2, B)",
+        "operator": "=",
+        "right": "r2"
+      },
+      {
+        "left": "k",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(P, Line(A, B))",
+        "operator": "<",
+        "right": "Distance(Q, Line(A, B))"
+      }
+    ],
+    "target": "Area(X, A, B, Y)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "18*sqrt(15)"
+  ],
+  "reference_parse_error": null
+}

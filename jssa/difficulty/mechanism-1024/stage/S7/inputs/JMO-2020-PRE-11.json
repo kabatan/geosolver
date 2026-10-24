@@ -1,0 +1,192 @@
+{
+  "case_id": "JMO-2020-PRE-11",
+  "dsl": {
+    "id": "JMO-2020-PRE-11",
+    "variables": [
+      "r",
+      "g1",
+      "g2",
+      "g3",
+      "g4"
+    ],
+    "constructions": [
+      {
+        "name": "O",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(r, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(r * cos(g1), r * sin(g1))"
+      },
+      {
+        "name": "C",
+        "expression": "Point(r * cos(g1 + g2), r * sin(g1 + g2))"
+      },
+      {
+        "name": "D",
+        "expression": "Point(r * cos(g1 + g2 + g3), r * sin(g1 + g2 + g3))"
+      },
+      {
+        "name": "P",
+        "expression": "Point(r * cos(g1 + g2 + g3 + g4), r * sin(g1 + g2 + g3 + g4))"
+      },
+      {
+        "name": "M",
+        "expression": "Midpoint(A, B)"
+      },
+      {
+        "name": "N",
+        "expression": "Midpoint(C, D)"
+      },
+      {
+        "name": "perpA",
+        "expression": "PerpendicularLine(Line(A, B), A)"
+      },
+      {
+        "name": "bisAP",
+        "expression": "PerpendicularBisector(A, P)"
+      },
+      {
+        "name": "OA",
+        "expression": "Intersect(perpA, bisAP)"
+      },
+      {
+        "name": "GammaA",
+        "expression": "CircleThroughPoint(OA, A)"
+      },
+      {
+        "name": "perpD",
+        "expression": "PerpendicularLine(Line(C, D), D)"
+      },
+      {
+        "name": "bisDP",
+        "expression": "PerpendicularBisector(D, P)"
+      },
+      {
+        "name": "OD",
+        "expression": "Intersect(perpD, bisDP)"
+      },
+      {
+        "name": "GammaD",
+        "expression": "CircleThroughPoint(OD, D)"
+      },
+      {
+        "name": "K",
+        "expression": "Intersect(GammaA, GammaD, exclude=P)"
+      },
+      {
+        "name": "Omega",
+        "expression": "Circle(O, r)"
+      },
+      {
+        "name": "Q",
+        "expression": "Intersect(Line(P, K), Omega, exclude=P)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Collinear(A, K, N)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Collinear(D, K, M)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, K)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(D, K)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(K, M)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "OnCircle(P, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(D, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(A, GammaA)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(P, GammaA)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(D, GammaD)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(P, GammaD)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g1",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g2",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g3",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g4",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g1 + g2 + g3 + g4",
+        "operator": "<",
+        "right": "2 * pi"
+      },
+      {
+        "left": "Distance(O, K)",
+        "operator": "<",
+        "right": "r"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D, P])"
+      }
+    ],
+    "target": "Distance(C, Q)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "11"
+  ],
+  "reference_parse_error": null
+}

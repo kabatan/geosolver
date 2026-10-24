@@ -1,0 +1,102 @@
+{
+  "case_id": "HMMT-2017-FEB-GEO-01",
+  "dsl": {
+    "id": "HMMT-2017-FEB-GEO-01",
+    "variables": [
+      "a",
+      "c",
+      "b",
+      "d",
+      "theta"
+    ],
+    "constructions": [
+      {
+        "name": "P",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(-a, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(c, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(b * cos(theta), b * sin(theta))"
+      },
+      {
+        "name": "D",
+        "expression": "Point(-d * cos(theta), -d * sin(theta))"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, B, C)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(D, A)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "OnCircle(D, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "a",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "c",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "d",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "theta",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "theta",
+        "operator": "<",
+        "right": "pi"
+      }
+    ],
+    "target": "a / c"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "2/5"
+  ],
+  "reference_parse_error": null
+}

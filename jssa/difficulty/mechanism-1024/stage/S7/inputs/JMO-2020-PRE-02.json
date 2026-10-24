@@ -1,0 +1,92 @@
+{
+  "case_id": "JMO-2020-PRE-02",
+  "dsl": {
+    "id": "JMO-2020-PRE-02",
+    "variables": [
+      "hx",
+      "hy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(1, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(1 / 2, sqrt(3) / 2)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(-1 / 2, sqrt(3) / 2)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(-1, 0)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(-1 / 2, -sqrt(3) / 2)"
+      },
+      {
+        "name": "F",
+        "expression": "Point(1 / 2, -sqrt(3) / 2)"
+      },
+      {
+        "name": "G",
+        "expression": "Midpoint(A, B)"
+      },
+      {
+        "name": "H",
+        "expression": "Point(hx, hy)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(C, G)",
+        "operator": "=",
+        "right": "Distance(G, H)"
+      },
+      {
+        "left": "Distance(G, H)",
+        "operator": "=",
+        "right": "Distance(H, C)"
+      },
+      {
+        "left": "Vector(A, B).x * Vector(A, H).y - Vector(A, B).y * Vector(A, H).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(B, C).x * Vector(B, H).y - Vector(B, C).y * Vector(B, H).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(C, D).x * Vector(C, H).y - Vector(C, D).y * Vector(C, H).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(D, E).x * Vector(D, H).y - Vector(D, E).y * Vector(D, H).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(E, F).x * Vector(E, H).y - Vector(E, F).y * Vector(E, H).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(F, A).x * Vector(F, H).y - Vector(F, A).y * Vector(F, H).x",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Area(E, F, H)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "sqrt(3)/8"
+  ],
+  "reference_parse_error": null
+}

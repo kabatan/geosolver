@@ -1,0 +1,108 @@
+{
+  "case_id": "AIME-2014-II-03",
+  "dsl": {
+    "id": "AIME-2014-II-03",
+    "variables": [
+      "a",
+      "sx",
+      "sy",
+      "ux",
+      "uy"
+    ],
+    "constructions": [
+      {
+        "name": "R",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "Z",
+        "expression": "Point(a, 0)"
+      },
+      {
+        "name": "T",
+        "expression": "Point(0, 24)"
+      },
+      {
+        "name": "X",
+        "expression": "Point(a, 24)"
+      },
+      {
+        "name": "S",
+        "expression": "Point(sx, sy)"
+      },
+      {
+        "name": "Y",
+        "expression": "Point(ux, uy)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(R, S)",
+        "operator": "=",
+        "right": 18
+      },
+      {
+        "left": "Distance(S, T)",
+        "operator": "=",
+        "right": 18
+      },
+      {
+        "left": "Distance(X, Y)",
+        "operator": "=",
+        "right": 18
+      },
+      {
+        "left": "Distance(Y, Z)",
+        "operator": "=",
+        "right": 18
+      },
+      {
+        "left": "Distance(Z, R)",
+        "operator": "=",
+        "right": "Distance(T, X)"
+      },
+      {
+        "left": "Parallel(Line(Z, R), Line(T, X))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(R, Line(T, X))",
+        "operator": "=",
+        "right": 24
+      },
+      {
+        "left": "Area(R, S, T, X, Y, Z)",
+        "operator": "=",
+        "right": "36 * a"
+      },
+      {
+        "left": "a",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "sy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "sy",
+        "operator": "<",
+        "right": "24"
+      },
+      {
+        "predicate": "ConvexPolygon([R, S, T, X, Y, Z])"
+      },
+      {
+        "predicate": "SimplePolygon([R, S, T, X, Y, Z])"
+      }
+    ],
+    "target": "a * a"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "720"
+  ],
+  "reference_parse_error": null
+}

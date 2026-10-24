@@ -1,0 +1,101 @@
+{
+  "case_id": "JMO-2012-PRE-07",
+  "dsl": {
+    "id": "JMO-2012-PRE-07",
+    "variables": [
+      "ex",
+      "ey",
+      "cx",
+      "cy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(8, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(11, 0)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(ex, ey)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "O",
+        "expression": "Midpoint(D, E)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "Distance(D, B)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(A, O)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(B, O)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(C, O)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Collinear(A, E, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "ey",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ex",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ex",
+        "operator": "<",
+        "right": "cx"
+      },
+      {
+        "left": "ey",
+        "operator": "<",
+        "right": "cy"
+      }
+    ],
+    "target": "Distance(C, E)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "4*sqrt(21)/7"
+  ],
+  "reference_parse_error": null
+}

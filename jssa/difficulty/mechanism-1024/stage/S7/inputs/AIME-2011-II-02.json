@@ -1,0 +1,95 @@
+{
+  "case_id": "AIME-2011-II-02",
+  "dsl": {
+    "id": "AIME-2011-II-02",
+    "variables": [
+      "s",
+      "t",
+      "u"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(s, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(s, s)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(0, s)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(0, t)"
+      },
+      {
+        "name": "F",
+        "expression": "Point(s, u)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(B, E)",
+        "operator": "=",
+        "right": 30
+      },
+      {
+        "left": "Distance(E, F)",
+        "operator": "=",
+        "right": 30
+      },
+      {
+        "left": "Distance(F, D)",
+        "operator": "=",
+        "right": 30
+      },
+      {
+        "left": "OnSegment(E, A, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(F, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": "<",
+        "right": "s"
+      },
+      {
+        "left": "u",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": "<",
+        "right": "s"
+      }
+    ],
+    "target": "Area(A, B, C, D)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "810"
+  ],
+  "reference_parse_error": null
+}

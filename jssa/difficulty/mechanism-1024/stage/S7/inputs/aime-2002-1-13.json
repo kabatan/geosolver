@@ -1,0 +1,78 @@
+{
+  "case_id": "aime-2002-1-13",
+  "dsl": {
+    "id": "aime-2002-1-13",
+    "variables": [
+      "x",
+      "y",
+      "t"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(24, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(x, y)"
+      },
+      {
+        "name": "D",
+        "expression": "Midpoint(B, C)"
+      },
+      {
+        "name": "E",
+        "expression": "Midpoint(A, B)"
+      },
+      {
+        "name": "ce_line",
+        "expression": "Line(C, E)"
+      },
+      {
+        "name": "circumcircle",
+        "expression": "Circumcircle(A, B, C)"
+      },
+      {
+        "name": "F",
+        "expression": "PointOnLine(ce_line, t)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "y",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 18
+      },
+      {
+        "left": "Distance(C, E)",
+        "operator": "=",
+        "right": 27
+      },
+      {
+        "left": "OnCircle(F, circumcircle)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(F, C)",
+        "operator": ">",
+        "right": 0
+      }
+    ],
+    "target": "Area(A, F, B)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "8*sqrt(55)"
+  ],
+  "reference_parse_error": null
+}

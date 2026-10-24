@@ -1,0 +1,65 @@
+{
+  "case_id": "HMMT-2013-FEB-GEO-08",
+  "dsl": {
+    "id": "HMMT-2013-FEB-GEO-08",
+    "variables": [
+      "g"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "X",
+        "expression": "Point(1, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(14 / 11 * cos(g), 14 / 11 * sin(g))"
+      },
+      {
+        "name": "D",
+        "expression": "Point(7 / 4 * cos(g), -(7 / 4) * sin(g))"
+      },
+      {
+        "name": "P",
+        "expression": "Point(-(21 / 2) * cos(g), -(21 / 2) * sin(g))"
+      },
+      {
+        "name": "C",
+        "expression": "Intersect(Line(P, D), Line(A, X))"
+      },
+      {
+        "name": "Q",
+        "expression": "Intersect(Line(C, B), Line(A, D))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "g",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "g",
+        "operator": "<",
+        "right": "pi / 2"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      },
+      {
+        "left": "Distance(A, Q)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(A, Q)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "42/13"
+  ],
+  "reference_parse_error": null
+}

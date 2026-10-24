@@ -1,0 +1,77 @@
+{
+  "case_id": "HMMT-2006-FEB-GEO-10",
+  "dsl": {
+    "id": "HMMT-2006-FEB-GEO-10",
+    "variables": [
+      "r"
+    ],
+    "constructions": [
+      {
+        "name": "C",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(56, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(0, 33)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, B, C)"
+      },
+      {
+        "name": "O",
+        "expression": "Center(Gamma)"
+      },
+      {
+        "name": "T",
+        "expression": "Point(r, r)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(T, r)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 65
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 33
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 56
+      },
+      {
+        "left": "Distance(O, T)",
+        "operator": "=",
+        "right": "Radius(Gamma) - r"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": "<",
+        "right": "33"
+      }
+    ],
+    "target": "r"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "24"
+  ],
+  "reference_parse_error": null
+}

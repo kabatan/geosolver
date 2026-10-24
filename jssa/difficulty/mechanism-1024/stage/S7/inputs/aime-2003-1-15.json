@@ -1,0 +1,87 @@
+{
+  "case_id": "aime-2003-1-15",
+  "dsl": {
+    "id": "aime-2003-1-15",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(507, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(x, y)"
+      },
+      {
+        "name": "M",
+        "expression": "Midpoint(C, A)"
+      },
+      {
+        "name": "ca_line",
+        "expression": "Line(C, A)"
+      },
+      {
+        "name": "bc_line",
+        "expression": "Line(B, C)"
+      },
+      {
+        "name": "angle_bisector",
+        "expression": "AngleBisector(A, B, C)"
+      },
+      {
+        "name": "D",
+        "expression": "Intersect(angle_bisector, ca_line)"
+      },
+      {
+        "name": "bd_line",
+        "expression": "Line(B, D)"
+      },
+      {
+        "name": "df_line",
+        "expression": "PerpendicularLine(bd_line, D)"
+      },
+      {
+        "name": "F",
+        "expression": "Intersect(df_line, bc_line)"
+      },
+      {
+        "name": "bm_line",
+        "expression": "Line(B, M)"
+      },
+      {
+        "name": "E",
+        "expression": "Intersect(df_line, bm_line)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "y",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 360
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 780
+      }
+    ],
+    "target": "Distance(D, E) / Distance(E, F)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "49/240"
+  ],
+  "reference_parse_error": null
+}

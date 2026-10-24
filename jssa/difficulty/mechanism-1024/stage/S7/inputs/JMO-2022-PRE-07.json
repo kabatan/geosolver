@@ -1,0 +1,106 @@
+{
+  "case_id": "JMO-2022-PRE-07",
+  "dsl": {
+    "id": "JMO-2022-PRE-07",
+    "variables": [
+      "dx",
+      "dy",
+      "ex",
+      "fy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(7, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(0, 7)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(dx, dy)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(0, ex)"
+      },
+      {
+        "name": "F",
+        "expression": "Point(fy, 0)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(D, E)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(D, F)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Perpendicular(Line(D, E), Line(D, F))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Collinear(B, D, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "dx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "dx",
+        "operator": "<",
+        "right": "7"
+      },
+      {
+        "left": "dy",
+        "operator": "<",
+        "right": "7"
+      },
+      {
+        "left": "ex",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ex",
+        "operator": "<",
+        "right": "7"
+      },
+      {
+        "left": "fy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "fy",
+        "operator": "<",
+        "right": "7"
+      }
+    ],
+    "target": "Distance(B, D)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "21*sqrt(2)/8"
+  ],
+  "reference_parse_error": null
+}

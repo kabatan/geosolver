@@ -1,0 +1,331 @@
+{
+  "case_id": "HMMT-2019-FEB-GEO-10",
+  "dsl": {
+    "id": "HMMT-2019-FEB-GEO-10",
+    "variables": [],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(13, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(99 / 13, 168 / 13)"
+      },
+      {
+        "name": "B1",
+        "expression": "Point(B.x + (B.y - A.y), B.y - (B.x - A.x))"
+      },
+      {
+        "name": "A2",
+        "expression": "Point(A.x + (B.y - A.y), A.y - (B.x - A.x))"
+      },
+      {
+        "name": "C1",
+        "expression": "Point(C.x + (C.y - B.y), C.y - (C.x - B.x))"
+      },
+      {
+        "name": "B2",
+        "expression": "Point(B.x + (C.y - B.y), B.y - (C.x - B.x))"
+      },
+      {
+        "name": "A1",
+        "expression": "Point(A.x + (A.y - C.y), A.y - (A.x - C.x))"
+      },
+      {
+        "name": "C2",
+        "expression": "Point(C.x + (A.y - C.y), C.y - (A.x - C.x))"
+      },
+      {
+        "name": "A3",
+        "expression": "Point(A2.x + (A2.y - A1.y), A2.y - (A2.x - A1.x))"
+      },
+      {
+        "name": "A4",
+        "expression": "Point(A1.x + (A2.y - A1.y), A1.y - (A2.x - A1.x))"
+      },
+      {
+        "name": "B3",
+        "expression": "Point(B2.x + (B2.y - B1.y), B2.y - (B2.x - B1.x))"
+      },
+      {
+        "name": "B4",
+        "expression": "Point(B1.x + (B2.y - B1.y), B1.y - (B2.x - B1.x))"
+      },
+      {
+        "name": "C3",
+        "expression": "Point(C2.x + (C2.y - C1.y), C2.y - (C2.x - C1.x))"
+      },
+      {
+        "name": "C4",
+        "expression": "Point(C1.x + (C2.y - C1.y), C1.y - (C2.x - C1.x))"
+      },
+      {
+        "name": "B5",
+        "expression": "Point(B4.x + (B4.y - A3.y), B4.y - (B4.x - A3.x))"
+      },
+      {
+        "name": "A6",
+        "expression": "Point(A3.x + (B4.y - A3.y), A3.y - (B4.x - A3.x))"
+      },
+      {
+        "name": "C5",
+        "expression": "Point(C4.x + (C4.y - B3.y), C4.y - (C4.x - B3.x))"
+      },
+      {
+        "name": "B6",
+        "expression": "Point(B3.x + (C4.y - B3.y), B3.y - (C4.x - B3.x))"
+      },
+      {
+        "name": "A5",
+        "expression": "Point(A4.x + (A4.y - C3.y), A4.y - (A4.x - C3.x))"
+      },
+      {
+        "name": "C6",
+        "expression": "Point(C3.x + (A4.y - C3.y), C3.y - (A4.x - C3.x))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 13
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 14
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "Distance(B, B1)"
+      },
+      {
+        "left": "Distance(B, B1)",
+        "operator": "=",
+        "right": "Distance(B1, A2)"
+      },
+      {
+        "left": "Distance(B1, A2)",
+        "operator": "=",
+        "right": "Distance(A2, A)"
+      },
+      {
+        "left": "Perpendicular(Line(A, B), Line(B, B1))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": "Distance(C, C1)"
+      },
+      {
+        "left": "Distance(C, C1)",
+        "operator": "=",
+        "right": "Distance(C1, B2)"
+      },
+      {
+        "left": "Distance(C1, B2)",
+        "operator": "=",
+        "right": "Distance(B2, B)"
+      },
+      {
+        "left": "Perpendicular(Line(B, C), Line(C, C1))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": "Distance(A, A1)"
+      },
+      {
+        "left": "Distance(A, A1)",
+        "operator": "=",
+        "right": "Distance(A1, C2)"
+      },
+      {
+        "left": "Distance(A1, C2)",
+        "operator": "=",
+        "right": "Distance(C2, C)"
+      },
+      {
+        "left": "Perpendicular(Line(C, A), Line(A, A1))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A1, A2)",
+        "operator": "=",
+        "right": "Distance(A2, A3)"
+      },
+      {
+        "left": "Distance(A2, A3)",
+        "operator": "=",
+        "right": "Distance(A3, A4)"
+      },
+      {
+        "left": "Distance(A3, A4)",
+        "operator": "=",
+        "right": "Distance(A4, A1)"
+      },
+      {
+        "left": "Perpendicular(Line(A1, A2), Line(A2, A3))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(B1, B2)",
+        "operator": "=",
+        "right": "Distance(B2, B3)"
+      },
+      {
+        "left": "Distance(B2, B3)",
+        "operator": "=",
+        "right": "Distance(B3, B4)"
+      },
+      {
+        "left": "Distance(B3, B4)",
+        "operator": "=",
+        "right": "Distance(B4, B1)"
+      },
+      {
+        "left": "Perpendicular(Line(B1, B2), Line(B2, B3))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(C1, C2)",
+        "operator": "=",
+        "right": "Distance(C2, C3)"
+      },
+      {
+        "left": "Distance(C2, C3)",
+        "operator": "=",
+        "right": "Distance(C3, C4)"
+      },
+      {
+        "left": "Distance(C3, C4)",
+        "operator": "=",
+        "right": "Distance(C4, C1)"
+      },
+      {
+        "left": "Perpendicular(Line(C1, C2), Line(C2, C3))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A3, B4)",
+        "operator": "=",
+        "right": "Distance(B4, B5)"
+      },
+      {
+        "left": "Distance(B4, B5)",
+        "operator": "=",
+        "right": "Distance(B5, A6)"
+      },
+      {
+        "left": "Distance(B5, A6)",
+        "operator": "=",
+        "right": "Distance(A6, A3)"
+      },
+      {
+        "left": "Perpendicular(Line(A3, B4), Line(B4, B5))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(B3, C4)",
+        "operator": "=",
+        "right": "Distance(C4, C5)"
+      },
+      {
+        "left": "Distance(C4, C5)",
+        "operator": "=",
+        "right": "Distance(C5, B6)"
+      },
+      {
+        "left": "Distance(C5, B6)",
+        "operator": "=",
+        "right": "Distance(B6, B3)"
+      },
+      {
+        "left": "Perpendicular(Line(B3, C4), Line(C4, C5))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(C3, A4)",
+        "operator": "=",
+        "right": "Distance(A4, A5)"
+      },
+      {
+        "left": "Distance(A4, A5)",
+        "operator": "=",
+        "right": "Distance(A5, C6)"
+      },
+      {
+        "left": "Distance(A5, C6)",
+        "operator": "=",
+        "right": "Distance(C6, C3)"
+      },
+      {
+        "left": "Perpendicular(Line(C3, A4), Line(A4, A5))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "C.y",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C])"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, B1, A2])"
+      },
+      {
+        "predicate": "ConvexPolygon([B, C, C1, B2])"
+      },
+      {
+        "predicate": "ConvexPolygon([C, A, A1, C2])"
+      },
+      {
+        "predicate": "ConvexPolygon([A1, A2, A3, A4])"
+      },
+      {
+        "predicate": "ConvexPolygon([B1, B2, B3, B4])"
+      },
+      {
+        "predicate": "ConvexPolygon([C1, C2, C3, C4])"
+      },
+      {
+        "predicate": "ConvexPolygon([A3, B4, B5, A6])"
+      },
+      {
+        "predicate": "ConvexPolygon([B3, C4, C5, B6])"
+      },
+      {
+        "predicate": "ConvexPolygon([C3, A4, A5, C6])"
+      }
+    ],
+    "target": "Area(A5, A6, B5, B6, C5, C6)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "19444"
+  ],
+  "reference_parse_error": null
+}

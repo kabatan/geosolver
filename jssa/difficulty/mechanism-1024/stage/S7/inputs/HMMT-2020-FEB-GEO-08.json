@@ -1,0 +1,94 @@
+{
+  "case_id": "HMMT-2020-FEB-GEO-08",
+  "dsl": {
+    "id": "HMMT-2020-FEB-GEO-08",
+    "variables": [
+      "b",
+      "cx",
+      "cy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(b, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "O",
+        "expression": "Circumcenter(A, B, C)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, B, C)"
+      },
+      {
+        "name": "A0",
+        "expression": "Reflect(A, O)"
+      },
+      {
+        "name": "bis",
+        "expression": "AngleBisector(B, A, C)"
+      },
+      {
+        "name": "E",
+        "expression": "Intersect(bis, Line(B, C))"
+      },
+      {
+        "name": "N",
+        "expression": "Intersect(bis, Gamma, exclude=A)"
+      },
+      {
+        "name": "V",
+        "expression": "Intersect(Line(A, A0), Line(B, C))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(E, V)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(V, A0)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(A0, N)",
+        "operator": "=",
+        "right": 9
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "AcuteTriangle(A, B, C)"
+      }
+    ],
+    "target": "Radius(Gamma)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "15/2"
+  ],
+  "reference_parse_error": null
+}

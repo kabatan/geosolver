@@ -1,0 +1,96 @@
+{
+  "case_id": "AIME-2010-II-09",
+  "dsl": {
+    "id": "AIME-2010-II-09",
+    "variables": [
+      "s"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(s, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(s / 2, sqrt(3) * s / 2)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(-s / 2, sqrt(3) * s / 2)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(-s, 0)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(-s / 2, -sqrt(3) * s / 2)"
+      },
+      {
+        "name": "F",
+        "expression": "Point(s / 2, -sqrt(3) * s / 2)"
+      },
+      {
+        "name": "G",
+        "expression": "Midpoint(A, B)"
+      },
+      {
+        "name": "H",
+        "expression": "Midpoint(B, C)"
+      },
+      {
+        "name": "I",
+        "expression": "Midpoint(C, D)"
+      },
+      {
+        "name": "J",
+        "expression": "Midpoint(D, E)"
+      },
+      {
+        "name": "K",
+        "expression": "Midpoint(E, F)"
+      },
+      {
+        "name": "L",
+        "expression": "Midpoint(F, A)"
+      },
+      {
+        "name": "U",
+        "expression": "Intersect(Line(A, H), Line(B, I))"
+      },
+      {
+        "name": "V",
+        "expression": "Intersect(Line(B, I), Line(C, J))"
+      },
+      {
+        "name": "W",
+        "expression": "Intersect(Line(C, J), Line(D, K))"
+      },
+      {
+        "name": "X",
+        "expression": "Intersect(Line(D, K), Line(E, L))"
+      },
+      {
+        "name": "Y",
+        "expression": "Intersect(Line(E, L), Line(F, G))"
+      },
+      {
+        "name": "Z",
+        "expression": "Intersect(Line(F, G), Line(A, H))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Area(U, V, W, X, Y, Z) / Area(A, B, C, D, E, F)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "4/7"
+  ],
+  "reference_parse_error": null
+}

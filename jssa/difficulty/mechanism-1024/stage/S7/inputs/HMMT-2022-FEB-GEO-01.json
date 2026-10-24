@@ -1,0 +1,81 @@
+{
+  "case_id": "HMMT-2022-FEB-GEO-01",
+  "dsl": {
+    "id": "HMMT-2022-FEB-GEO-01",
+    "variables": [
+      "u"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(20, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(11, 11 * sqrt(3))"
+      },
+      {
+        "name": "U",
+        "expression": "Point(u, 0)"
+      },
+      {
+        "name": "V",
+        "expression": "Point(u / 2, u * sqrt(3) / 2)"
+      },
+      {
+        "name": "l",
+        "expression": "Line(U, V)"
+      },
+      {
+        "name": "X",
+        "expression": "FootOfPerpendicular(B, l)"
+      },
+      {
+        "name": "Y",
+        "expression": "FootOfPerpendicular(C, l)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 22
+      },
+      {
+        "left": "Distance(A, U)",
+        "operator": "=",
+        "right": "Distance(A, V)"
+      },
+      {
+        "left": "Distance(A, U)",
+        "operator": "=",
+        "right": "Distance(U, V)"
+      },
+      {
+        "left": "u",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": "<",
+        "right": "20"
+      }
+    ],
+    "target": "Distance(X, Y)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "21"
+  ],
+  "reference_parse_error": null
+}

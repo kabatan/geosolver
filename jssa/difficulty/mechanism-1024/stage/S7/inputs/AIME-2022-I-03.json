@@ -1,0 +1,73 @@
+{
+  "case_id": "AIME-2022-I-03",
+  "dsl": {
+    "id": "AIME-2022-I-03",
+    "variables": [
+      "h"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(-250, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(250, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(325, h)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(-325, h)"
+      },
+      {
+        "name": "P",
+        "expression": "Intersect(AngleBisector(D, A, B), AngleBisector(C, D, A))"
+      },
+      {
+        "name": "Q",
+        "expression": "Intersect(AngleBisector(A, B, C), AngleBisector(B, C, D))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 500
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 650
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 333
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 333
+      },
+      {
+        "left": "h",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(P, Q)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(P, Q)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "242"
+  ],
+  "reference_parse_error": null
+}

@@ -1,0 +1,83 @@
+{
+  "case_id": "HMMT-2023-FEB-GEO-10",
+  "dsl": {
+    "id": "HMMT-2023-FEB-GEO-10",
+    "variables": [
+      "cx",
+      "ax",
+      "ay"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(ax, ay)"
+      },
+      {
+        "name": "I",
+        "expression": "Incenter(A, B, C)"
+      },
+      {
+        "name": "D",
+        "expression": "FootOfPerpendicular(A, Line(B, C))"
+      },
+      {
+        "name": "O",
+        "expression": "Circumcenter(A, B, C)"
+      },
+      {
+        "name": "X",
+        "expression": "Reflect(A, O)"
+      },
+      {
+        "name": "incircle",
+        "expression": "Incircle(A, B, C)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(I, D)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(I, A)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(I, X)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "cx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": "!=",
+        "right": "0"
+      }
+    ],
+    "target": "incircle.radius"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "11/12"
+  ],
+  "reference_parse_error": null
+}

@@ -1,0 +1,71 @@
+{
+  "case_id": "AIME-2025-I-02",
+  "dsl": {
+    "id": "AIME-2025-I-02",
+    "variables": [
+      "cx",
+      "cy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(28, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(4, 0)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(20, 0)"
+      },
+      {
+        "name": "F",
+        "expression": "Point(13 * cx / 91, 13 * cy / 91)"
+      },
+      {
+        "name": "G",
+        "expression": "Point(65 * cx / 91, 65 * cy / 91)"
+      },
+      {
+        "name": "M",
+        "expression": "Reflect(D, F)"
+      },
+      {
+        "name": "N",
+        "expression": "Reflect(G, E)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 91
+      },
+      {
+        "left": "Area(D, E, G, F)",
+        "operator": "=",
+        "right": 288
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Area(A, F, N, B, C, E, M)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "588"
+  ],
+  "reference_parse_error": null
+}

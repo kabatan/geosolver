@@ -1,0 +1,169 @@
+{
+  "case_id": "AIME-2019-II-07",
+  "dsl": {
+    "id": "AIME-2019-II-07",
+    "variables": [],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(120, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(-20 / 3, sqrt(291200) / 3)"
+      },
+      {
+        "name": "Ua",
+        "expression": "PointOnSegment(A, B, 1 / 4)"
+      },
+      {
+        "name": "Ub",
+        "expression": "PointOnSegment(B, A, 1 / 4)"
+      },
+      {
+        "name": "Uc",
+        "expression": "PointOnSegment(C, A, 1 / 8)"
+      },
+      {
+        "name": "lA",
+        "expression": "ParallelLine(Ua, Line(B, C))"
+      },
+      {
+        "name": "lB",
+        "expression": "ParallelLine(Ub, Line(A, C))"
+      },
+      {
+        "name": "lC",
+        "expression": "ParallelLine(Uc, Line(A, B))"
+      },
+      {
+        "name": "A1",
+        "expression": "Intersect(lA, Line(A, B))"
+      },
+      {
+        "name": "A2",
+        "expression": "Intersect(lA, Line(A, C))"
+      },
+      {
+        "name": "B1",
+        "expression": "Intersect(lB, Line(A, B))"
+      },
+      {
+        "name": "B2",
+        "expression": "Intersect(lB, Line(B, C))"
+      },
+      {
+        "name": "C1",
+        "expression": "Intersect(lC, Line(A, C))"
+      },
+      {
+        "name": "C2",
+        "expression": "Intersect(lC, Line(B, C))"
+      },
+      {
+        "name": "I",
+        "expression": "Intersect(lA, lB)"
+      },
+      {
+        "name": "J",
+        "expression": "Intersect(lB, lC)"
+      },
+      {
+        "name": "K",
+        "expression": "Intersect(lC, lA)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 120
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 220
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 180
+      },
+      {
+        "left": "Distance(A1, A2)",
+        "operator": "=",
+        "right": 55
+      },
+      {
+        "left": "Distance(B1, B2)",
+        "operator": "=",
+        "right": 45
+      },
+      {
+        "left": "Distance(C1, C2)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "OnSegment(A1, A, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(A2, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(B1, A, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(B2, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(C1, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(C2, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "C.y",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(I, J)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(J, K)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(K, I)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(I, J) + Distance(J, K) + Distance(K, I)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "715"
+  ],
+  "reference_parse_error": null
+}

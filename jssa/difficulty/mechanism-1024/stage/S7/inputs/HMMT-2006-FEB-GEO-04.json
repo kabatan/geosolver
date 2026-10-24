@@ -1,0 +1,74 @@
+{
+  "case_id": "HMMT-2006-FEB-GEO-04",
+  "dsl": {
+    "id": "HMMT-2006-FEB-GEO-04",
+    "variables": [],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(4, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(11 / 8, 3 * sqrt(15) / 8)"
+      },
+      {
+        "name": "O",
+        "expression": "Point(8 / 5, 0)"
+      },
+      {
+        "name": "E",
+        "expression": "FootOfPerpendicular(O, Line(A, B))"
+      },
+      {
+        "name": "F",
+        "expression": "FootOfPerpendicular(O, Line(A, C))"
+      },
+      {
+        "name": "r",
+        "expression": "Distance(O, E)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(O, r)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "Distance(O, E)",
+        "operator": "=",
+        "right": "Distance(O, F)"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "pi * r * r / 2"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "27*pi/40"
+  ],
+  "reference_parse_error": null
+}

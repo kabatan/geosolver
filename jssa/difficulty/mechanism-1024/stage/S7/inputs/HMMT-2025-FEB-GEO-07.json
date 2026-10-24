@@ -1,0 +1,83 @@
+{
+  "case_id": "HMMT-2025-FEB-GEO-07",
+  "dsl": {
+    "id": "HMMT-2025-FEB-GEO-07",
+    "variables": [
+      "cx",
+      "cy",
+      "u",
+      "v"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(6, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(6 * u + cx * v, cy * v)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Angle(A, B, P)",
+        "operator": "=",
+        "right": "Angle(A, C, P)"
+      },
+      {
+        "left": "Distance(B, P)",
+        "operator": "=",
+        "right": "Distance(P, C) / 2"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "v",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u + v",
+        "operator": "<",
+        "right": "1"
+      }
+    ],
+    "target": "Area(B, P, C) / Area(A, B, C)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "7/18"
+  ],
+  "reference_parse_error": null
+}

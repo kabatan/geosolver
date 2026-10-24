@@ -1,0 +1,69 @@
+{
+  "case_id": "AIME-2023-I-05",
+  "dsl": {
+    "id": "AIME-2023-I-05",
+    "variables": [
+      "s",
+      "px",
+      "py"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(-s / 2, -s / 2)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(s / 2, -s / 2)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(s / 2, s / 2)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(-s / 2, s / 2)"
+      },
+      {
+        "name": "O",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(px, py)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circle(O, s / sqrt(2))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "OnCircle(P, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(P, A) * Distance(P, C)",
+        "operator": "=",
+        "right": 56
+      },
+      {
+        "left": "Distance(P, B) * Distance(P, D)",
+        "operator": "=",
+        "right": 90
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "s * s"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "106"
+  ],
+  "reference_parse_error": null
+}

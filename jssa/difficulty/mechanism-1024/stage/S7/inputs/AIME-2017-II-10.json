@@ -1,0 +1,82 @@
+{
+  "case_id": "AIME-2017-II-10",
+  "dsl": {
+    "id": "AIME-2017-II-10",
+    "variables": [
+      "px",
+      "py"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(84, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(84, 42)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(0, 42)"
+      },
+      {
+        "name": "M",
+        "expression": "Midpoint(A, D)"
+      },
+      {
+        "name": "N",
+        "expression": "Point(28, 0)"
+      },
+      {
+        "name": "O",
+        "expression": "Intersect(Line(C, M), Line(D, N))"
+      },
+      {
+        "name": "P",
+        "expression": "Point(px, py)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Area(B, C, P)",
+        "operator": "=",
+        "right": "Area(B, C, O, N) / 2"
+      },
+      {
+        "left": "OnSegment(P, C, O)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "px",
+        "operator": ">",
+        "right": "28"
+      },
+      {
+        "left": "px",
+        "operator": "<",
+        "right": "84"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": "<",
+        "right": "42"
+      }
+    ],
+    "target": "Area(C, D, P)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "546"
+  ],
+  "reference_parse_error": null
+}

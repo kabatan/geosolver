@@ -1,0 +1,76 @@
+{
+  "case_id": "AIME-2012-II-15",
+  "dsl": {
+    "id": "AIME-2012-II-15",
+    "variables": [
+      "cx",
+      "cy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(5, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "I",
+        "expression": "Incenter(A, B, C)"
+      },
+      {
+        "name": "D",
+        "expression": "Intersect(Line(A, I), Line(B, C))"
+      },
+      {
+        "name": "omega",
+        "expression": "Circumcircle(A, B, C)"
+      },
+      {
+        "name": "E",
+        "expression": "Intersect(Line(A, D), omega, exclude=A)"
+      },
+      {
+        "name": "gamma",
+        "expression": "Circle(Midpoint(D, E), Distance(D, E) / 2)"
+      },
+      {
+        "name": "F",
+        "expression": "Intersect(omega, gamma, exclude=E)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "OnSegment(D, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(A, F) ** 2"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "900/19"
+  ],
+  "reference_parse_error": null
+}

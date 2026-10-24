@@ -1,0 +1,116 @@
+{
+  "case_id": "AIME-2008-II-11",
+  "dsl": {
+    "id": "AIME-2008-II-11",
+    "variables": [
+      "o1x",
+      "o1y",
+      "o2x",
+      "o2y",
+      "r"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(28, 96)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(56, 0)"
+      },
+      {
+        "name": "O1",
+        "expression": "Point(o1x, o1y)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(o2x, o2y)"
+      },
+      {
+        "name": "P",
+        "expression": "Circle(O1, 16)"
+      },
+      {
+        "name": "Q",
+        "expression": "Circle(O2, r)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(O1, Line(A, C))",
+        "operator": "=",
+        "right": 16
+      },
+      {
+        "left": "Distance(O1, Line(B, C))",
+        "operator": "=",
+        "right": 16
+      },
+      {
+        "left": "Distance(O2, Line(A, B))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O2, Line(B, C))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O1, O2)",
+        "operator": "=",
+        "right": "16 + r"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "o1y",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "o2y",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "o2x",
+        "operator": "<",
+        "right": "56"
+      },
+      {
+        "left": "Vector(A, B).x * Vector(A, O2).y - Vector(A, B).y * Vector(A, O2).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(B, C).x * Vector(B, O2).y - Vector(B, C).y * Vector(B, O2).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Vector(C, A).x * Vector(C, O2).y - Vector(C, A).y * Vector(C, O2).x",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(O2, Line(A, C))",
+        "operator": ">=",
+        "right": "r"
+      }
+    ],
+    "target": "r"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "44 - 6*sqrt(35)"
+  ],
+  "reference_parse_error": null
+}

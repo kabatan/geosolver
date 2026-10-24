@@ -1,0 +1,96 @@
+{
+  "case_id": "JMO-2025-PRE-09",
+  "dsl": {
+    "conditions": [
+      {
+        "left": "Angle(A, O, D)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Distance(O, D)",
+        "operator": "=",
+        "right": "4 * sqrt(7)"
+      },
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": 11
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "AcuteTriangle(A,B,C)"
+      },
+      {
+        "left": "OnSegment(P,A,O)",
+        "operator": "=",
+        "right": "0"
+      },
+      {
+        "left": "OnSegment(P,E,F)",
+        "operator": "=",
+        "right": "0"
+      }
+    ],
+    "constructions": [
+      {
+        "expression": "Point(0, 0)",
+        "name": "A"
+      },
+      {
+        "expression": "Point(b, 0)",
+        "name": "B"
+      },
+      {
+        "expression": "Point(cx, cy)",
+        "name": "C"
+      },
+      {
+        "expression": "Circumcenter(A, B, C)",
+        "name": "O"
+      },
+      {
+        "expression": "FootOfPerpendicular(Line(B, C), A)",
+        "name": "D"
+      },
+      {
+        "expression": "FootOfPerpendicular(Line(A, B), D)",
+        "name": "E"
+      },
+      {
+        "expression": "FootOfPerpendicular(Line(A, C), D)",
+        "name": "F"
+      },
+      {
+        "expression": "Intersect(Line(A, O), Line(E, F))",
+        "name": "P"
+      }
+    ],
+    "id": "JMO-2025-PRE-09",
+    "target": "Distance(E, F)",
+    "variables": [
+      "b",
+      "cx",
+      "cy"
+    ]
+  },
+  "selection": null,
+  "reference_expressions": [
+    "2*sqrt(61)"
+  ],
+  "reference_parse_error": null
+}

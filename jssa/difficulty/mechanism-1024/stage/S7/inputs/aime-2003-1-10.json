@@ -1,0 +1,72 @@
+{
+  "case_id": "aime-2003-1-10",
+  "dsl": {
+    "id": "aime-2003-1-10",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(2, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(1, x)"
+      },
+      {
+        "name": "M",
+        "expression": "Point(y, z)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "x",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "z",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "x*y-z",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "2*x-x*y-z",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Angle(A, C, B)",
+        "operator": "=",
+        "right": "106*pi/180"
+      },
+      {
+        "left": "Angle(M, A, C)",
+        "operator": "=",
+        "right": "7*pi/180"
+      },
+      {
+        "left": "Angle(M, C, A)",
+        "operator": "=",
+        "right": "23*pi/180"
+      }
+    ],
+    "target": "Degrees(Angle(C, M, B))"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "83"
+  ],
+  "reference_parse_error": null
+}

@@ -1,0 +1,86 @@
+{
+  "case_id": "aime-2005-1-14",
+  "dsl": {
+    "id": "aime-2005-1-14",
+    "variables": [
+      "cx",
+      "cy",
+      "vx",
+      "vy"
+    ],
+    "constructions": [
+      {
+        "name": "O",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "S0",
+        "expression": "Point(cx + vx, cy + vy)"
+      },
+      {
+        "name": "S1",
+        "expression": "Point(cx - vy, cy + vx)"
+      },
+      {
+        "name": "S2",
+        "expression": "Point(cx - vx, cy - vy)"
+      },
+      {
+        "name": "S3",
+        "expression": "Point(cx + vy, cy - vx)"
+      },
+      {
+        "name": "edge01",
+        "expression": "Segment(S0, S1)"
+      },
+      {
+        "name": "edge12",
+        "expression": "Segment(S1, S2)"
+      },
+      {
+        "name": "edge23",
+        "expression": "Segment(S2, S3)"
+      },
+      {
+        "name": "edge30",
+        "expression": "Segment(S3, S0)"
+      },
+      {
+        "name": "square",
+        "expression": "Polygon([S0, S1, S2, S3])"
+      },
+      {
+        "name": "A",
+        "expression": "Point(0, 12)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(10, 9)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(8, 0)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(-4, 7)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "vx**2 + vy**2",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "predicate": "Or(And(OnSegment(A, S0, S1) == 0, OnSegment(B, S1, S2) == 0, OnSegment(C, S2, S3) == 0, OnSegment(D, S3, S0) == 0), And(OnSegment(A, S0, S1) == 0, OnSegment(B, S1, S2) == 0, OnSegment(C, S3, S0) == 0, OnSegment(D, S2, S3) == 0), And(OnSegment(A, S0, S1) == 0, OnSegment(B, S2, S3) == 0, OnSegment(C, S1, S2) == 0, OnSegment(D, S3, S0) == 0), And(OnSegment(A, S0, S1) == 0, OnSegment(B, S2, S3) == 0, OnSegment(C, S3, S0) == 0, OnSegment(D, S1, S2) == 0), And(OnSegment(A, S0, S1) == 0, OnSegment(B, S3, S0) == 0, OnSegment(C, S1, S2) == 0, OnSegment(D, S2, S3) == 0), And(OnSegment(A, S0, S1) == 0, OnSegment(B, S3, S0) == 0, OnSegment(C, S2, S3) == 0, OnSegment(D, S1, S2) == 0), And(OnSegment(A, S1, S2) == 0, OnSegment(B, S0, S1) == 0, OnSegment(C, S2, S3) == 0, OnSegment(D, S3, S0) == 0), And(OnSegment(A, S1, S2) == 0, OnSegment(B, S0, S1) == 0, OnSegment(C, S3, S0) == 0, OnSegment(D, S2, S3) == 0), And(OnSegment(A, S1, S2) == 0, OnSegment(B, S2, S3) == 0, OnSegment(C, S0, S1) == 0, OnSegment(D, S3, S0) == 0), And(OnSegment(A, S1, S2) == 0, OnSegment(B, S2, S3) == 0, OnSegment(C, S3, S0) == 0, OnSegment(D, S0, S1) == 0), And(OnSegment(A, S1, S2) == 0, OnSegment(B, S3, S0) == 0, OnSegment(C, S0, S1) == 0, OnSegment(D, S2, S3) == 0), And(OnSegment(A, S1, S2) == 0, OnSegment(B, S3, S0) == 0, OnSegment(C, S2, S3) == 0, OnSegment(D, S0, S1) == 0), And(OnSegment(A, S2, S3) == 0, OnSegment(B, S0, S1) == 0, OnSegment(C, S1, S2) == 0, OnSegment(D, S3, S0) == 0), And(OnSegment(A, S2, S3) == 0, OnSegment(B, S0, S1) == 0, OnSegment(C, S3, S0) == 0, OnSegment(D, S1, S2) == 0), And(OnSegment(A, S2, S3) == 0, OnSegment(B, S1, S2) == 0, OnSegment(C, S0, S1) == 0, OnSegment(D, S3, S0) == 0), And(OnSegment(A, S2, S3) == 0, OnSegment(B, S1, S2) == 0, OnSegment(C, S3, S0) == 0, OnSegment(D, S0, S1) == 0), And(OnSegment(A, S2, S3) == 0, OnSegment(B, S3, S0) == 0, OnSegment(C, S0, S1) == 0, OnSegment(D, S1, S2) == 0), And(OnSegment(A, S2, S3) == 0, OnSegment(B, S3, S0) == 0, OnSegment(C, S1, S2) == 0, OnSegment(D, S0, S1) == 0), And(OnSegment(A, S3, S0) == 0, OnSegment(B, S0, S1) == 0, OnSegment(C, S1, S2) == 0, OnSegment(D, S2, S3) == 0), And(OnSegment(A, S3, S0) == 0, OnSegment(B, S0, S1) == 0, OnSegment(C, S2, S3) == 0, OnSegment(D, S1, S2) == 0), And(OnSegment(A, S3, S0) == 0, OnSegment(B, S1, S2) == 0, OnSegment(C, S0, S1) == 0, OnSegment(D, S2, S3) == 0), And(OnSegment(A, S3, S0) == 0, OnSegment(B, S1, S2) == 0, OnSegment(C, S2, S3) == 0, OnSegment(D, S0, S1) == 0), And(OnSegment(A, S3, S0) == 0, OnSegment(B, S2, S3) == 0, OnSegment(C, S0, S1) == 0, OnSegment(D, S1, S2) == 0), And(OnSegment(A, S3, S0) == 0, OnSegment(B, S2, S3) == 0, OnSegment(C, S1, S2) == 0, OnSegment(D, S0, S1) == 0))"
+      }
+    ],
+    "target": "Area(S0, S1, S2, S3)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "1936/10"
+  ],
+  "reference_parse_error": null
+}

@@ -1,0 +1,79 @@
+{
+  "case_id": "AIME-2024-II-10",
+  "dsl": {
+    "id": "AIME-2024-II-10",
+    "variables": [
+      "b",
+      "cx",
+      "cy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(b, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "I",
+        "expression": "Incenter(A, B, C)"
+      },
+      {
+        "name": "O",
+        "expression": "Circumcenter(A, B, C)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, B, C)"
+      },
+      {
+        "name": "omega",
+        "expression": "Incircle(A, B, C)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Perpendicular(Line(I, A), Line(I, O))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Radius(Gamma)",
+        "operator": "=",
+        "right": 13
+      },
+      {
+        "left": "Radius(omega)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(A, B) * Distance(A, C)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "468"
+  ],
+  "reference_parse_error": null
+}

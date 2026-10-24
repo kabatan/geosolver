@@ -1,0 +1,107 @@
+{
+  "case_id": "aime-2002-1-10",
+  "dsl": {
+    "id": "aime-2002-1-10",
+    "variables": [
+      "x",
+      "t_e",
+      "t_f"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(0, 12)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(x, 0)"
+      },
+      {
+        "name": "E",
+        "expression": "PointOnSegment(A, B, t_e)"
+      },
+      {
+        "name": "F",
+        "expression": "PointOnSegment(A, C, t_f)"
+      },
+      {
+        "name": "bc_line",
+        "expression": "Line(B, C)"
+      },
+      {
+        "name": "angle_bisector",
+        "expression": "AngleBisector(C, A, B)"
+      },
+      {
+        "name": "D",
+        "expression": "Intersect(angle_bisector, bc_line)"
+      },
+      {
+        "name": "ef_line",
+        "expression": "Line(E, F)"
+      },
+      {
+        "name": "G",
+        "expression": "Intersect(angle_bisector, ef_line)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "x",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "predicate": "Bound(t_e, (0, 1))"
+      },
+      {
+        "predicate": "Bound(t_f, (0, 1))"
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(E, B)",
+        "operator": "=",
+        "right": 9
+      },
+      {
+        "left": "Distance(A, F)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(F, C)",
+        "operator": "=",
+        "right": 27
+      },
+      {
+        "left": "OnSegment(D, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(G, A, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(G, E, F)",
+        "operator": "=",
+        "right": 0
+      }
+    ],
+    "target": "Area(D, C, F, G)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "497160/3367"
+  ],
+  "reference_parse_error": null
+}

@@ -1,0 +1,47 @@
+{
+  "constraints": [
+    "Collinear(A, Y, X)",
+    "Collinear(B, Z, Y)",
+    "Collinear(C, X, Z)",
+    "OnSegment(Y, A, X)",
+    "OnSegment(Z, B, Y)",
+    "OnSegment(X, C, Z)",
+    "Distance(X, Y)",
+    "Distance(X, Y)",
+    "Perpendicular(Line(X, Y), Line(X, Z))"
+  ],
+  "targets": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    "1 / 4",
+    "Distance(X, Z)",
+    0
+  ],
+  "scales": [
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0"
+  ],
+  "finite_counts": [
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20
+  ],
+  "rule": "max(1,finite |lhs|,finite |rhs|) over saved first ordinary search candidates; never reference solution"
+}

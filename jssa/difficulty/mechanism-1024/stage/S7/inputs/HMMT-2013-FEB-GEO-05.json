@@ -1,0 +1,74 @@
+{
+  "case_id": "HMMT-2013-FEB-GEO-05",
+  "dsl": {
+    "id": "HMMT-2013-FEB-GEO-05",
+    "variables": [
+      "s",
+      "Ax",
+      "Ay"
+    ],
+    "constructions": [
+      {
+        "name": "M",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(-s, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(s, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(Ax, Ay)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, B, C)"
+      },
+      {
+        "name": "D",
+        "expression": "Intersect(Line(A, M), Gamma, exclude=A)"
+      },
+      {
+        "name": "O",
+        "expression": "Circumcenter(A, B, C)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "pi / 4"
+      },
+      {
+        "left": "Distance(A, M)",
+        "operator": "=",
+        "right": "2 * Distance(M, D)"
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(A, M)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "cos(Angle(A, O, D))"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "-1/8"
+  ],
+  "reference_parse_error": null
+}

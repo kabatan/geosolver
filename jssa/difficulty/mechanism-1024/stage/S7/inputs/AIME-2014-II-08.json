@@ -1,0 +1,74 @@
+{
+  "case_id": "AIME-2014-II-08",
+  "dsl": {
+    "id": "AIME-2014-II-08",
+    "variables": [
+      "e",
+      "ex"
+    ],
+    "constructions": [
+      {
+        "name": "O",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(-2, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(2, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Circle(O, 2)"
+      },
+      {
+        "name": "OD",
+        "expression": "Point(-2 + 3 * e, 0)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(ex, e)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(O, OD)",
+        "operator": "=",
+        "right": "2 - 3 * e"
+      },
+      {
+        "left": "Distance(O, E)",
+        "operator": "=",
+        "right": "2 - e"
+      },
+      {
+        "left": "Distance(OD, E)",
+        "operator": "=",
+        "right": "4 * e"
+      },
+      {
+        "left": "Distance(E, Line(A, B))",
+        "operator": "=",
+        "right": "e"
+      },
+      {
+        "left": "e",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "3 * e",
+        "operator": "<",
+        "right": "2"
+      }
+    ],
+    "target": "3 * e"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "-14 + 4*sqrt(15)"
+  ],
+  "reference_parse_error": null
+}

@@ -1,0 +1,165 @@
+{
+  "case_id": "aime-2003-2-14",
+  "dsl": {
+    "id": "aime-2003-2-14",
+    "variables": [
+      "b",
+      "cx",
+      "cy",
+      "dx",
+      "dy",
+      "ex",
+      "ey",
+      "fx",
+      "fy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(b, 2)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(dx, dy)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(ex, ey)"
+      },
+      {
+        "name": "F",
+        "expression": "Point(fx, fy)"
+      },
+      {
+        "name": "ab_line",
+        "expression": "Line(A, B)"
+      },
+      {
+        "name": "bc_line",
+        "expression": "Line(B, C)"
+      },
+      {
+        "name": "cd_line",
+        "expression": "Line(C, D)"
+      },
+      {
+        "name": "de_line",
+        "expression": "Line(D, E)"
+      },
+      {
+        "name": "ef_line",
+        "expression": "Line(E, F)"
+      },
+      {
+        "name": "fa_line",
+        "expression": "Line(F, A)"
+      }
+    ],
+    "conditions": [
+      {
+        "predicate": "ConvexPolygon([A, B, C, D, E, F])"
+      },
+      {
+        "left": "Angle(F, A, B)",
+        "operator": "=",
+        "right": "2*pi/3"
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Distance(D, E)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Distance(E, F)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Distance(F, A)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Parallel(ab_line, de_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(bc_line, ef_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(cd_line, fa_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "predicate": "Or(C.y == 4, C.y == 6, C.y == 8, C.y == 10)"
+      },
+      {
+        "predicate": "Or(D.y == 4, D.y == 6, D.y == 8, D.y == 10)"
+      },
+      {
+        "predicate": "Or(E.y == 4, E.y == 6, E.y == 8, E.y == 10)"
+      },
+      {
+        "predicate": "Or(F.y == 4, F.y == 6, F.y == 8, F.y == 10)"
+      },
+      {
+        "left": "C.y",
+        "operator": "!=",
+        "right": "D.y"
+      },
+      {
+        "left": "C.y",
+        "operator": "!=",
+        "right": "E.y"
+      },
+      {
+        "left": "C.y",
+        "operator": "!=",
+        "right": "F.y"
+      },
+      {
+        "left": "D.y",
+        "operator": "!=",
+        "right": "E.y"
+      },
+      {
+        "left": "D.y",
+        "operator": "!=",
+        "right": "F.y"
+      },
+      {
+        "left": "E.y",
+        "operator": "!=",
+        "right": "F.y"
+      }
+    ],
+    "target": "Area(A, B, C, D, E, F)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "48*sqrt(3)"
+  ],
+  "reference_parse_error": null
+}

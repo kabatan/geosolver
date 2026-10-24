@@ -1,0 +1,69 @@
+{
+  "case_id": "HMMT-2012-FEB-GEO-01",
+  "dsl": {
+    "id": "HMMT-2012-FEB-GEO-01",
+    "variables": [
+      "t"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(2, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(0, 2)"
+      },
+      {
+        "name": "D",
+        "expression": "Midpoint(B, C)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(2 * (1 - t), 2 * t)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Area(A, E, D, B)",
+        "operator": "=",
+        "right": "2 * Area(E, C, D)"
+      },
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": "<",
+        "right": "1"
+      }
+    ],
+    "target": "Distance(D, E)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "sqrt(17)/3"
+  ],
+  "reference_parse_error": null
+}

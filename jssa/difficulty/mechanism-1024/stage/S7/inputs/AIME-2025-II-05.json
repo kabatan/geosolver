@@ -1,0 +1,99 @@
+{
+  "case_id": "AIME-2025-II-05",
+  "dsl": {
+    "id": "AIME-2025-II-05",
+    "variables": [
+      "ax",
+      "ay"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(6, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(ax, ay)"
+      },
+      {
+        "name": "D",
+        "expression": "Midpoint(B, C)"
+      },
+      {
+        "name": "E",
+        "expression": "Midpoint(A, C)"
+      },
+      {
+        "name": "F",
+        "expression": "Midpoint(A, B)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(D, E, F)"
+      },
+      {
+        "name": "O",
+        "expression": "Circumcenter(D, E, F)"
+      },
+      {
+        "name": "G",
+        "expression": "Intersect(Line(B, D), Gamma, exclude=D)"
+      },
+      {
+        "name": "H",
+        "expression": "Intersect(Line(A, E), Gamma, exclude=E)"
+      },
+      {
+        "name": "J",
+        "expression": "Intersect(Line(A, F), Gamma, exclude=F)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "84 * pi / 180"
+      },
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "60 * pi / 180"
+      },
+      {
+        "left": "Angle(A, C, B)",
+        "operator": "=",
+        "right": "36 * pi / 180"
+      },
+      {
+        "left": "OnSegment(G, B, D)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(H, A, E)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(J, A, F)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "ay",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "180 * (Angle(D, O, E) + 2 * Angle(H, O, J) + 3 * Angle(F, O, G)) / pi"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "336"
+  ],
+  "reference_parse_error": null
+}

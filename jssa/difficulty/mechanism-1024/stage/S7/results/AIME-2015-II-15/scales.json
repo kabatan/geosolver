@@ -1,0 +1,43 @@
+{
+  "constraints": [
+    "OnCircle(B, omega1)",
+    "OnCircle(C, omega2)",
+    "IsTangent(Line(B, C), omega1)",
+    "IsTangent(Line(B, C), omega2)",
+    "OnCircle(D, omega1)",
+    "OnCircle(E, omega2)",
+    "OnLine(E, A, D)",
+    "Area(D, B, A)"
+  ],
+  "targets": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    "Area(A, C, E)"
+  ],
+  "scales": [
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0"
+  ],
+  "finite_counts": [
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    19,
+    19
+  ],
+  "rule": "max(1,finite |lhs|,finite |rhs|) over saved first ordinary search candidates; never reference solution"
+}

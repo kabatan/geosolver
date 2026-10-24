@@ -1,0 +1,84 @@
+{
+  "case_id": "HMMT-2023-FEB-GEO-04",
+  "dsl": {
+    "id": "HMMT-2023-FEB-GEO-04",
+    "variables": [
+      "s",
+      "p",
+      "q"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(s, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(s, s)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(0, s)"
+      },
+      {
+        "name": "M",
+        "expression": "Midpoint(B, C)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(p * s, p * s / 2)"
+      },
+      {
+        "name": "Q",
+        "expression": "Point(q * s, q * s / 2)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Angle(B, P, D)",
+        "operator": "=",
+        "right": "3 * pi / 4"
+      },
+      {
+        "left": "Angle(B, Q, D)",
+        "operator": "=",
+        "right": "3 * pi / 4"
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "p",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "p",
+        "operator": "<",
+        "right": "1"
+      },
+      {
+        "left": "q",
+        "operator": ">",
+        "right": "p"
+      },
+      {
+        "left": "q",
+        "operator": "<",
+        "right": "1"
+      }
+    ],
+    "target": "Distance(A, Q) / Distance(A, P)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "sqrt(5)"
+  ],
+  "reference_parse_error": null
+}

@@ -1,0 +1,131 @@
+{
+  "case_id": "JMO-2024-PRE-06",
+  "dsl": {
+    "id": "JMO-2024-PRE-06",
+    "variables": [
+      "cx",
+      "cy",
+      "ex",
+      "ey",
+      "ox",
+      "oy",
+      "r"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(5, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(3, 0)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(ex, ey)"
+      },
+      {
+        "name": "O",
+        "expression": "Point(ox, oy)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(O, r)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, D, E)"
+      },
+      {
+        "name": "F",
+        "expression": "Intersect(omega, Line(A, E), exclude=E)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Collinear(B, E, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(E, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(O, B)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "OnCircle(E, omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Line(A, B), omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(omega, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(C, F)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(E, B)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(E, C)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(B, C)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "14*sqrt(65)/13"
+  ],
+  "reference_parse_error": null
+}

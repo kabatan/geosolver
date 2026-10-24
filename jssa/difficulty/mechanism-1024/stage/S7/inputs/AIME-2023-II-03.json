@@ -1,0 +1,82 @@
+{
+  "case_id": "AIME-2023-II-03",
+  "dsl": {
+    "id": "AIME-2023-II-03",
+    "variables": [
+      "s",
+      "px",
+      "py"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(s, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(0, s)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(px, py)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Angle(P, A, B)",
+        "operator": "=",
+        "right": "Angle(P, B, C)"
+      },
+      {
+        "left": "Angle(P, B, C)",
+        "operator": "=",
+        "right": "Angle(P, C, A)"
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "px",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "px",
+        "operator": "<",
+        "right": "s"
+      },
+      {
+        "left": "py",
+        "operator": "<",
+        "right": "s"
+      },
+      {
+        "left": "px + py",
+        "operator": "<",
+        "right": "s"
+      }
+    ],
+    "target": "Area(A, B, C)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "250"
+  ],
+  "reference_parse_error": null
+}

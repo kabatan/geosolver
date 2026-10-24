@@ -1,0 +1,82 @@
+{
+  "case_id": "HMMT-2006-FEB-GEO-03",
+  "dsl": {
+    "id": "HMMT-2006-FEB-GEO-03",
+    "variables": [
+      "a",
+      "c",
+      "s"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(-6 * cos(a), -6 * sin(a))"
+      },
+      {
+        "name": "P",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(5 * cos(a), 5 * sin(a))"
+      },
+      {
+        "name": "Q",
+        "expression": "Point(27, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(27 + 7 * c, 7 * s)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(27 - 12 * c, -12 * s)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, B, C)"
+      },
+      {
+        "name": "O",
+        "expression": "Center(Gamma)"
+      },
+      {
+        "name": "H",
+        "expression": "FootOfPerpendicular(O, Line(P, Q))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "c * c + s * s",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "OnCircle(D, Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "a",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "a",
+        "operator": "<",
+        "right": "pi"
+      }
+    ],
+    "target": "2 * sqrt(Radius(Gamma) * Radius(Gamma) - Distance(O, H) * Distance(O, H))"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "31"
+  ],
+  "reference_parse_error": null
+}

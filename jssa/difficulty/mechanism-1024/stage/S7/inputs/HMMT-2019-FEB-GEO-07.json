@@ -1,0 +1,96 @@
+{
+  "case_id": "HMMT-2019-FEB-GEO-07",
+  "dsl": {
+    "id": "HMMT-2019-FEB-GEO-07",
+    "variables": [],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(5, 12)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(14, 0)"
+      },
+      {
+        "name": "H",
+        "expression": "Point(5, 15 / 4)"
+      },
+      {
+        "name": "GammaA",
+        "expression": "Circumcircle(A, H, B)"
+      },
+      {
+        "name": "GammaB",
+        "expression": "Circumcircle(B, H, C)"
+      },
+      {
+        "name": "GammaC",
+        "expression": "Circumcircle(C, H, A)"
+      },
+      {
+        "name": "A0",
+        "expression": "Point(9, -12)"
+      },
+      {
+        "name": "B0",
+        "expression": "Point(19, 12)"
+      },
+      {
+        "name": "C0",
+        "expression": "Point(-9, 12)"
+      },
+      {
+        "name": "Omega",
+        "expression": "Circumcircle(A0, B0, C0)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 13
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 14
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "IsTangent(Omega, GammaA)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Omega, GammaB)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(Omega, GammaC)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Radius(Omega)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Radius(Omega)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "65/4"
+  ],
+  "reference_parse_error": null
+}

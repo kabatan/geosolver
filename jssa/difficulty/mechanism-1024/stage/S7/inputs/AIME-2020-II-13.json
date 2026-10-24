@@ -1,0 +1,174 @@
+{
+  "case_id": "AIME-2020-II-13",
+  "dsl": {
+    "id": "AIME-2020-II-13",
+    "variables": [
+      "r",
+      "beta",
+      "gamma",
+      "delta",
+      "epsilon"
+    ],
+    "constructions": [
+      {
+        "name": "I",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "T1",
+        "expression": "Point(r, 0)"
+      },
+      {
+        "name": "T2",
+        "expression": "Point(r * cos(beta), r * sin(beta))"
+      },
+      {
+        "name": "T3",
+        "expression": "Point(r * cos(gamma), r * sin(gamma))"
+      },
+      {
+        "name": "T4",
+        "expression": "Point(r * cos(delta), r * sin(delta))"
+      },
+      {
+        "name": "T5",
+        "expression": "Point(r * cos(epsilon), r * sin(epsilon))"
+      },
+      {
+        "name": "l1",
+        "expression": "PerpendicularLine(Line(I, T1), T1)"
+      },
+      {
+        "name": "l2",
+        "expression": "PerpendicularLine(Line(I, T2), T2)"
+      },
+      {
+        "name": "l3",
+        "expression": "PerpendicularLine(Line(I, T3), T3)"
+      },
+      {
+        "name": "l4",
+        "expression": "PerpendicularLine(Line(I, T4), T4)"
+      },
+      {
+        "name": "l5",
+        "expression": "PerpendicularLine(Line(I, T5), T5)"
+      },
+      {
+        "name": "A",
+        "expression": "Intersect(l5, l1)"
+      },
+      {
+        "name": "B",
+        "expression": "Intersect(l1, l2)"
+      },
+      {
+        "name": "C",
+        "expression": "Intersect(l2, l3)"
+      },
+      {
+        "name": "D",
+        "expression": "Intersect(l3, l4)"
+      },
+      {
+        "name": "E",
+        "expression": "Intersect(l4, l5)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(I, r)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(D, E)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(E, A)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(I, Line(A, B))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(I, Line(B, C))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(I, Line(C, D))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(I, Line(D, E))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(I, Line(E, A))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "beta",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "gamma - beta",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "delta - gamma",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "epsilon - delta",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "2 * pi - epsilon",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D, E])"
+      }
+    ],
+    "target": "Area(A, B, C, D, E)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "60"
+  ],
+  "reference_parse_error": null
+}

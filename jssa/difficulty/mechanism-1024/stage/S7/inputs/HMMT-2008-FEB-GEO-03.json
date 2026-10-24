@@ -1,0 +1,134 @@
+{
+  "case_id": "HMMT-2008-FEB-GEO-03",
+  "dsl": {
+    "id": "HMMT-2008-FEB-GEO-03",
+    "variables": [
+      "c",
+      "r"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(6, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(0, c)"
+      },
+      {
+        "name": "O",
+        "expression": "Point(r, r)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(O, r)"
+      },
+      {
+        "name": "X",
+        "expression": "Point(r, 0)"
+      },
+      {
+        "name": "Y",
+        "expression": "Point(0, r)"
+      },
+      {
+        "name": "Xp",
+        "expression": "Point(2 * r, r)"
+      },
+      {
+        "name": "Yp",
+        "expression": "Point(r, 2 * r)"
+      },
+      {
+        "name": "L2",
+        "expression": "c * c + 36"
+      },
+      {
+        "name": "f",
+        "expression": "r * (c + 6) - 6 * c"
+      },
+      {
+        "name": "hx",
+        "expression": "r - f * c / L2"
+      },
+      {
+        "name": "hy",
+        "expression": "r - f * 6 / L2"
+      },
+      {
+        "name": "h",
+        "expression": "sqrt(r * r - f * f / L2)"
+      },
+      {
+        "name": "U",
+        "expression": "Point(hx - 6 * h / sqrt(L2), hy + c * h / sqrt(L2))"
+      },
+      {
+        "name": "V",
+        "expression": "Point(hx + 6 * h / sqrt(L2), hy - c * h / sqrt(L2))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Area(B, C, Xp)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Area(B, C, Yp)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(Xp, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(Yp, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "c",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": "<",
+        "right": "6"
+      },
+      {
+        "left": "h",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "r * r * Angle(U, O, V) / 2 - Area(U, O, V)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "pi-2"
+  ],
+  "reference_parse_error": null
+}

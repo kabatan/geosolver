@@ -1,0 +1,79 @@
+{
+  "case_id": "JMO-2015-PRE-11",
+  "dsl": {
+    "id": "JMO-2015-PRE-11",
+    "variables": [
+      "b",
+      "cx",
+      "cy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(b, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, B, C)"
+      },
+      {
+        "name": "Ap",
+        "expression": "Midpoint(Arc(Gamma, B, C, excluding=A))"
+      },
+      {
+        "name": "Bp",
+        "expression": "Midpoint(Arc(Gamma, C, A, excluding=B))"
+      },
+      {
+        "name": "Cp",
+        "expression": "Midpoint(Arc(Gamma, A, B, excluding=C))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Area(A, Bp, Cp)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Area(Ap, B, Cp)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Area(Ap, Bp, C)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Area(A, B, C)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "288/35"
+  ],
+  "reference_parse_error": null
+}

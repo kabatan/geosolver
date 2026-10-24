@@ -1,0 +1,147 @@
+{
+  "case_id": "aime-2000-2-6",
+  "dsl": {
+    "id": "aime-2000-2-6",
+    "variables": [
+      "base_length",
+      "top_left_x",
+      "top_right_x",
+      "height",
+      "section_fraction"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(base_length, 0)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(top_left_x, height)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(top_right_x, height)"
+      },
+      {
+        "name": "bottom_base",
+        "expression": "Segment(A, B)"
+      },
+      {
+        "name": "top_base",
+        "expression": "Segment(D, C)"
+      },
+      {
+        "name": "bottom_line",
+        "expression": "Line(A, B)"
+      },
+      {
+        "name": "top_line",
+        "expression": "Line(D, C)"
+      },
+      {
+        "name": "left_leg",
+        "expression": "Segment(A, D)"
+      },
+      {
+        "name": "right_leg",
+        "expression": "Segment(B, C)"
+      },
+      {
+        "name": "trapezoid",
+        "expression": "Polygon([A, B, C, D])"
+      },
+      {
+        "name": "M",
+        "expression": "Midpoint(A, D)"
+      },
+      {
+        "name": "N",
+        "expression": "Midpoint(B, C)"
+      },
+      {
+        "name": "midline",
+        "expression": "Segment(M, N)"
+      },
+      {
+        "name": "midline_line",
+        "expression": "Line(M, N)"
+      },
+      {
+        "name": "P",
+        "expression": "PointOnSegment(A, D, section_fraction)"
+      },
+      {
+        "name": "Q",
+        "expression": "PointOnSegment(B, C, section_fraction)"
+      },
+      {
+        "name": "bisector",
+        "expression": "Segment(P, Q)"
+      },
+      {
+        "name": "bisector_line",
+        "expression": "Line(P, Q)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "base_length",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "height",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "top_right_x",
+        "operator": ">",
+        "right": "top_left_x"
+      },
+      {
+        "left": "Distance(A, B) - Distance(D, C)",
+        "operator": "=",
+        "right": 100
+      },
+      {
+        "left": "Area(A, B, N, M)",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Area(M, N, C, D)",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "3 * Area(M, N, C, D)",
+        "operator": "=",
+        "right": "2 * Area(A, B, N, M)"
+      },
+      {
+        "predicate": "Bound(section_fraction, (0, 1), inclusive=False)"
+      },
+      {
+        "left": "Distance(P, Q)",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "Area(A, B, Q, P)",
+        "operator": "=",
+        "right": "Area(A, B, C, D) / 2"
+      }
+    ],
+    "target": "Distance(P, Q)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "sqrt(18125)"
+  ],
+  "reference_parse_error": null
+}

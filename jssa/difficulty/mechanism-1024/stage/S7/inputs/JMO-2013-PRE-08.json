@@ -1,0 +1,96 @@
+{
+  "case_id": "JMO-2013-PRE-08",
+  "dsl": {
+    "id": "JMO-2013-PRE-08",
+    "variables": [
+      "d",
+      "ox",
+      "oy",
+      "r"
+    ],
+    "constructions": [
+      {
+        "name": "X",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(-5, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(0, 6)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(20, 0)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(0, -d)"
+      },
+      {
+        "name": "O1",
+        "expression": "Circle(A, 5)"
+      },
+      {
+        "name": "O2",
+        "expression": "Circle(B, 6)"
+      },
+      {
+        "name": "O3",
+        "expression": "Circle(C, 20)"
+      },
+      {
+        "name": "O4",
+        "expression": "Circle(D, d)"
+      },
+      {
+        "name": "T",
+        "expression": "Point(ox, oy)"
+      },
+      {
+        "name": "Omega",
+        "expression": "Circle(T, r)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(T, A)",
+        "operator": "=",
+        "right": "r - 5"
+      },
+      {
+        "left": "Distance(T, B)",
+        "operator": "=",
+        "right": "r - 6"
+      },
+      {
+        "left": "Distance(T, C)",
+        "operator": "=",
+        "right": "r - 20"
+      },
+      {
+        "left": "Distance(T, D)",
+        "operator": "=",
+        "right": "r - d"
+      },
+      {
+        "left": "d",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(D, X)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "12"
+  ],
+  "reference_parse_error": null
+}

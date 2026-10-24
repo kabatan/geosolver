@@ -1,0 +1,77 @@
+{
+  "case_id": "HMMT-2014-FEB-GEO-08",
+  "dsl": {
+    "id": "HMMT-2014-FEB-GEO-08",
+    "variables": [
+      "t"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(6, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(0, 8)"
+      },
+      {
+        "name": "M",
+        "expression": "Midpoint(B, A)"
+      },
+      {
+        "name": "N",
+        "expression": "Midpoint(B, C)"
+      },
+      {
+        "name": "Y",
+        "expression": "Point(6 * t / 2, 8 * (1 - t))"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, M, Y)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 8
+      },
+      {
+        "left": "IsTangent(Line(A, N), Gamma)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(N, A, Y)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Area(N, A, Y)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "600/73"
+  ],
+  "reference_parse_error": null
+}

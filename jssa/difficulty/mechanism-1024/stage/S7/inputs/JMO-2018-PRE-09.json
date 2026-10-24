@@ -1,0 +1,107 @@
+{
+  "case_id": "JMO-2018-PRE-09",
+  "dsl": {
+    "id": "JMO-2018-PRE-09",
+    "variables": [
+      "b",
+      "cx",
+      "cy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(b, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "inc",
+        "expression": "Incircle(A, B, C)"
+      },
+      {
+        "name": "I",
+        "expression": "Incenter(A, B, C)"
+      },
+      {
+        "name": "P",
+        "expression": "IncircleContactPoint(A, B, C, side='BC')"
+      },
+      {
+        "name": "Q",
+        "expression": "IncircleContactPoint(A, B, C, side='CA')"
+      },
+      {
+        "name": "R",
+        "expression": "IncircleContactPoint(A, B, C, side='AB')"
+      },
+      {
+        "name": "exc",
+        "expression": "Excircle(A, B, C, vertex='A')"
+      },
+      {
+        "name": "S",
+        "expression": "ContactPoint(exc, Line(B, C))"
+      },
+      {
+        "name": "T",
+        "expression": "ContactPoint(exc, Line(C, A))"
+      },
+      {
+        "name": "U",
+        "expression": "ContactPoint(exc, Line(A, B))"
+      },
+      {
+        "name": "D",
+        "expression": "Intersect(Line(P, Q), Line(S, T))"
+      },
+      {
+        "name": "E",
+        "expression": "Intersect(Line(P, R), Line(S, U))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, I)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(I, P)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(P, S)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(D, E)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "4*sqrt(2)/3"
+  ],
+  "reference_parse_error": null
+}

@@ -1,0 +1,31 @@
+{
+  "constraints": [
+    "Perpendicular(Line(A, F), Line(B, D))",
+    "Perpendicular(Line(C, E), Line(B, D))",
+    "Distance(B, E)",
+    "Distance(B, E)",
+    "Distance(E, F)"
+  ],
+  "targets": [
+    0,
+    0,
+    "Distance(D, F)",
+    "Distance(A, B) / 3",
+    1
+  ],
+  "scales": [
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0"
+  ],
+  "finite_counts": [
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "rule": "max(1,finite |lhs|,finite |rhs|) over saved first ordinary search candidates; never reference solution"
+}

@@ -1,0 +1,149 @@
+{
+  "case_id": "aime-2000-2-11",
+  "dsl": {
+    "id": "aime-2000-2-11",
+    "variables": [
+      "x",
+      "y",
+      "z",
+      "w"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(20, 100)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(21, 107)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(x, y)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(z, w)"
+      },
+      {
+        "name": "ab_line",
+        "expression": "Line(A, B)"
+      },
+      {
+        "name": "bc_line",
+        "expression": "Line(B, C)"
+      },
+      {
+        "name": "cd_line",
+        "expression": "Line(C, D)"
+      },
+      {
+        "name": "da_line",
+        "expression": "Line(D, A)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "IsInteger(x)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsInteger(y)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsInteger(z)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsInteger(w)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, C, D])"
+      },
+      {
+        "left": "Parallel(ab_line, cd_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Parallel(ab_line, bc_line)",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(ab_line, da_line)",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(cd_line, bc_line)",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(cd_line, da_line)",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(bc_line, da_line)",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "B.y - A.y",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "B.x - A.x",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "C.y - B.y",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "C.x - B.x",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "D.y - C.y",
+        "operator": "!=",
+        "right": 0
+      },
+      {
+        "left": "D.x - C.x",
+        "operator": "!=",
+        "right": 0
+      }
+    ],
+    "target": "Slope(ab_line)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "-1",
+    "-4/3",
+    "1",
+    "3/4",
+    "-1/2",
+    "-3",
+    "1/3",
+    "2"
+  ],
+  "reference_parse_error": null
+}

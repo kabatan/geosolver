@@ -1,0 +1,66 @@
+{
+  "case_id": "aime-2004-2-13",
+  "dsl": {
+    "id": "aime-2004-2-13",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(3, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(11/2, 5*sqrt(3)/2)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(x/2, x*sqrt(3)/2)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(y, 5*sqrt(3)/2)"
+      },
+      {
+        "name": "ac_line",
+        "expression": "Line(A, C)"
+      },
+      {
+        "name": "de_line",
+        "expression": "Line(D, E)"
+      }
+    ],
+    "conditions": [
+      {
+        "predicate": "ConvexPolygon([A, B, C, D, E])"
+      },
+      {
+        "left": "x",
+        "operator": ">",
+        "right": 5
+      },
+      {
+        "left": "Parallel(ac_line, de_line)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(D, E)",
+        "operator": "=",
+        "right": 15
+      }
+    ],
+    "target": "Area(A, B, C) / Area(E, B, D)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "49/435"
+  ],
+  "reference_parse_error": null
+}

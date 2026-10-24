@@ -1,0 +1,52 @@
+{
+  "case_id": "aime-2003-1-7",
+  "dsl": {
+    "id": "aime-2003-1-7",
+    "variables": [
+      "x"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(9, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(30, 0)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(15, x)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "x",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "left": "IsInteger(Distance(A, D))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsInteger(Distance(B, D))",
+        "operator": "=",
+        "right": 0
+      }
+    ],
+    "target": "Distance(A, C) + Distance(A, D) + Distance(C, D)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "64",
+    "96",
+    "220"
+  ],
+  "reference_parse_error": null
+}

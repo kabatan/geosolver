@@ -1,0 +1,90 @@
+{
+  "case_id": "AIME-2013-I-03",
+  "dsl": {
+    "id": "AIME-2013-I-03",
+    "variables": [
+      "s",
+      "e",
+      "f"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(s, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(s, s)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(0, s)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(e, 0)"
+      },
+      {
+        "name": "F",
+        "expression": "Point(s, f)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "Distance(B, C)"
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": "Distance(B, F)"
+      },
+      {
+        "left": "e",
+        "operator": "=",
+        "right": "f"
+      },
+      {
+        "left": "e * e + (s - e) * (s - e)",
+        "operator": "=",
+        "right": "9 * s * s / 10"
+      },
+      {
+        "left": "OnSegment(E, A, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(F, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": "<",
+        "right": "s"
+      }
+    ],
+    "target": "e / (s - e) + (s - e) / e"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "18"
+  ],
+  "reference_parse_error": null
+}

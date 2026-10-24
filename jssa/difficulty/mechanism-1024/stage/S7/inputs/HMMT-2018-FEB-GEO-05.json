@@ -1,0 +1,70 @@
+{
+  "case_id": "HMMT-2018-FEB-GEO-05",
+  "dsl": {
+    "id": "HMMT-2018-FEB-GEO-05",
+    "variables": [
+      "theta"
+    ],
+    "constructions": [
+      {
+        "name": "O",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(O, 1)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(1, 0)"
+      },
+      {
+        "name": "M",
+        "expression": "Point(-1, 0)"
+      },
+      {
+        "name": "R",
+        "expression": "Point(cos(theta), sin(theta))"
+      },
+      {
+        "name": "bis",
+        "expression": "AngleBisector(R, A, M)"
+      },
+      {
+        "name": "E",
+        "expression": "Intersect(bis, omega, exclude=A)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Area(R, A, M)",
+        "operator": "=",
+        "right": "Area(R, E, M)"
+      },
+      {
+        "left": "theta",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "theta",
+        "operator": "<",
+        "right": "pi"
+      },
+      {
+        "predicate": "ConvexPolygon([M, A, R, E])"
+      },
+      {
+        "left": "Area(M, A, R, E)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Area(M, A, R, E)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "8*sqrt(2)/9"
+  ],
+  "reference_parse_error": null
+}

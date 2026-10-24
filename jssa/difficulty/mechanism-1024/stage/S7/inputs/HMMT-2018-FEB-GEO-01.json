@@ -1,0 +1,53 @@
+{
+  "case_id": "HMMT-2018-FEB-GEO-01",
+  "dsl": {
+    "id": "HMMT-2018-FEB-GEO-01",
+    "variables": [],
+    "constructions": [
+      {
+        "name": "G",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "R",
+        "expression": "Point(5, 0)"
+      },
+      {
+        "name": "T",
+        "expression": "Point(5, 12)"
+      },
+      {
+        "name": "O",
+        "expression": "Intersect(PerpendicularBisector(G, T), Line(G, R))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(G, R)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(R, T)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "Distance(G, T)",
+        "operator": "=",
+        "right": 13
+      },
+      {
+        "left": "Distance(T, O)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(T, O)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "169/10"
+  ],
+  "reference_parse_error": null
+}

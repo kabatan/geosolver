@@ -1,0 +1,118 @@
+{
+  "case_id": "HMMT-2012-FEB-GEO-04",
+  "dsl": {
+    "id": "HMMT-2012-FEB-GEO-04",
+    "variables": [],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(3, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(16, 0)"
+      },
+      {
+        "name": "m",
+        "expression": "13 / (8 * sqrt(3))"
+      },
+      {
+        "name": "xA",
+        "expression": "19 / 2 / (1 + m * m)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(xA, m * xA)"
+      },
+      {
+        "name": "r1",
+        "expression": "xA * (1 + m * m) / (2 * m)"
+      },
+      {
+        "name": "O1",
+        "expression": "Point(0, r1)"
+      },
+      {
+        "name": "omega1",
+        "expression": "Circle(O1, r1)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(19 / 2, 0)"
+      },
+      {
+        "name": "r2",
+        "expression": "13 / 2"
+      },
+      {
+        "name": "omega2",
+        "expression": "Circle(O2, r2)"
+      },
+      {
+        "name": "T",
+        "expression": "FootOfPerpendicular(O2, Line(A, B))"
+      },
+      {
+        "name": "E",
+        "expression": "Intersect(Line(A, D), omega1, exclude=A)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(B, D)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 13
+      },
+      {
+        "left": "OnCircle(A, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(A, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(O2, T)",
+        "operator": "=",
+        "right": "r2"
+      },
+      {
+        "left": "OnCircle(E, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "r1",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(E, B)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Distance(E, D)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(E, B) / Distance(E, D)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "4*sqrt(3)/3"
+  ],
+  "reference_parse_error": null
+}

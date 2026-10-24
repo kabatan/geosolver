@@ -1,0 +1,82 @@
+{
+  "case_id": "AIME-2019-II-01",
+  "dsl": {
+    "id": "AIME-2019-II-01",
+    "variables": [
+      "cx",
+      "cy",
+      "dx",
+      "dy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(9, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(dx, dy)"
+      },
+      {
+        "name": "X",
+        "expression": "Intersect(Line(A, C), Line(B, D))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 17
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 10
+      },
+      {
+        "left": "Distance(B, D)",
+        "operator": "=",
+        "right": 17
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "dy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cx",
+        "operator": ">",
+        "right": "9"
+      },
+      {
+        "left": "dx",
+        "operator": "<",
+        "right": "0"
+      }
+    ],
+    "target": "Area(A, B, X)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "54/5"
+  ],
+  "reference_parse_error": null
+}

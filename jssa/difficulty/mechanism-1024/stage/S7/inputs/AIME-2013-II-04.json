@@ -1,0 +1,73 @@
+{
+  "case_id": "AIME-2013-II-04",
+  "dsl": {
+    "id": "AIME-2013-II-04",
+    "variables": [
+      "cx",
+      "cy",
+      "px",
+      "py"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(1, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(2, 2 * sqrt(3))"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(px, py)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": "Distance(A, B)"
+      },
+      {
+        "left": "Distance(P, Centroid(A, B, C))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "cx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "px",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "px * py"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "25*sqrt(3)/12"
+  ],
+  "reference_parse_error": null
+}

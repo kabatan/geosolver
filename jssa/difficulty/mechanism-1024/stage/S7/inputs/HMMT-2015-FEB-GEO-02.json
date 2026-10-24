@@ -1,0 +1,60 @@
+{
+  "case_id": "HMMT-2015-FEB-GEO-02",
+  "dsl": {
+    "id": "HMMT-2015-FEB-GEO-02",
+    "variables": [],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(5, 12)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(14, 0)"
+      },
+      {
+        "name": "H",
+        "expression": "Point(5, 15 / 4)"
+      },
+      {
+        "name": "GA",
+        "expression": "Centroid(H, B, C)"
+      },
+      {
+        "name": "GB",
+        "expression": "Centroid(H, C, A)"
+      },
+      {
+        "name": "GC",
+        "expression": "Centroid(H, A, B)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 13
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 14
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 15
+      }
+    ],
+    "target": "Area(GA, GB, GC)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "28/3"
+  ],
+  "reference_parse_error": null
+}

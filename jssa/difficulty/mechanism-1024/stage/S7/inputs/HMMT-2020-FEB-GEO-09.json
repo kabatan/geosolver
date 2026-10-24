@@ -1,0 +1,184 @@
+{
+  "case_id": "HMMT-2020-FEB-GEO-09",
+  "dsl": {
+    "id": "HMMT-2020-FEB-GEO-09",
+    "variables": [
+      "p"
+    ],
+    "constructions": [
+      {
+        "name": "q",
+        "expression": "sqrt(341) * p / (sqrt(341) - 7 * p)"
+      },
+      {
+        "name": "rb",
+        "expression": "49 * p * p"
+      },
+      {
+        "name": "rc",
+        "expression": "49 * q * q"
+      },
+      {
+        "name": "A",
+        "expression": "Point(0, 341)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(2 * sqrt(341 * 49) * p, rb)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(2 * sqrt(341 * 49) * q, rc)"
+      },
+      {
+        "name": "omegaA",
+        "expression": "Circle(A, 341)"
+      },
+      {
+        "name": "omegaB",
+        "expression": "Circle(B, rb)"
+      },
+      {
+        "name": "omegaC",
+        "expression": "Circle(C, rc)"
+      },
+      {
+        "name": "D",
+        "expression": "PointOnSegment(B, C, rb / (rb + rc))"
+      },
+      {
+        "name": "E",
+        "expression": "PointOnSegment(C, A, rc / (rc + 341))"
+      },
+      {
+        "name": "F",
+        "expression": "PointOnSegment(A, B, 341 / (341 + rb))"
+      },
+      {
+        "name": "L",
+        "expression": "Line(Point(0, 0), Point(1, 0))"
+      },
+      {
+        "name": "W",
+        "expression": "Intersect(Circle(A, 341 + 49), Circle(B, rb + 49), near=C)"
+      },
+      {
+        "name": "T",
+        "expression": "Intersect(Line(B, E), Line(C, F))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": "341 + rb"
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": "rb + rc"
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": "rc + 341"
+      },
+      {
+        "left": "OnCircle(D, omegaB)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(D, omegaC)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(D, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(E, omegaC)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(E, omegaA)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(E, C, A)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(F, omegaA)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(F, omegaB)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnLine(F, A, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(L, omegaA)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(L, omegaB)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(L, omegaC)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(W, A)",
+        "operator": "=",
+        "right": "341 + 49"
+      },
+      {
+        "left": "Distance(W, B)",
+        "operator": "=",
+        "right": "rb + 49"
+      },
+      {
+        "left": "Distance(W, C)",
+        "operator": "=",
+        "right": "rc + 49"
+      },
+      {
+        "left": "p",
+        "operator": ">",
+        "right": "1"
+      },
+      {
+        "left": "p",
+        "operator": "<",
+        "right": "sqrt(341) / 7"
+      },
+      {
+        "left": "Distance(T, L)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(T, L)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "294"
+  ],
+  "reference_parse_error": null
+}

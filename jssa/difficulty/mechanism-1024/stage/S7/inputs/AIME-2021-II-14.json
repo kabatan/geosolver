@@ -1,0 +1,85 @@
+{
+  "case_id": "AIME-2021-II-14",
+  "dsl": {
+    "id": "AIME-2021-II-14",
+    "variables": [
+      "bx",
+      "cx",
+      "cy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(bx, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, B, C)"
+      },
+      {
+        "name": "O",
+        "expression": "Circumcenter(A, B, C)"
+      },
+      {
+        "name": "G",
+        "expression": "Centroid(A, B, C)"
+      },
+      {
+        "name": "tA",
+        "expression": "Tangent(A, Gamma)"
+      },
+      {
+        "name": "X",
+        "expression": "Intersect(tA, PerpendicularLine(G, Line(G, O)))"
+      },
+      {
+        "name": "Y",
+        "expression": "Intersect(Line(X, G), Line(B, C))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "2 * Angle(A, B, C)",
+        "operator": "=",
+        "right": "13 * Angle(B, C, A)"
+      },
+      {
+        "left": "17 * Angle(B, C, A)",
+        "operator": "=",
+        "right": "2 * Angle(X, O, Y)"
+      },
+      {
+        "left": "bx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Angle(B, A, C)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "AcuteTriangle(A, B, C)"
+      }
+    ],
+    "target": "180 * Angle(B, A, C) / pi"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "585/7"
+  ],
+  "reference_parse_error": null
+}

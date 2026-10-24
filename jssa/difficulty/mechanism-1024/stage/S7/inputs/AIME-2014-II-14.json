@@ -1,0 +1,86 @@
+{
+  "case_id": "AIME-2014-II-14",
+  "dsl": {
+    "id": "AIME-2014-II-14",
+    "variables": [
+      "cx",
+      "cy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(10, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "H",
+        "expression": "FootOfPerpendicular(Line(B, C), A)"
+      },
+      {
+        "name": "I",
+        "expression": "Incenter(A, B, C)"
+      },
+      {
+        "name": "D",
+        "expression": "Intersect(Line(A, I), Line(B, C))"
+      },
+      {
+        "name": "M",
+        "expression": "Midpoint(B, C)"
+      },
+      {
+        "name": "N",
+        "expression": "Midpoint(H, M)"
+      },
+      {
+        "name": "P",
+        "expression": "Intersect(Line(A, D), PerpendicularLine(Line(B, C), N))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Angle(B, A, C)",
+        "operator": "=",
+        "right": "30 * pi / 180"
+      },
+      {
+        "left": "Angle(A, C, B)",
+        "operator": "=",
+        "right": "45 * pi / 180"
+      },
+      {
+        "left": "cx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Dot(Vector(A, D), Vector(A, P))",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(A, P) ** 2"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "75/2"
+  ],
+  "reference_parse_error": null
+}

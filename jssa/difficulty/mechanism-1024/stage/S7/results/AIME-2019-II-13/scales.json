@@ -1,0 +1,19 @@
+{
+  "constraints": [
+    "1 / 8 - sqrt(2) / (4 * pi) + (Vector(A1, A2).x * Vector(A1, P).y - Vector(A1, A2).y * Vector(A1, P).x) / 2",
+    "1 / 8 - sqrt(2) / (4 * pi) + (Vector(A3, A4).x * Vector(A3, P).y - Vector(A3, A4).y * Vector(A3, P).x) / 2"
+  ],
+  "targets": [
+    "1 / 7",
+    "1 / 9"
+  ],
+  "scales": [
+    "1.0",
+    "1.0"
+  ],
+  "finite_counts": [
+    20,
+    20
+  ],
+  "rule": "max(1,finite |lhs|,finite |rhs|) over saved first ordinary search candidates; never reference solution"
+}

@@ -1,0 +1,90 @@
+{
+  "case_id": "AIME-2023-II-12",
+  "dsl": {
+    "id": "AIME-2023-II-12",
+    "variables": [
+      "cx",
+      "cy",
+      "qx",
+      "qy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(13, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "M",
+        "expression": "Midpoint(B, C)"
+      },
+      {
+        "name": "Gamma",
+        "expression": "Circumcircle(A, B, C)"
+      },
+      {
+        "name": "P",
+        "expression": "Intersect(Line(A, M), Gamma, exclude=A)"
+      },
+      {
+        "name": "Q",
+        "expression": "Point(qx, qy)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 14
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "Collinear(A, Q, M)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(Q, A, M)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Angle(P, B, Q)",
+        "operator": "=",
+        "right": "Angle(P, C, Q)"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "qx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "qy",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(A, Q)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "99*sqrt(37)/74"
+  ],
+  "reference_parse_error": null
+}

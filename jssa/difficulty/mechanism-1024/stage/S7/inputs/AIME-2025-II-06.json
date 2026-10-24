@@ -1,0 +1,134 @@
+{
+  "case_id": "AIME-2025-II-06",
+  "dsl": {
+    "id": "AIME-2025-II-06",
+    "variables": [
+      "e",
+      "h"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(6, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(-24, 0)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(0, 12)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(-9, 0)"
+      },
+      {
+        "name": "omega1",
+        "expression": "Circle(A, 6)"
+      },
+      {
+        "name": "omega2",
+        "expression": "Circle(O2, 15)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(e, -h)"
+      },
+      {
+        "name": "F",
+        "expression": "Point(e, h)"
+      },
+      {
+        "name": "G",
+        "expression": "Point(-e, h)"
+      },
+      {
+        "name": "H",
+        "expression": "Point(-e, -h)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(O2, B)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "Distance(O2, C)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(A, F)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(A, G)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Distance(A, H)",
+        "operator": "=",
+        "right": 6
+      },
+      {
+        "left": "Perpendicular(Line(E, F), Line(B, C))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Area(D, G, F)",
+        "operator": "=",
+        "right": "Area(C, H, G)"
+      },
+      {
+        "left": "e",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "h",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "e",
+        "operator": "<",
+        "right": "6"
+      },
+      {
+        "left": "h",
+        "operator": "<",
+        "right": "6"
+      },
+      {
+        "left": "Area(E, F, G, H)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Area(E, F, G, H)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "288/5"
+  ],
+  "reference_parse_error": null
+}

@@ -1,0 +1,80 @@
+{
+  "case_id": "JMO-2011-PRE-06",
+  "dsl": {
+    "id": "JMO-2011-PRE-06",
+    "variables": [
+      "a",
+      "c",
+      "r"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0,0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(a,0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(0,c)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(0,c-1)"
+      },
+      {
+        "name": "Q",
+        "expression": "Point(a/3,2*c/3)"
+      },
+      {
+        "name": "R",
+        "expression": "Point(r,0)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "a",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "c",
+        "operator": ">",
+        "right": "1"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r",
+        "operator": "<",
+        "right": "a"
+      },
+      {
+        "left": "Distance(A,R)",
+        "operator": "=",
+        "right": "Distance(A,Q)"
+      },
+      {
+        "left": "Distance(Q,P)",
+        "operator": "=",
+        "right": "Distance(Q,R)"
+      },
+      {
+        "left": "Perpendicular(Line(Q,P),Line(Q,R))",
+        "operator": "=",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(A,R)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "4+2*sqrt(5)"
+  ],
+  "reference_parse_error": null
+}

@@ -1,0 +1,98 @@
+{
+  "case_id": "AIME-2006-II-09",
+  "dsl": {
+    "id": "AIME-2006-II-09",
+    "variables": [
+      "m1",
+      "b1",
+      "m2",
+      "b2"
+    ],
+    "constructions": [
+      {
+        "name": "O1",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(12, 0)"
+      },
+      {
+        "name": "O3",
+        "expression": "Point(24, 0)"
+      },
+      {
+        "name": "C1",
+        "expression": "Circle(O1, 1)"
+      },
+      {
+        "name": "C2",
+        "expression": "Circle(O2, 2)"
+      },
+      {
+        "name": "C3",
+        "expression": "Circle(O3, 4)"
+      },
+      {
+        "name": "t1",
+        "expression": "Line(m1, -1, b1)"
+      },
+      {
+        "name": "t2",
+        "expression": "Line(m2, -1, b2)"
+      },
+      {
+        "name": "T",
+        "expression": "Intersect(t1, t2)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "IsTangent(t1, C1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(t1, C2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(t2, C2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "IsTangent(t2, C3)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "m1",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "m2",
+        "operator": "<",
+        "right": "0"
+      },
+      {
+        "left": "b1 * (12 * m1 + b1)",
+        "operator": "<",
+        "right": "0"
+      },
+      {
+        "left": "(12 * m2 + b2) * (24 * m2 + b2)",
+        "operator": "<",
+        "right": "0"
+      }
+    ],
+    "target": "T.x"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "19 - 3*sqrt(5)"
+  ],
+  "reference_parse_error": null
+}

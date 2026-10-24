@@ -1,0 +1,72 @@
+{
+  "case_id": "JMO-2006-PRE-02",
+  "dsl": {
+    "id": "JMO-2006-PRE-02",
+    "variables": [
+      "s",
+      "px",
+      "py"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(s, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(s / 2, sqrt(3) * s / 2)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(px, py)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(P, Line(A, B))",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(P, Line(A, C))",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(P, Line(B, C))",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "s",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "py",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "px",
+        "operator": ">",
+        "right": "py / sqrt(3)"
+      },
+      {
+        "left": "px",
+        "operator": "<",
+        "right": "s - py / sqrt(3)"
+      }
+    ],
+    "target": "Distance(A, B)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "4*sqrt(3)"
+  ],
+  "reference_parse_error": null
+}

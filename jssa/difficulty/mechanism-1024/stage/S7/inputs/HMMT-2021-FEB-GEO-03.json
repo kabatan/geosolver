@@ -1,0 +1,80 @@
+{
+  "case_id": "HMMT-2021-FEB-GEO-03",
+  "dsl": {
+    "id": "HMMT-2021-FEB-GEO-03",
+    "variables": [
+      "a",
+      "b",
+      "dx",
+      "dy"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(a, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(0, b)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(dx, dy)"
+      },
+      {
+        "name": "L",
+        "expression": "Midpoint(A, D)"
+      },
+      {
+        "name": "M",
+        "expression": "Midpoint(D, C)"
+      },
+      {
+        "name": "N",
+        "expression": "Midpoint(C, A)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Collinear(A, D, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(C, D), Line(A, B))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(C, L)",
+        "operator": "=",
+        "right": 7
+      },
+      {
+        "left": "Distance(B, M)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "a",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(B, N) ** 2"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "193"
+  ],
+  "reference_parse_error": null
+}

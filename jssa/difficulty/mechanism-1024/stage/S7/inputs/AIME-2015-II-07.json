@@ -1,0 +1,125 @@
+{
+  "case_id": "AIME-2015-II-07",
+  "dsl": {
+    "id": "AIME-2015-II-07",
+    "variables": [
+      "t"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(12, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(-8, 15)"
+      },
+      {
+        "name": "lineBC",
+        "expression": "Line(B, C)"
+      },
+      {
+        "name": "lineAC",
+        "expression": "Line(A, C)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(12 * t, 0)"
+      },
+      {
+        "name": "Q",
+        "expression": "Intersect(ParallelLine(P, lineBC), lineAC)"
+      },
+      {
+        "name": "R",
+        "expression": "Intersect(PerpendicularLine(lineBC, Q), lineBC)"
+      },
+      {
+        "name": "S",
+        "expression": "Intersect(PerpendicularLine(lineBC, P), lineBC)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 25
+      },
+      {
+        "left": "Distance(C, A)",
+        "operator": "=",
+        "right": 17
+      },
+      {
+        "left": "OnSegment(P, A, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(Q, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(R, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(S, B, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(Line(P, Q), Line(R, S))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Parallel(Line(Q, R), Line(S, P))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(P, Q), Line(Q, R))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(P, Q)",
+        "operator": "=",
+        "right": "Distance(R, S)"
+      },
+      {
+        "left": "Distance(Q, R)",
+        "operator": "=",
+        "right": "Distance(S, P)"
+      },
+      {
+        "left": "t",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "t",
+        "operator": "<",
+        "right": "1"
+      }
+    ],
+    "target": "Distance(A, Line(B, C)) / Distance(B, C)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "36/125"
+  ],
+  "reference_parse_error": null
+}

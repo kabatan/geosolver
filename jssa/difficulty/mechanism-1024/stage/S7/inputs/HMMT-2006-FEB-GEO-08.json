@@ -1,0 +1,77 @@
+{
+  "case_id": "HMMT-2006-FEB-GEO-08",
+  "dsl": {
+    "id": "HMMT-2006-FEB-GEO-08",
+    "variables": [
+      "Ay",
+      "Cx",
+      "Dx"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, Ay)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(Cx, 0)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(Dx, 0)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "=",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Distance(A, C)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "3 * Angle(B, A, D)",
+        "operator": "=",
+        "right": "Angle(B, A, C)"
+      },
+      {
+        "left": "Ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Dx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Dx",
+        "operator": "<",
+        "right": "Cx"
+      },
+      {
+        "left": "Cx",
+        "operator": ">",
+        "right": "1"
+      }
+    ],
+    "target": "Distance(B, D)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "3/8"
+  ],
+  "reference_parse_error": null
+}

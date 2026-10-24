@@ -1,0 +1,74 @@
+{
+  "case_id": "HMMT-2008-FEB-GEO-04",
+  "dsl": {
+    "id": "HMMT-2008-FEB-GEO-04",
+    "variables": [
+      "Ax",
+      "Ay"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(14, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(18, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(Ax, Ay)"
+      },
+      {
+        "name": "Gamma1",
+        "expression": "Circumcircle(A, B, D)"
+      },
+      {
+        "name": "Gamma2",
+        "expression": "Circumcircle(A, D, C)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(B, D)",
+        "operator": "=",
+        "right": 14
+      },
+      {
+        "left": "Distance(D, C)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 13
+      },
+      {
+        "left": "Radius(Gamma1)",
+        "operator": "=",
+        "right": "Radius(Gamma2)"
+      },
+      {
+        "left": "Ay",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(A, B, C)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Area(A, B, C)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "108"
+  ],
+  "reference_parse_error": null
+}

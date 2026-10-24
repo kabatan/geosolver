@@ -1,0 +1,138 @@
+{
+  "case_id": "AIME-2022-II-15",
+  "dsl": {
+    "id": "AIME-2022-II-15",
+    "variables": [
+      "r1",
+      "theta"
+    ],
+    "constructions": [
+      {
+        "name": "O1",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(15, 0)"
+      },
+      {
+        "name": "r2",
+        "expression": "15 - r1"
+      },
+      {
+        "name": "omega1",
+        "expression": "Circle(O1, r1)"
+      },
+      {
+        "name": "omega2",
+        "expression": "Circle(O2, r2)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(r1 * cos(theta), r1 * sin(theta))"
+      },
+      {
+        "name": "Omega",
+        "expression": "Circumcircle(O1, O2, B)"
+      },
+      {
+        "name": "C",
+        "expression": "Intersect(omega1, Omega, exclude=B)"
+      },
+      {
+        "name": "A",
+        "expression": "Intersect(omega2, Omega, near=B)"
+      },
+      {
+        "name": "D",
+        "expression": "Intersect(omega2, Omega, exclude=A)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(O1, O2)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "Distance(O1, O2)",
+        "operator": "=",
+        "right": "r1 + r2"
+      },
+      {
+        "left": "OnCircle(B, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(B, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(C, omega1)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(C, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(A, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(A, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(D, omega2)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnCircle(D, Omega)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, B)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(C, D)",
+        "operator": "=",
+        "right": 16
+      },
+      {
+        "left": "r1",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "r1",
+        "operator": "<",
+        "right": "15"
+      },
+      {
+        "left": "sin(theta)",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "predicate": "ConvexPolygon([A, B, O1, C, D, O2])"
+      }
+    ],
+    "target": "Area(A, B, O1, C, D, O2)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "140"
+  ],
+  "reference_parse_error": null
+}

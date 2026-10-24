@@ -1,0 +1,171 @@
+{
+  "case_id": "aime-2000-2-10",
+  "dsl": {
+    "id": "aime-2000-2-10",
+    "variables": [
+      "r",
+      "t_ab",
+      "t_bc",
+      "t_cd",
+      "t_da"
+    ],
+    "constructions": [
+      {
+        "name": "O",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(O, r)"
+      },
+      {
+        "name": "P",
+        "expression": "PointOnCircle(omega, t_ab)"
+      },
+      {
+        "name": "R",
+        "expression": "PointOnCircle(omega, t_bc)"
+      },
+      {
+        "name": "Q",
+        "expression": "PointOnCircle(omega, t_cd)"
+      },
+      {
+        "name": "S",
+        "expression": "PointOnCircle(omega, t_da)"
+      },
+      {
+        "name": "line_ab",
+        "expression": "Polar(P, omega)"
+      },
+      {
+        "name": "line_bc",
+        "expression": "Polar(R, omega)"
+      },
+      {
+        "name": "line_cd",
+        "expression": "Polar(Q, omega)"
+      },
+      {
+        "name": "line_da",
+        "expression": "Polar(S, omega)"
+      },
+      {
+        "name": "A",
+        "expression": "Intersect(line_da, line_ab)"
+      },
+      {
+        "name": "B",
+        "expression": "Intersect(line_ab, line_bc)"
+      },
+      {
+        "name": "C",
+        "expression": "Intersect(line_bc, line_cd)"
+      },
+      {
+        "name": "D",
+        "expression": "Intersect(line_cd, line_da)"
+      },
+      {
+        "name": "AB",
+        "expression": "Segment(A, B)"
+      },
+      {
+        "name": "BC",
+        "expression": "Segment(B, C)"
+      },
+      {
+        "name": "CD",
+        "expression": "Segment(C, D)"
+      },
+      {
+        "name": "DA",
+        "expression": "Segment(D, A)"
+      },
+      {
+        "name": "quadrilateral",
+        "expression": "Polygon([A, B, C, D])"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "r",
+        "operator": ">",
+        "right": 0
+      },
+      {
+        "predicate": "Bound(t_ab, (0, 1), inclusive=False)"
+      },
+      {
+        "predicate": "Bound(t_bc, (0, 1), inclusive=False)"
+      },
+      {
+        "predicate": "Bound(t_cd, (0, 1), inclusive=False)"
+      },
+      {
+        "predicate": "Bound(t_da, (0, 1), inclusive=False)"
+      },
+      {
+        "left": "t_ab",
+        "operator": "<",
+        "right": "t_bc"
+      },
+      {
+        "left": "t_bc",
+        "operator": "<",
+        "right": "t_cd"
+      },
+      {
+        "left": "t_cd",
+        "operator": "<",
+        "right": "t_da"
+      },
+      {
+        "left": "t_bc - t_ab",
+        "operator": "<",
+        "right": "1/2"
+      },
+      {
+        "left": "t_cd - t_bc",
+        "operator": "<",
+        "right": "1/2"
+      },
+      {
+        "left": "t_da - t_cd",
+        "operator": "<",
+        "right": "1/2"
+      },
+      {
+        "left": "1 + t_ab - t_da",
+        "operator": "<",
+        "right": "1/2"
+      },
+      {
+        "left": "Distance(A, P)",
+        "operator": "=",
+        "right": 19
+      },
+      {
+        "left": "Distance(P, B)",
+        "operator": "=",
+        "right": 26
+      },
+      {
+        "left": "Distance(C, Q)",
+        "operator": "=",
+        "right": 37
+      },
+      {
+        "left": "Distance(Q, D)",
+        "operator": "=",
+        "right": 23
+      }
+    ],
+    "target": "Radius(omega)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "sqrt(647)"
+  ],
+  "reference_parse_error": null
+}

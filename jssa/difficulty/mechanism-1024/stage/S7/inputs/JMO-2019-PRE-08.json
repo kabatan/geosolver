@@ -1,0 +1,92 @@
+{
+  "case_id": "JMO-2019-PRE-08",
+  "dsl": {
+    "id": "JMO-2019-PRE-08",
+    "variables": [
+      "b",
+      "cx",
+      "cy",
+      "ex",
+      "ey"
+    ],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(b, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(cx, cy)"
+      },
+      {
+        "name": "I",
+        "expression": "Incenter(A, B, C)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(b / 9, 0)"
+      },
+      {
+        "name": "E",
+        "expression": "Point(ex, ey)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Collinear(A, E, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(A, E)",
+        "operator": "=",
+        "right": "Distance(A, C) / 9"
+      },
+      {
+        "left": "OnSegment(E, A, C)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(D, E)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(D, I)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "Distance(E, I)",
+        "operator": "=",
+        "right": 1
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "cy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "b",
+        "operator": ">",
+        "right": "Distance(A, C)"
+      }
+    ],
+    "target": "Distance(A, B)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "(81 + 9*sqrt(13))/16"
+  ],
+  "reference_parse_error": null
+}

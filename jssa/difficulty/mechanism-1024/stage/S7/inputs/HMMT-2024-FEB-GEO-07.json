@@ -1,0 +1,87 @@
+{
+  "case_id": "HMMT-2024-FEB-GEO-07",
+  "dsl": {
+    "id": "HMMT-2024-FEB-GEO-07",
+    "variables": [
+      "u"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(15, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(u, 24)"
+      },
+      {
+        "name": "D",
+        "expression": "Point(u, 0)"
+      },
+      {
+        "name": "E",
+        "expression": "FootOfPerpendicular(B, Line(C, A))"
+      },
+      {
+        "name": "F",
+        "expression": "FootOfPerpendicular(C, Line(A, B))"
+      },
+      {
+        "name": "Q",
+        "expression": "FootOfPerpendicular(A, Line(E, F))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(B, C)",
+        "operator": "=",
+        "right": 15
+      },
+      {
+        "left": "Distance(A, D)",
+        "operator": "=",
+        "right": 24
+      },
+      {
+        "left": "Distance(A, Q)",
+        "operator": "=",
+        "right": 20
+      },
+      {
+        "left": "u",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "u",
+        "operator": "<",
+        "right": "15"
+      },
+      {
+        "left": "Angle(A, B, C)",
+        "operator": "<",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Angle(B, C, A)",
+        "operator": "<",
+        "right": "pi / 2"
+      },
+      {
+        "left": "Angle(C, A, B)",
+        "operator": "<",
+        "right": "pi / 2"
+      }
+    ],
+    "target": "Distance(D, E) + Distance(E, F) + Distance(F, D)"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "8*sqrt(11)"
+  ],
+  "reference_parse_error": null
+}

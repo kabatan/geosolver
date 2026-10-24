@@ -1,0 +1,146 @@
+{
+  "case_id": "HMMT-2008-FEB-GEO-07",
+  "dsl": {
+    "id": "HMMT-2008-FEB-GEO-07",
+    "variables": [
+      "r"
+    ],
+    "constructions": [
+      {
+        "name": "O1",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(5, 0)"
+      },
+      {
+        "name": "Kx",
+        "expression": "2 + r / 5"
+      },
+      {
+        "name": "Ky",
+        "expression": "sqrt((r - 2) * (r - 2) - Kx * Kx)"
+      },
+      {
+        "name": "K",
+        "expression": "Point(Kx, Ky)"
+      },
+      {
+        "name": "C1",
+        "expression": "Circle(O1, 2)"
+      },
+      {
+        "name": "C2",
+        "expression": "Circle(O2, 3)"
+      },
+      {
+        "name": "C3",
+        "expression": "Circle(K, r)"
+      },
+      {
+        "name": "segment_extension_A",
+        "expression": "Line(O1, K)"
+      },
+      {
+        "name": "A",
+        "expression": "PointOnLine(segment_extension_A, -segment_extension_A.b*(O1.x+(-2 / (r - 2))*(K.x-O1.x))+segment_extension_A.a*(O1.y+(-2 / (r - 2))*(K.y-O1.y)))"
+      },
+      {
+        "name": "segment_extension_B",
+        "expression": "Line(O2, K)"
+      },
+      {
+        "name": "B",
+        "expression": "PointOnLine(segment_extension_B, -segment_extension_B.b*(O2.x+(-3 / (r - 3))*(K.x-O2.x))+segment_extension_B.a*(O2.y+(-3 / (r - 3))*(K.y-O2.y)))"
+      },
+      {
+        "name": "T",
+        "expression": "Intersect(PerpendicularLine(Line(K, A), A), PerpendicularLine(Line(K, B), B))"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(O1, O2)",
+        "operator": "=",
+        "right": 5
+      },
+      {
+        "left": "Distance(O1, K)",
+        "operator": "=",
+        "right": "r - 2"
+      },
+      {
+        "left": "Distance(O2, K)",
+        "operator": "=",
+        "right": "r - 3"
+      },
+      {
+        "left": "Distance(O1, A)",
+        "operator": "=",
+        "right": 2
+      },
+      {
+        "left": "Distance(K, A)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Area(O1, K, A)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(O2, B)",
+        "operator": "=",
+        "right": 3
+      },
+      {
+        "left": "Distance(K, B)",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Area(O2, K, B)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(A, T), Line(A, K))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Perpendicular(Line(B, T), Line(B, K))",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Distance(T, A)",
+        "operator": "=",
+        "right": 4
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "5"
+      },
+      {
+        "left": "Ky",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "Area(O1, O2, K)",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "r"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "8"
+  ],
+  "reference_parse_error": null
+}

@@ -1,0 +1,36 @@
+{
+  "case_id": "HMMT-2016-FEB-GEO-03",
+  "dsl": {
+    "id": "HMMT-2016-FEB-GEO-03",
+    "variables": [],
+    "constructions": [
+      {
+        "name": "A",
+        "expression": "Point(0,0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(5,0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(5/2,5*sqrt(3)/2)"
+      },
+      {
+        "name": "O",
+        "expression": "Centroid(A,B,C)"
+      },
+      {
+        "name": "omega",
+        "expression": "Circle(O,2)"
+      }
+    ],
+    "conditions": [],
+    "target": "(Area(A,B,C)-Area(omega))/3"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "25*sqrt(3)/12-4*pi/3"
+  ],
+  "reference_parse_error": null
+}

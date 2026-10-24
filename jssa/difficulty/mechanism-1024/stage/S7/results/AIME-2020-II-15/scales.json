@@ -1,0 +1,27 @@
+{
+  "constraints": [
+    "Distance(B, C)",
+    "Distance(B, T)",
+    "Distance(C, T)",
+    "Distance(T, X) * Distance(T, X) + Distance(T, Y) * Distance(T, Y) + Distance(X, Y) * Distance(X, Y)"
+  ],
+  "targets": [
+    22,
+    16,
+    16,
+    1143
+  ],
+  "scales": [
+    "22.0",
+    "16.0",
+    "16.0",
+    "1143.0"
+  ],
+  "finite_counts": [
+    20,
+    20,
+    20,
+    20
+  ],
+  "rule": "max(1,finite |lhs|,finite |rhs|) over saved first ordinary search candidates; never reference solution"
+}

@@ -1,0 +1,51 @@
+{
+  "constraints": [
+    "OnCircle(P, omega)",
+    "OnCircle(Q, omega)",
+    "OnLine(P, A, C)",
+    "OnLine(Q, A, C)",
+    "IsTangent(Line(D, A), omega)",
+    "IsTangent(Line(A, B), omega)",
+    "IsTangent(Line(B, C), omega)",
+    "Distance(A, P)",
+    "Distance(P, Q)",
+    "Distance(Q, C)"
+  ],
+  "targets": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    3,
+    9,
+    16
+  ],
+  "scales": [
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "1.0",
+    "3.0",
+    "9.0",
+    "16.0"
+  ],
+  "finite_counts": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2
+  ],
+  "rule": "max(1,finite |lhs|,finite |rhs|) over saved first ordinary search candidates; never reference solution"
+}

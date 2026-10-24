@@ -1,0 +1,71 @@
+{
+  "case_id": "AIME-2007-I-09",
+  "dsl": {
+    "id": "AIME-2007-I-09",
+    "variables": [
+      "x1",
+      "y2",
+      "r"
+    ],
+    "constructions": [
+      {
+        "name": "C",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(30, 0)"
+      },
+      {
+        "name": "B",
+        "expression": "Point(0, 16)"
+      },
+      {
+        "name": "O1",
+        "expression": "Point(x1, r)"
+      },
+      {
+        "name": "O2",
+        "expression": "Point(r, y2)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(O1, Line(A, B))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O2, Line(A, B))",
+        "operator": "=",
+        "right": "r"
+      },
+      {
+        "left": "Distance(O1, O2)",
+        "operator": "=",
+        "right": "2 * r"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "x1",
+        "operator": ">",
+        "right": "30"
+      },
+      {
+        "left": "y2",
+        "operator": ">",
+        "right": "16"
+      }
+    ],
+    "target": "r"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "680/57"
+  ],
+  "reference_parse_error": null
+}

@@ -1,0 +1,106 @@
+{
+  "case_id": "JMO-2017-PRE-10",
+  "dsl": {
+    "id": "JMO-2017-PRE-10",
+    "variables": [
+      "p",
+      "qx",
+      "qy",
+      "r"
+    ],
+    "constructions": [
+      {
+        "name": "B",
+        "expression": "Point(0, 0)"
+      },
+      {
+        "name": "A",
+        "expression": "Point(8, 0)"
+      },
+      {
+        "name": "C",
+        "expression": "Point(0, 3)"
+      },
+      {
+        "name": "P",
+        "expression": "Point(0, p)"
+      },
+      {
+        "name": "Q",
+        "expression": "Point(qx, qy)"
+      },
+      {
+        "name": "R",
+        "expression": "Point(r, 0)"
+      }
+    ],
+    "conditions": [
+      {
+        "left": "Distance(P, Q) + Distance(Q, R) + Distance(R, P)",
+        "operator": "=",
+        "right": 12
+      },
+      {
+        "left": "Collinear(C, Q, A)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "OnSegment(Q, C, A)",
+        "operator": "=",
+        "right": 0
+      },
+      {
+        "left": "Angle(C, R, P)",
+        "operator": "=",
+        "right": "Angle(C, R, Q)"
+      },
+      {
+        "left": "Angle(B, P, R)",
+        "operator": "=",
+        "right": "Angle(C, P, Q)"
+      },
+      {
+        "left": "p",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "p",
+        "operator": "<",
+        "right": "3"
+      },
+      {
+        "left": "qx",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "qy",
+        "operator": ">",
+        "right": "0"
+      },
+      {
+        "left": "qx",
+        "operator": "<",
+        "right": "8"
+      },
+      {
+        "left": "r",
+        "operator": "<",
+        "right": "8"
+      },
+      {
+        "left": "r",
+        "operator": ">",
+        "right": "0"
+      }
+    ],
+    "target": "Distance(Q, Line(B, C))"
+  },
+  "selection": null,
+  "reference_expressions": [
+    "9/2"
+  ],
+  "reference_parse_error": null
+}

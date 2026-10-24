@@ -1,0 +1,31 @@
+{
+  "constraints": [
+    "Distance(A, B)",
+    "Distance(B, C)",
+    "Distance(C, D)",
+    "Distance(D, A)",
+    "AreConcyclic(A, B, C, D)"
+  ],
+  "targets": [
+    3,
+    2,
+    2,
+    4,
+    0
+  ],
+  "scales": [
+    "3.0",
+    "2.0",
+    "2.0",
+    "4.0",
+    "1.0"
+  ],
+  "finite_counts": [
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "rule": "max(1,finite |lhs|,finite |rhs|) over saved first ordinary search candidates; never reference solution"
+}
