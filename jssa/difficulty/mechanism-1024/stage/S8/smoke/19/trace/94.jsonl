@@ -1,0 +1,29 @@
+{"event": "process_start", "pid": 94, "ppid": 92, "argv": ["-m", "--input", "/tmp/geosolver-ba8vzbno/request.json", "--output", "/tmp/geosolver-ba8vzbno/artifact.json"], "environment": {"GEOSOLVER_ABLATE_NO_NOMAD": "0", "GEOSOLVER_ABLATE_NO_SECOND_ATTEMPT": "0", "GEOSOLVER_ABLATE_NO_RESCUE": "0", "GEOSOLVER_ABLATE_NO_DIVERSE_SELECTION": "0", "GEOSOLVER_ABLATE_NO_RESIDUAL_REWRITE": "0", "GEOSOLVER_ABLATE_NO_SCALE_CHART": "0", "GEOSOLVER_ABLATE_NO_ALGEBRAIC": "1", "GEOSOLVER_ABLATE_NO_ANALYTIC_JAC": "1"}, "affinity": [5]}
+{"event": "call", "file": "engine/standard/orchestration/run_external_pipeline.py", "function": "_resolve_ordered_search_attempts"}
+{"event": "gate", "switch": "NO_SECOND_ATTEMPT", "disabled": false, "caller": "engine/standard/orchestration/run_external_pipeline.py", "line": 223}
+{"event": "return", "file": "engine/standard/orchestration/run_external_pipeline.py", "function": "_resolve_ordered_search_attempts", "attempt_count": 2}
+{"event": "call", "file": "engine/standard/search/algebraic_branches.py", "function": "search_algebraic_branches"}
+{"event": "gate", "switch": "NO_ALGEBRAIC", "disabled": true, "caller": "engine/standard/search/algebraic_branches.py", "line": 658}
+{"event": "return", "file": "engine/standard/search/algebraic_branches.py", "function": "search_algebraic_branches", "produced_batch": false}
+{"event": "call", "file": "engine/standard/orchestration/run_search.py", "function": "run_search", "search_mode": "disco_mads"}
+{"event": "call", "file": "engine/standard/search/scale_chart.py", "function": "search_positive_scale_chart"}
+{"event": "gate", "switch": "NO_SCALE_CHART", "disabled": false, "caller": "engine/standard/search/scale_chart.py", "line": 14}
+{"event": "return", "file": "engine/standard/search/scale_chart.py", "function": "search_positive_scale_chart", "produced_batch": false}
+{"event": "call", "file": "engine/standard/search/nomad_backend.py", "function": "run_search", "search_mode": "disco_mads"}
+{"event": "call", "file": "engine/standard/search/nomad_backend.py", "function": "_import_pynomad"}
+{"event": "gate", "switch": "NO_NOMAD", "disabled": false, "caller": "engine/standard/search/nomad_backend.py", "line": 43}
+{"event": "return", "file": "engine/standard/search/nomad_backend.py", "function": "_import_pynomad", "import_succeeded": true}
+{"event": "gate", "switch": "NO_DIVERSE_SELECTION", "disabled": false, "caller": "engine/standard/search/nomad_backend.py", "line": 171}
+{"event": "return", "file": "engine/standard/search/nomad_backend.py", "function": "run_search"}
+{"event": "return", "file": "engine/standard/orchestration/run_search.py", "function": "run_search"}
+{"event": "gate", "switch": "NO_DIVERSE_SELECTION", "disabled": false, "caller": "engine/standard/orchestration/run_external_pipeline.py", "line": 408}
+{"event": "call", "file": "engine/standard/refinement/mpmath_refiner.py", "function": "_run_findroot_closure"}
+{"event": "gate", "switch": "NO_RESIDUAL_REWRITE", "disabled": false, "caller": "engine/standard/refinement/mpmath_refiner.py", "line": 1356}
+{"event": "call", "file": "engine/standard/refinement/mpmath_refiner.py", "function": "_smooth_zero_constraint_residuals"}
+{"event": "return", "file": "engine/standard/refinement/mpmath_refiner.py", "function": "_smooth_zero_constraint_residuals"}
+{"event": "call", "file": "engine/standard/refinement/analytic_jacobian.py", "function": "derivative_plan"}
+{"event": "gate", "switch": "NO_ANALYTIC_JAC", "disabled": true, "caller": "engine/standard/refinement/analytic_jacobian.py", "line": 163}
+{"event": "return", "file": "engine/standard/refinement/analytic_jacobian.py", "function": "derivative_plan", "plan_available": false}
+{"event": "return", "file": "engine/standard/refinement/mpmath_refiner.py", "function": "_run_findroot_closure"}
+{"event": "gate", "switch": "NO_RESCUE", "disabled": false, "caller": "engine/standard/orchestration/run_external_pipeline.py", "line": 455}
+{"event": "process_exit", "counts": {"call:engine/standard/orchestration/run_external_pipeline.py:_resolve_ordered_search_attempts": 1, "gate:NO_SECOND_ATTEMPT:False": 1, "return:engine/standard/orchestration/run_external_pipeline.py:_resolve_ordered_search_attempts": 1, "call:engine/standard/search/algebraic_branches.py:search_algebraic_branches": 1, "gate:NO_ALGEBRAIC:True": 1, "return:engine/standard/search/algebraic_branches.py:search_algebraic_branches": 1, "call:engine/standard/orchestration/run_search.py:run_search": 1, "call:engine/standard/search/scale_chart.py:search_positive_scale_chart": 1, "gate:NO_SCALE_CHART:False": 1, "return:engine/standard/search/scale_chart.py:search_positive_scale_chart": 1, "call:engine/standard/search/nomad_backend.py:run_search": 1, "call:engine/standard/search/nomad_backend.py:_import_pynomad": 1, "gate:NO_NOMAD:False": 1, "return:engine/standard/search/nomad_backend.py:_import_pynomad": 1, "gate:NO_DIVERSE_SELECTION:False": 2, "return:engine/standard/search/nomad_backend.py:run_search": 1, "return:engine/standard/orchestration/run_search.py:run_search": 1, "call:engine/standard/refinement/mpmath_refiner.py:_run_findroot_closure": 100, "gate:NO_RESIDUAL_REWRITE:False": 7223, "call:engine/standard/refinement/mpmath_refiner.py:_smooth_zero_constraint_residuals": 7223, "return:engine/standard/refinement/mpmath_refiner.py:_smooth_zero_constraint_residuals": 7223, "call:engine/standard/refinement/analytic_jacobian.py:derivative_plan": 80, "gate:NO_ANALYTIC_JAC:True": 80, "return:engine/standard/refinement/analytic_jacobian.py:derivative_plan": 80, "return:engine/standard/refinement/mpmath_refiner.py:_run_findroot_closure": 100, "gate:NO_RESCUE:False": 1}}

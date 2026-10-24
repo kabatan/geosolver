@@ -1,0 +1,317 @@
+diff --git a/src/geosolver/engine-lock.json b/src/geosolver/engine-lock.json
+index 411ad2d..c852681 100644
+--- a/src/geosolver/engine-lock.json
++++ b/src/geosolver/engine-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "schema_version": 2,
+   "artifact_protocol_version": 4,
+-  "source_tree_hash": "sha256:e2115f553d6a59d6d85a30413e5719992c09e376d23d3e3e124fd07fd135b8ee",
++  "source_tree_hash": "sha256:03a44bfbb743b972d95306c63a14c04b78c7d12b96a1ba83d147c56eea7f86a3",
+   "resolved_config_hash": "sha256:98810edcd2beb35fb7d31ba65620de8f3cebd3fc289c11a526b8a623adf6d70f",
+   "dependency_lock_hash": "sha256:aa93c94b893ed67b359af271ca6fb62e97d3551fc874a4b9e45a66c8c5e52930",
+   "engines": {
+     "standard": {
+-      "hash": "sha256:e2115f553d6a59d6d85a30413e5719992c09e376d23d3e3e124fd07fd135b8ee",
++      "hash": "sha256:03a44bfbb743b972d95306c63a14c04b78c7d12b96a1ba83d147c56eea7f86a3",
+       "platforms": [
+         "linux",
+         "windows",
+diff --git a/src/geosolver/engine/standard/contracts/candidate_record.py b/src/geosolver/engine/standard/contracts/candidate_record.py
+index b51cfdb..d38cacc 100644
+--- a/src/geosolver/engine/standard/contracts/candidate_record.py
++++ b/src/geosolver/engine/standard/contracts/candidate_record.py
+@@ -193,6 +193,11 @@ class SearchBatchResult:
+     # None preserves older producers; their ratio still describes evaluations.
+     evaluation_failure_count: int | None = None
+ 
++    # Research-only handoff pool; None leaves the ordinary search contract intact.
++    refinement_selection_pool: tuple[FloatCandidate, ...] | None = field(
++        default=None, repr=False, compare=False
++    )
++
+     @property
+     def failed_evaluations(self) -> int:
+         if self.evaluation_failure_count is not None:
+diff --git a/src/geosolver/engine/standard/orchestration/run_external_pipeline.py b/src/geosolver/engine/standard/orchestration/run_external_pipeline.py
+index a6c9cb9..74b141e 100644
+--- a/src/geosolver/engine/standard/orchestration/run_external_pipeline.py
++++ b/src/geosolver/engine/standard/orchestration/run_external_pipeline.py
+@@ -46,6 +46,10 @@ from geosolver.engine.standard.search.nomad_config import (
+     NomadConfig,
+     derive_seed_values,
+ )
++from geosolver.engine.standard.search.residual_selection import (
++    refinement_selection_pool,
++    select_residual_candidates,
++)
+ from geosolver.runtime.ablation import ablated
+ 
+ from .assemble_exact_results import ExactAssemblyResult, assemble_exact_results
+@@ -401,6 +405,11 @@ def _run_pipeline_stage(
+         constraint_scales=constraint_scales,
+         allow_integer_shortcuts=allow_algebraic,
+     )
++    if ablated("NO_DIVERSE_SELECTION"):
++        search_result = replace(
++            search_result,
++            candidates=select_residual_candidates(refinement_selection_pool(search_result)),
++        )
+     refinement_result = run_refinement(
+         bundle=bundle,
+         evaluator=evaluator,
+diff --git a/src/geosolver/engine/standard/orchestration/run_rescue_search.py b/src/geosolver/engine/standard/orchestration/run_rescue_search.py
+index 4427a9e..06a541d 100644
+--- a/src/geosolver/engine/standard/orchestration/run_rescue_search.py
++++ b/src/geosolver/engine/standard/orchestration/run_rescue_search.py
+@@ -16,6 +16,8 @@ from geosolver.engine.standard.search.deduplicate_search_candidates import (
+ )
+ from geosolver.engine.standard.search.nomad_blackbox_adapter import NomadBlackboxAdapter
+ from geosolver.engine.standard.search.select_rescue_boxes import select_rescue_boxes
++from geosolver.engine.standard.search.residual_selection import select_residual_candidates
++from geosolver.runtime.ablation import ablated
+ from geosolver.runtime.deadline import timed_phase, uses_deadline
+ 
+ _RESCUE_CANDIDATE_NAMESPACE = 10_000_000_000_000
+@@ -74,6 +76,8 @@ def run_rescue_search(
+     )
+     rescued_candidates: list[FloatCandidate] = []
+     box_runs = []
++    if ablated("NO_DIVERSE_SELECTION"):
++        residual_selection_records = []
+     seed = int(rescue_config.seed_values[0]) if rescue_config.seed_values else 0
+     for box_index, box in enumerate(boxes):
+         remaining = min(
+@@ -129,13 +133,18 @@ def run_rescue_search(
+             : int(pipeline_config.keep_per_rescue_box)
+         ]
+         rescued_candidates.extend(run_top)
+-    deduped = deduplicate_search_candidates(
+-        candidates=tuple(rescued_candidates),
+-        bounds=bounds,
+-        keep_count=max(1, len(rescued_candidates)),
+-        dedup_distance_threshold=rescue_config.dedup_distance,
+-        min_per_seed=0,
+-    )
++        if ablated("NO_DIVERSE_SELECTION"):
++            residual_selection_records.extend(adapter.records)
++    if ablated("NO_DIVERSE_SELECTION"):
++        deduped = select_residual_candidates(residual_selection_records)
++    else:
++        deduped = deduplicate_search_candidates(
++            candidates=tuple(rescued_candidates),
++            bounds=bounds,
++            keep_count=max(1, len(rescued_candidates)),
++            dedup_distance_threshold=rescue_config.dedup_distance,
++            min_per_seed=0,
++        )
+     elapsed_sec = time.monotonic() - started_at
+     _ = bundle
+     return RescueSearchResult(
+diff --git a/src/geosolver/engine/standard/orchestration/run_search.py b/src/geosolver/engine/standard/orchestration/run_search.py
+index e233c6d..2f18c2a 100644
+--- a/src/geosolver/engine/standard/orchestration/run_search.py
++++ b/src/geosolver/engine/standard/orchestration/run_search.py
+@@ -24,10 +24,15 @@ from geosolver.engine.standard.search.deduplicate_search_candidates import (
+ )
+ from geosolver.engine.standard.search.nomad_backend import NomadBackend
+ from geosolver.engine.standard.search.nomad_config import NomadConfig
++from geosolver.engine.standard.search.residual_selection import (
++    eligible_selection_pool,
++    refinement_selection_pool,
++)
+ from geosolver.engine.standard.search.scipy_multistart_backend import (
+     ScipyMultistartBackend,
+ )
+ from geosolver.engine.standard.search.select_search_start_points import select_search_start_points
++from geosolver.runtime.ablation import ablated
+ from geosolver.runtime.deadline import timed_phase, uses_deadline
+ 
+ from .run_initial_probe import InitialProbeResult
+@@ -118,6 +123,8 @@ def _attach_search_diagnostic(
+         all_records=result.all_records,
+         guard_feasible_ledger=result.guard_feasible_ledger,
+         search_diagnostics=diagnostics,
++        **({"refinement_selection_pool": result.refinement_selection_pool}
++           if ablated("NO_DIVERSE_SELECTION") else {}),
+     )
+ 
+ 
+@@ -221,6 +228,8 @@ def _merge_search_results(
+         evaluation_failure_count=failure_count,
+         all_records=all_records,
+         guard_feasible_ledger=guard_feasible_ledger,
++        **({"refinement_selection_pool": eligible_selection_pool(all_records, all_records)}
++           if ablated("NO_DIVERSE_SELECTION") else {}),
+         search_diagnostics=_merge_search_diagnostics(
+             first=primary.search_diagnostics,
+             second=supplemental.search_diagnostics,
+@@ -255,6 +264,9 @@ def _merge_search_batch_results(
+         evaluation_failure_count=failure_count,
+         all_records=all_records,
+         guard_feasible_ledger=guard_feasible_ledger,
++        **({"refinement_selection_pool": (
++            refinement_selection_pool(first) + refinement_selection_pool(second)
++        )} if ablated("NO_DIVERSE_SELECTION") else {}),
+         search_diagnostics=_merge_search_diagnostics(
+             first=first.search_diagnostics,
+             second=second.search_diagnostics,
+diff --git a/src/geosolver/engine/standard/refinement/mpmath_refiner.py b/src/geosolver/engine/standard/refinement/mpmath_refiner.py
+index cd142d2..82500b8 100644
+--- a/src/geosolver/engine/standard/refinement/mpmath_refiner.py
++++ b/src/geosolver/engine/standard/refinement/mpmath_refiner.py
+@@ -33,6 +33,7 @@ from geosolver.engine.standard.precision.type_guards.high_precision_mode import
+ from geosolver.engine.standard.precision.type_guards.mp_types import MPFloat
+ from geosolver.problem.ir.compiler import safe_eval_expr_hp
+ from geosolver.problem.logical_equalities import evaluation_sources
++from geosolver.runtime.ablation import ablated
+ from geosolver.runtime.deadline import (
+     count_event,
+     expired,
+@@ -1031,6 +1032,7 @@ def _run_findroot_closure(
+             and not (
+                 isinstance(residual_fn, partial)
+                 and residual_fn.keywords.get("smooth_zero_constraints")
++                and not ablated("NO_RESIDUAL_REWRITE")
+             )
+         )
+     ):
+@@ -1351,7 +1353,7 @@ class MpmathRefiner(LocalRefinerPort):
+             return None
+         residuals = list(hp_eval.residual_vector)
+         if not integer_closures:
+-            if smooth_zero_constraints:
++            if smooth_zero_constraints and not ablated("NO_RESIDUAL_REWRITE"):
+                 residuals = _smooth_zero_constraint_residuals(
+                     bundle=bundle,
+                     point=point,
+diff --git a/src/geosolver/engine/standard/search/nomad_backend.py b/src/geosolver/engine/standard/search/nomad_backend.py
+index fff4535..9bf7016 100644
+--- a/src/geosolver/engine/standard/search/nomad_backend.py
++++ b/src/geosolver/engine/standard/search/nomad_backend.py
+@@ -16,6 +16,7 @@ from .build_guard_feasible_ledger import build_guard_feasible_ledger
+ from .deduplicate_search_candidates import deduplicate_search_candidates
+ from .nomad_blackbox_adapter import NomadBlackboxAdapter
+ from .nomad_config import NomadConfig
++from .residual_selection import eligible_selection_pool
+ 
+ 
+ def _expand_bounds(
+@@ -166,4 +167,6 @@ class NomadBackend(GlobalSearchPort):
+             evaluation_failure_count=total_failures,
+             all_records=tuple(all_records),
+             guard_feasible_ledger=guard_feasible_ledger,
++            **({"refinement_selection_pool": eligible_selection_pool(tuple(all_records), all_candidates)}
++               if ablated("NO_DIVERSE_SELECTION") else {}),
+         )
+diff --git a/src/geosolver/engine/standard/search/residual_selection.py b/src/geosolver/engine/standard/search/residual_selection.py
+new file mode 100644
+index 0000000..63be34b
+--- /dev/null
++++ b/src/geosolver/engine/standard/search/residual_selection.py
+@@ -0,0 +1,34 @@
++"""Residual-only selection at the search-to-refinement handoff."""
++
++import math
++
++from geosolver.engine.standard.evaluation.classify_evaluation_failure import EvaluationStatus
++
++
++def eligible_selection_pool(records, fallback):
++    """Keep the ordinary backend's admission and its original fallback pool."""
++    feasible = tuple(
++        record for record in records
++        if record.evaluation_status is EvaluationStatus.OK
++        and record.guard_ok and record.hard_feasible
++    )
++    return feasible or tuple(fallback)
++
++
++def refinement_selection_pool(result):
++    # Direct algebraic/finite/integer producers already apply their own admission.
++    pool = result.refinement_selection_pool
++    return result.candidates if pool is None else pool
++
++
++def select_residual_candidates(records):
++    """Stable raw-norm top 20; no coordinate deduplication or seed allocation."""
++    unique = {}
++    for index, record in enumerate(records):
++        if math.isfinite(record.residual_norm_float):
++            unique.setdefault(record.candidate_uid, (index, record))
++    ordered = sorted(
++        unique.values(),
++        key=lambda item: (item[1].residual_norm_float, item[1].candidate_uid, item[0]),
++    )
++    return tuple(record for _index, record in ordered[:20])
+diff --git a/src/geosolver/engine/standard/search/scalar_branch_scan.py b/src/geosolver/engine/standard/search/scalar_branch_scan.py
+index 3afe209..d6da06c 100644
+--- a/src/geosolver/engine/standard/search/scalar_branch_scan.py
++++ b/src/geosolver/engine/standard/search/scalar_branch_scan.py
+@@ -14,6 +14,7 @@ from geosolver.engine.standard.search.scipy_multistart_backend import (
+     _run_one_dimensional_search,
+     _SearchTelemetry,
+ )
++from geosolver.runtime.ablation import ablated
+ 
+ 
+ def scan_scalar_branches(*, evaluator, bounds, config, prefix_count, constraint_scales=None):
+@@ -78,5 +79,11 @@ def scan_scalar_branches(*, evaluator, bounds, config, prefix_count, constraint_
+         evaluation_failure_count=telemetry.failure_count,
+         all_records=records,
+         guard_feasible_ledger=ledger,
++        **({"refinement_selection_pool": tuple(
++            record for record in records
++            if record.evaluation_status is EvaluationStatus.OK
++            and record.residual_norm_float < _RESIDUAL_ACCEPT_FLOAT
++            and record.guard_ok and record.hard_feasible
++        )} if ablated("NO_DIVERSE_SELECTION") else {}),
+         search_diagnostics={"primary_scalar_branch_scan": diagnostics},
+     )
+diff --git a/src/geosolver/engine/standard/search/scipy_multistart_backend.py b/src/geosolver/engine/standard/search/scipy_multistart_backend.py
+index c7907b2..820fbcd 100644
+--- a/src/geosolver/engine/standard/search/scipy_multistart_backend.py
++++ b/src/geosolver/engine/standard/search/scipy_multistart_backend.py
+@@ -26,11 +26,13 @@ from geosolver.engine.standard.evaluation.snapshots import uses_evaluation_store
+ from geosolver.engine.standard.problem.infer_problem_bounds import (
+     _infer_parametric_variable_names,
+ )
++from geosolver.runtime.ablation import ablated
+ from geosolver.runtime.deadline import deadline_scope
+ 
+ from .build_guard_feasible_ledger import build_guard_feasible_ledger
+ from .deduplicate_search_candidates import deduplicate_search_candidates
+ from .nomad_config import NomadConfig
++from .residual_selection import eligible_selection_pool
+ from .scipy_lazy import brentq, least_squares, minimize, minimize_scalar
+ 
+ _LOCAL_FLOAT_TIME_BUDGET_SECONDS = 45.0
+@@ -1264,6 +1266,8 @@ class ScipyMultistartBackend(GlobalSearchPort):
+                     all_records=records,
+                     guard_feasible_ledger=guard_feasible_ledger,
+                     search_diagnostics=diagnostics,
++                    **({"refinement_selection_pool": admissible_one_d_records}
++                       if ablated("NO_DIVERSE_SELECTION") else {}),
+                 )
+             all_records.extend(one_d_records)
+         burn_in = _HALTON_START_BURN_IN if has_parametric_variables else 0
+@@ -1411,4 +1415,6 @@ class ScipyMultistartBackend(GlobalSearchPort):
+             all_records=records,
+             guard_feasible_ledger=guard_feasible_ledger,
+             search_diagnostics=_build_local_start_diagnostics(telemetry=telemetry),
++            **({"refinement_selection_pool": eligible_selection_pool(records, records)}
++               if ablated("NO_DIVERSE_SELECTION") else {}),
+         )
+diff --git a/src/geosolver/runtime/ablation.py b/src/geosolver/runtime/ablation.py
+index f939875..02aec3c 100644
+--- a/src/geosolver/runtime/ablation.py
++++ b/src/geosolver/runtime/ablation.py
+@@ -9,6 +9,8 @@ ABLATIONS = (
+     "NO_RESCUE",
+     "NO_SCALE_CHART",
+     "NO_SECOND_ATTEMPT",
++    "NO_RESIDUAL_REWRITE",
++    "NO_DIVERSE_SELECTION",
+ )
+ 
+ 
