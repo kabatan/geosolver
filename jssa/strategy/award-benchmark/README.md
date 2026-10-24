@@ -8,6 +8,9 @@
 | [02-it-awards-62-69.md](02-it-awards-62-69.md) | 情報・技術／応用数学（高校）第62〜69回の受賞作57件をランク別に。概要PDFのURLと、何が評価されたか（推測と明記） |
 | [03-calibration-table.md](03-calibration-table.md) | GPT-Pro の A〜E と実際の賞の対応、各ランクの典型的な水準（事実／推測を分けて）、GPT-Pro と人間のずれ方 |
 | [04-blind-anchor-test.md](04-blind-anchor-test.md) | 目隠し較正テストの手順と判定プロンプト |
+| [05-applied-math.md](05-applied-math.md) | **応用数学部門の物差し**（受賞作15件のランク別一覧、較正表、応用数学版の目隠しテスト）。本人が応用数学に決定（10/24） |
+| [division-and-impact.md](division-and-impact.md) | 情報・技術と応用数学の違い、社会的有用性の示し方、部門の規定 |
+| am-anchors-order1〜3.md, am-anchors-key.md | 応用数学版の目隠しテストの素材と答え |
 | anchors-order1〜3.md | 受賞作16件＋geosolver の概要を匿名で混ぜたもの（3通りの並び順） |
 | anchors-key.md | その答え（判定する GPT-Pro には渡さない） |
 | geosolver-summary-v14.txt | geosolver の概要（受賞作と同じ定型、本文 v14 から作成） |
