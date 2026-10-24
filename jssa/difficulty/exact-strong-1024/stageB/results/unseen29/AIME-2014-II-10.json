@@ -1,0 +1,116 @@
+{
+  "id": "AIME-2014-II-10",
+  "status": "verified_complete",
+  "stage": "finished",
+  "identity": {
+    "commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+    "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+    "clean": true,
+    "verifier_file": "/tmp/exstrong-clean/src/geosolver/engine/standard/evaluation/final_verifier.py",
+    "converter_sha256": "23296abd40168721f6277d3220e21320ec5d5ff69c92fd2c8d8e120a9149ab98",
+    "run_exact_sha256": "9ba6001733afddbdb5d48ada4e2e3650c72152b832d4759ed5cde51da48bd64b"
+  },
+  "dsl_sha256": "702a3c10f6b6d0249cabc224815d56b8071b3946c15bb1302b05fc81f54a01b9",
+  "limits": {
+    "wall_seconds": 600,
+    "memory_bytes": 8589934592,
+    "max_file_bytes": 2900000,
+    "threads": 1,
+    "attempts": 1
+  },
+  "implementation_sha256": {
+    "run_strong.py": "05008e24929b2991593bb50964459df554292ab9c5d6044406c0f0a1ba70f9dc",
+    "strong_translate.py": "7d9cdb4acab1d64bf5f9b1f3a55d6b75585479074a4ebefc0e2da39c54da010a"
+  },
+  "worker_wall_seconds": 0.26407325314357877,
+  "translation_seconds": 0.05005837301723659,
+  "nvars": 6,
+  "nequations": 6,
+  "saturation_factors": 6,
+  "algebraic_constants": [],
+  "variable_order": [
+    "v_u",
+    "v_v",
+    "v_x",
+    "v_y",
+    "s1",
+    "t2"
+  ],
+  "saturation_factor_expressions": [
+    "v_v",
+    "v_y",
+    "v_u**2 + 4028*v_u + v_v**2 + 4056196",
+    "v_u**2 + v_v**2",
+    "v_x**2 + 4028*v_x + v_y**2 + 4056196",
+    "v_x**2 + v_y**2"
+  ],
+  "algebra_seconds": 0.016535626025870442,
+  "algebra_returncode": 0,
+  "algebra_solver_calls": 1,
+  "elimination_polynomials": [
+    "t2**4 - 27763975108827*t2**2"
+  ],
+  "target_polynomial_factored": "t2**2*(t2**2 - 27763975108827)",
+  "candidates_exact": [
+    "-3042147*sqrt(3)",
+    "0",
+    "3042147*sqrt(3)"
+  ],
+  "candidates": [
+    {
+      "nodes": 2,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 1,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "-3042147*sqrt(3)"
+    },
+    {
+      "nodes": 6,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 2,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "0"
+    },
+    {
+      "nodes": 7,
+      "free_samples": 0,
+      "verifier_calls": 1,
+      "pruned": 1,
+      "incomplete": false,
+      "failures": {},
+      "witness": {
+        "dsl_values_exact": {
+          "x": "-1007",
+          "y": "1007*sqrt(3)",
+          "u": "-1007",
+          "v": "-1007*sqrt(3)"
+        },
+        "answer": "5269153.168093237351872640305473065103477954174463487996498089035118759671590055306406",
+        "normalized_residual": "1.356396069359414239706489082645203228329858108196040432996606768330114776652495707613008907972850375e-183",
+        "precision_dps": 180,
+        "status": "verified",
+        "hard_feasible": true
+      },
+      "state": "verified",
+      "candidate_exact": "3042147*sqrt(3)"
+    }
+  ],
+  "answers": [
+    "3042147*sqrt(3)"
+  ],
+  "filter_seconds": 0.14443167787976563,
+  "set_complete": true,
+  "wall_seconds": 0.8063906179741025,
+  "peak_tree_rss_bytes": 94834688,
+  "supervisor_returncode": 0,
+  "attempts": 1,
+  "last_algebra_marker": "STRONG_LEX_END"
+}

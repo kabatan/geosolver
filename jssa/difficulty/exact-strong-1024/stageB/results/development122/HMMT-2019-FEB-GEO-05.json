@@ -1,0 +1,149 @@
+{
+  "id": "HMMT-2019-FEB-GEO-05",
+  "status": "verified_complete",
+  "stage": "finished",
+  "identity": {
+    "commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+    "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+    "clean": true,
+    "verifier_file": "/tmp/exstrong-clean/src/geosolver/engine/standard/evaluation/final_verifier.py",
+    "converter_sha256": "23296abd40168721f6277d3220e21320ec5d5ff69c92fd2c8d8e120a9149ab98",
+    "run_exact_sha256": "9ba6001733afddbdb5d48ada4e2e3650c72152b832d4759ed5cde51da48bd64b"
+  },
+  "dsl_sha256": "0ceb3f25ee4496ff765f78c8bcc19264e65eb30b260abd032839ec0762b47539",
+  "limits": {
+    "wall_seconds": 600,
+    "memory_bytes": 8589934592,
+    "max_file_bytes": 2900000,
+    "threads": 1,
+    "attempts": 1
+  },
+  "implementation_sha256": {
+    "run_strong.py": "05008e24929b2991593bb50964459df554292ab9c5d6044406c0f0a1ba70f9dc",
+    "strong_translate.py": "7d9cdb4acab1d64bf5f9b1f3a55d6b75585479074a4ebefc0e2da39c54da010a"
+  },
+  "worker_wall_seconds": 5.703542910981923,
+  "translation_seconds": 0.10692468797788024,
+  "nvars": 14,
+  "nequations": 13,
+  "saturation_factors": 2,
+  "algebraic_constants": [],
+  "variable_order": [
+    "v_ax",
+    "v_ay",
+    "v_bx",
+    "v_by",
+    "v_cx",
+    "v_cy",
+    "p1",
+    "p2",
+    "s3",
+    "s4",
+    "s5",
+    "s6",
+    "s7",
+    "t8"
+  ],
+  "saturation_factor_expressions": [
+    "s7",
+    "v_ax**2 - 2*v_ax*v_bx + v_ay**2 - 2*v_ay*v_by + v_bx**2 + v_by**2"
+  ],
+  "algebra_seconds": 0.04483090015128255,
+  "algebra_returncode": 0,
+  "algebra_solver_calls": 1,
+  "elimination_polynomials": [
+    "16*t8**4 - 24*t8**2 + 1"
+  ],
+  "target_polynomial_factored": "(4*t8**2 - 4*t8 - 1)*(4*t8**2 + 4*t8 - 1)",
+  "candidates_exact": [
+    "-sqrt(2)/2 - 1/2",
+    "1/2 - sqrt(2)/2",
+    "-1/2 + sqrt(2)/2",
+    "1/2 + sqrt(2)/2"
+  ],
+  "candidates": [
+    {
+      "nodes": 2,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 1,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "-sqrt(2)/2 - 1/2"
+    },
+    {
+      "nodes": 2,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 1,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "1/2 - sqrt(2)/2"
+    },
+    {
+      "nodes": 16,
+      "free_samples": 1,
+      "verifier_calls": 1,
+      "pruned": 2,
+      "incomplete": true,
+      "failures": {},
+      "witness": {
+        "dsl_values_exact": {
+          "ax": "CRootOf(36*x**4 - 36*x**2 + 1, 0)",
+          "ay": "CRootOf(36*x**4 - 36*x**2 + 1, 2)",
+          "bx": "-sqrt(3)/3",
+          "by": "sqrt(6)/3",
+          "cx": "-sqrt(6)/3",
+          "cy": "-sqrt(3)/3"
+        },
+        "answer": "0.2071067811865475244008443621048490392848359376884740365883398689953662392310535194252",
+        "normalized_residual": "1.034438921273381172686535827605370082265066308814556586042532861341196752473316924157737280800167778e-183",
+        "precision_dps": 180,
+        "status": "verified",
+        "hard_feasible": true
+      },
+      "state": "verified",
+      "candidate_exact": "-1/2 + sqrt(2)/2"
+    },
+    {
+      "nodes": 16,
+      "free_samples": 1,
+      "verifier_calls": 1,
+      "pruned": 2,
+      "incomplete": true,
+      "failures": {},
+      "witness": {
+        "dsl_values_exact": {
+          "ax": "CRootOf(36*x**4 - 36*x**2 + 1, 1)",
+          "ay": "CRootOf(36*x**4 - 36*x**2 + 1, 3)",
+          "bx": "-sqrt(3)/3",
+          "by": "-sqrt(6)/3",
+          "cx": "sqrt(6)/3",
+          "cy": "-sqrt(3)/3"
+        },
+        "answer": "1.207106781186547524400844362104849039284835937688474036588339868995366239231053519425",
+        "normalized_residual": "1.299823486062609080272891136928006357098349202431375833299816911490617503667546394569652267594531147e-183",
+        "precision_dps": 180,
+        "status": "verified",
+        "hard_feasible": true
+      },
+      "state": "verified",
+      "candidate_exact": "1/2 + sqrt(2)/2"
+    }
+  ],
+  "answers": [
+    "-1/2 + sqrt(2)/2",
+    "1/2 + sqrt(2)/2"
+  ],
+  "filter_seconds": 5.478703839937225,
+  "set_complete": true,
+  "wall_seconds": 6.328694165917113,
+  "peak_tree_rss_bytes": 101347328,
+  "supervisor_returncode": 0,
+  "attempts": 1,
+  "last_algebra_marker": "STRONG_LEX_END"
+}

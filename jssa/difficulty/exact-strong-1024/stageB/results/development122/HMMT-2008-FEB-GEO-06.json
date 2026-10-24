@@ -1,0 +1,116 @@
+{
+  "id": "HMMT-2008-FEB-GEO-06",
+  "status": "verified_complete",
+  "stage": "finished",
+  "identity": {
+    "commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+    "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+    "clean": true,
+    "verifier_file": "/tmp/exstrong-clean/src/geosolver/engine/standard/evaluation/final_verifier.py",
+    "converter_sha256": "23296abd40168721f6277d3220e21320ec5d5ff69c92fd2c8d8e120a9149ab98",
+    "run_exact_sha256": "9ba6001733afddbdb5d48ada4e2e3650c72152b832d4759ed5cde51da48bd64b"
+  },
+  "dsl_sha256": "6f9f0cf481eae5339a5503461aceae068ccec717ba5e3adef9441dc8aa907283",
+  "limits": {
+    "wall_seconds": 600,
+    "memory_bytes": 8589934592,
+    "max_file_bytes": 2900000,
+    "threads": 1,
+    "attempts": 1
+  },
+  "implementation_sha256": {
+    "run_strong.py": "05008e24929b2991593bb50964459df554292ab9c5d6044406c0f0a1ba70f9dc",
+    "strong_translate.py": "7d9cdb4acab1d64bf5f9b1f3a55d6b75585479074a4ebefc0e2da39c54da010a"
+  },
+  "worker_wall_seconds": 0.42710596905089915,
+  "translation_seconds": 0.10800882894545794,
+  "nvars": 8,
+  "nequations": 7,
+  "saturation_factors": 3,
+  "algebraic_constants": [
+    {
+      "symbol": "k4",
+      "expression": "sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    },
+    {
+      "symbol": "k5",
+      "expression": "-sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "-0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    }
+  ],
+  "variable_order": [
+    "v_Ax",
+    "v_Ay",
+    "k4",
+    "k5",
+    "p1",
+    "s6",
+    "s7",
+    "t8"
+  ],
+  "saturation_factor_expressions": [
+    "v_Ay",
+    "v_Ax**2 + 6*v_Ax + v_Ay**2 + 9",
+    "v_Ax**2 - 10*v_Ax + v_Ay**2 + 25"
+  ],
+  "algebra_seconds": 0.01585881202481687,
+  "algebra_returncode": 0,
+  "algebra_solver_calls": 1,
+  "elimination_polynomials": [
+    "t8**2 - 17"
+  ],
+  "target_polynomial_factored": "t8**2 - 17",
+  "candidates_exact": [
+    "-sqrt(17)",
+    "sqrt(17)"
+  ],
+  "candidates": [
+    {
+      "nodes": 2,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 1,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "-sqrt(17)"
+    },
+    {
+      "nodes": 48,
+      "free_samples": 1,
+      "verifier_calls": 1,
+      "pruned": 11,
+      "incomplete": true,
+      "failures": {
+        "CONJUGATE_CONSTANT": 4
+      },
+      "witness": {
+        "dsl_values_exact": {
+          "Ax": "1 - sqrt(1087)/8",
+          "Ay": "1/8"
+        },
+        "answer": "4.123105625617660549821409855974077025147199225373620434398633573094954346337621593588",
+        "normalized_residual": "5.451688131253191017630558195790298727305384298072332385510674668282261257394116645657722427203162291e-183",
+        "precision_dps": 180,
+        "status": "verified",
+        "hard_feasible": true
+      },
+      "state": "verified",
+      "candidate_exact": "sqrt(17)"
+    }
+  ],
+  "answers": [
+    "sqrt(17)"
+  ],
+  "filter_seconds": 0.2614663220010698,
+  "set_complete": true,
+  "wall_seconds": 0.907283385982737,
+  "peak_tree_rss_bytes": 100909056,
+  "supervisor_returncode": 0,
+  "attempts": 1,
+  "last_algebra_marker": "STRONG_LEX_END"
+}

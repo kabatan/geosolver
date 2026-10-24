@@ -1,0 +1,157 @@
+{
+  "id": "AIME-2002-I-02",
+  "status": "verified_complete",
+  "stage": "finished",
+  "identity": {
+    "commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+    "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+    "clean": true,
+    "verifier_file": "/tmp/exstrong-clean/src/geosolver/engine/standard/evaluation/final_verifier.py",
+    "converter_sha256": "23296abd40168721f6277d3220e21320ec5d5ff69c92fd2c8d8e120a9149ab98",
+    "run_exact_sha256": "9ba6001733afddbdb5d48ada4e2e3650c72152b832d4759ed5cde51da48bd64b"
+  },
+  "dsl_sha256": "a82301c05f44d0ee02e047b596876f8b1b24e14af0b62cec8996208c8b138b85",
+  "limits": {
+    "wall_seconds": 600,
+    "memory_bytes": 8589934592,
+    "max_file_bytes": 2900000,
+    "threads": 1,
+    "attempts": 1
+  },
+  "implementation_sha256": {
+    "run_strong.py": "05008e24929b2991593bb50964459df554292ab9c5d6044406c0f0a1ba70f9dc",
+    "strong_translate.py": "7d9cdb4acab1d64bf5f9b1f3a55d6b75585479074a4ebefc0e2da39c54da010a"
+  },
+  "worker_wall_seconds": 1.4647005158476532,
+  "translation_seconds": 0.12928989599458873,
+  "nvars": 10,
+  "nequations": 11,
+  "saturation_factors": 7,
+  "algebraic_constants": [],
+  "variable_order": [
+    "v_s",
+    "v_u",
+    "v_v",
+    "v_w",
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "t6"
+  ],
+  "saturation_factor_expressions": [
+    "v_s",
+    "v_s - v_u + 1",
+    "v_s - v_w/6 + 1/6",
+    "v_u - 1",
+    "v_v - 1",
+    "v_v - v_w",
+    "v_w + 1"
+  ],
+  "algebra_seconds": 0.01960683986544609,
+  "algebra_returncode": 0,
+  "algebra_solver_calls": 1,
+  "elimination_polynomials": [
+    "4*t6**6 - 444*t6**4 + 436*t6**3 + 11025*t6**2 - 7350*t6 - 42875"
+  ],
+  "target_polynomial_factored": "(t6 - 7)*(t6 + 5)*(2*t6**2 - 10*t6 - 25)*(2*t6**2 + 14*t6 - 49)",
+  "candidates_exact": [
+    "-7*sqrt(3)/2 - 7/2",
+    "-5",
+    "5/2 - 5*sqrt(3)/2",
+    "-7/2 + 7*sqrt(3)/2",
+    "5/2 + 5*sqrt(3)/2",
+    "7"
+  ],
+  "candidates": [
+    {
+      "nodes": 7,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 1,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "-7*sqrt(3)/2 - 7/2"
+    },
+    {
+      "nodes": 9,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 2,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "-5"
+    },
+    {
+      "nodes": 9,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 1,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "5/2 - 5*sqrt(3)/2"
+    },
+    {
+      "nodes": 10,
+      "free_samples": 0,
+      "verifier_calls": 1,
+      "pruned": 0,
+      "incomplete": false,
+      "failures": {},
+      "witness": {
+        "dsl_values_exact": {
+          "s": "2",
+          "u": "2",
+          "v": "1 + sqrt(3)",
+          "w": "1 + 2*sqrt(3)"
+        },
+        "answer": "2.562177826491070527346062195270553284299818388336332198195324428081765559180800129784",
+        "normalized_residual": "1.487762837383488162263909864643232953025491880106584948241694304588434859856950605913876651777782496e-183",
+        "precision_dps": 180,
+        "status": "verified",
+        "hard_feasible": true
+      },
+      "state": "verified",
+      "candidate_exact": "-7/2 + 7*sqrt(3)/2"
+    },
+    {
+      "nodes": 7,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 1,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "5/2 + 5*sqrt(3)/2"
+    },
+    {
+      "nodes": 9,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 2,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "7"
+    }
+  ],
+  "answers": [
+    "-7/2 + 7*sqrt(3)/2"
+  ],
+  "filter_seconds": 1.225221305852756,
+  "set_complete": true,
+  "wall_seconds": 2.117132634855807,
+  "peak_tree_rss_bytes": 102166528,
+  "supervisor_returncode": 0,
+  "attempts": 1,
+  "last_algebra_marker": "STRONG_LEX_END"
+}

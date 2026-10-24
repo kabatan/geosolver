@@ -1,0 +1,188 @@
+{
+  "id": "AIME-2005-II-12",
+  "status": "verified_complete",
+  "stage": "finished",
+  "identity": {
+    "commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+    "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+    "clean": true,
+    "verifier_file": "/tmp/exstrong-clean/src/geosolver/engine/standard/evaluation/final_verifier.py",
+    "converter_sha256": "23296abd40168721f6277d3220e21320ec5d5ff69c92fd2c8d8e120a9149ab98",
+    "run_exact_sha256": "9ba6001733afddbdb5d48ada4e2e3650c72152b832d4759ed5cde51da48bd64b"
+  },
+  "dsl_sha256": "d1574d9ece80be299c4a6f32431edfeef7787dc53fb0f1b547c2da7cc13fd583",
+  "limits": {
+    "wall_seconds": 600,
+    "memory_bytes": 8589934592,
+    "max_file_bytes": 2900000,
+    "threads": 1,
+    "attempts": 1
+  },
+  "implementation_sha256": {
+    "run_strong.py": "05008e24929b2991593bb50964459df554292ab9c5d6044406c0f0a1ba70f9dc",
+    "strong_translate.py": "7d9cdb4acab1d64bf5f9b1f3a55d6b75585479074a4ebefc0e2da39c54da010a"
+  },
+  "worker_wall_seconds": 1.4108004041481763,
+  "translation_seconds": 0.1260069329291582,
+  "nvars": 9,
+  "nequations": 9,
+  "saturation_factors": 4,
+  "algebraic_constants": [
+    {
+      "symbol": "k6",
+      "expression": "sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    },
+    {
+      "symbol": "k7",
+      "expression": "-sqrt(2)/2",
+      "minimal_polynomial": "2*_constant**2 - 1",
+      "intended_value_80d": "-0.70710678118654752440084436210484903928483593768847403658833986899536623923105352"
+    }
+  ],
+  "variable_order": [
+    "v_e",
+    "v_f",
+    "k6",
+    "k7",
+    "s1",
+    "s2",
+    "s3",
+    "s8",
+    "t9"
+  ],
+  "saturation_factor_expressions": [
+    "s1 - s2",
+    "v_e - v_f",
+    "v_e**2 - 900*v_e + 405000",
+    "v_f**2 - 900*v_f + 405000"
+  ],
+  "algebra_seconds": 0.0356508968397975,
+  "algebra_returncode": 0,
+  "algebra_solver_calls": 1,
+  "elimination_polynomials": [
+    "t9**16 - 640000*t9**14 + 550500000000*t9**12 - 289840000000000000*t9**10 - 26014396250000000000000*t9**8 - 25675930800000000000000000000*t9**6 + 21224769800062500000000000000000000*t9**4 - 2590121202570000000000000000000000000000*t9**2 + 31883646891800390625000000000000000000000000"
+  ],
+  "target_polynomial_factored": "(t9**2 - 1300*t9 + 405000)*(t9**2 - 1300*t9 + 765000)*(t9**2 - 500*t9 + 45000)*(t9**2 - 500*t9 + 405000)*(t9**2 + 500*t9 + 45000)*(t9**2 + 500*t9 + 405000)*(t9**2 + 1300*t9 + 405000)*(t9**2 + 1300*t9 + 765000)",
+  "candidates_exact": [
+    "-650 - 50*sqrt(7)",
+    "-650 + 50*sqrt(7)",
+    "-250 - 50*sqrt(7)",
+    "-250 + 50*sqrt(7)",
+    "250 - 50*sqrt(7)",
+    "50*sqrt(7) + 250",
+    "650 - 50*sqrt(7)",
+    "50*sqrt(7) + 650"
+  ],
+  "candidates": [
+    {
+      "nodes": 5,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 2,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "-650 - 50*sqrt(7)"
+    },
+    {
+      "nodes": 5,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 2,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "-650 + 50*sqrt(7)"
+    },
+    {
+      "nodes": 5,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 2,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "-250 - 50*sqrt(7)"
+    },
+    {
+      "nodes": 5,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 2,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "-250 + 50*sqrt(7)"
+    },
+    {
+      "nodes": 7,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 3,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "250 - 50*sqrt(7)"
+    },
+    {
+      "nodes": 11,
+      "free_samples": 0,
+      "verifier_calls": 1,
+      "pruned": 2,
+      "incomplete": false,
+      "failures": {},
+      "witness": {
+        "dsl_values_exact": {
+          "e": "250 - 50*sqrt(7)",
+          "f": "650 - 50*sqrt(7)"
+        },
+        "answer": "382.287565553229529525080787681963021285512959154122509018416722960053441161514181388",
+        "normalized_residual": "7.398966237012897248548017084031594524635300607145636871733446839402170806258301153806625612779253748e-183",
+        "precision_dps": 180,
+        "status": "verified",
+        "hard_feasible": true
+      },
+      "state": "verified",
+      "candidate_exact": "50*sqrt(7) + 250"
+    },
+    {
+      "nodes": 7,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 3,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "650 - 50*sqrt(7)"
+    },
+    {
+      "nodes": 15,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 4,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "50*sqrt(7) + 650"
+    }
+  ],
+  "answers": [
+    "50*sqrt(7) + 250"
+  ],
+  "filter_seconds": 1.1720745500642806,
+  "set_complete": true,
+  "wall_seconds": 1.9107129061594605,
+  "peak_tree_rss_bytes": 99401728,
+  "supervisor_returncode": 0,
+  "attempts": 1,
+  "last_algebra_marker": "STRONG_LEX_END"
+}

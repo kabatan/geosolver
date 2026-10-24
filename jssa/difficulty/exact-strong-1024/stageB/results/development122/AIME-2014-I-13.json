@@ -1,0 +1,135 @@
+{
+  "id": "AIME-2014-I-13",
+  "status": "verified_complete",
+  "stage": "finished",
+  "identity": {
+    "commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+    "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+    "clean": true,
+    "verifier_file": "/tmp/exstrong-clean/src/geosolver/engine/standard/evaluation/final_verifier.py",
+    "converter_sha256": "23296abd40168721f6277d3220e21320ec5d5ff69c92fd2c8d8e120a9149ab98",
+    "run_exact_sha256": "9ba6001733afddbdb5d48ada4e2e3650c72152b832d4759ed5cde51da48bd64b"
+  },
+  "dsl_sha256": "2abf4ae1171d054d3a801cbb7bf7aee57bf350d69f93b48b39eb9856c371e085",
+  "limits": {
+    "wall_seconds": 600,
+    "memory_bytes": 8589934592,
+    "max_file_bytes": 2900000,
+    "threads": 1,
+    "attempts": 1
+  },
+  "implementation_sha256": {
+    "run_strong.py": "05008e24929b2991593bb50964459df554292ab9c5d6044406c0f0a1ba70f9dc",
+    "strong_translate.py": "7d9cdb4acab1d64bf5f9b1f3a55d6b75585479074a4ebefc0e2da39c54da010a"
+  },
+  "worker_wall_seconds": 52.97854405315593,
+  "translation_seconds": 0.09086035308428109,
+  "nvars": 16,
+  "nequations": 19,
+  "saturation_factors": 13,
+  "algebraic_constants": [],
+  "variable_order": [
+    "v_e",
+    "v_f",
+    "v_g",
+    "v_h",
+    "v_s",
+    "v_t",
+    "p1",
+    "p2",
+    "s3",
+    "s4",
+    "s5",
+    "s6",
+    "s7",
+    "s8",
+    "s9",
+    "t10"
+  ],
+  "saturation_factor_expressions": [
+    "v_e",
+    "v_e - v_s",
+    "v_f",
+    "v_f - v_s",
+    "v_g",
+    "v_g - v_s",
+    "v_h",
+    "v_h - v_s",
+    "v_s",
+    "v_t",
+    "v_e**2 - 2*v_e*v_g + v_g**2 + v_s**2",
+    "v_e*v_f - v_e*v_h - v_f*v_g + v_g*v_h + v_s**2",
+    "v_f**2 - 2*v_f*v_h + v_h**2 + v_s**2"
+  ],
+  "algebra_seconds": 49.717676462139934,
+  "algebra_returncode": 0,
+  "algebra_solver_calls": 1,
+  "elimination_polynomials": [
+    "2791437684975244136693265085201*t10**7 + 3596431561522229468780617040880776*t10**6 - 3369504226838947572398496055592340684*t10**5 - 8970331545366965160035885098641326144464*t10**4 - 1263863653724324601024410621851879250405504*t10**3 + 5265328212179707483086782655035400002650252800*t10**2 + 2336616042425835120026806598880362226417029760000*t10 - 1087780332399475384245895651544938169889614400000000"
+  ],
+  "target_polynomial_factored": "(t10 - 850)*(t10 - 306)*(13365440881*t10 - 15445638848836)*(13969585249*t10**2 + 26040570450056*t10 + 17071225517610000)*(14950686529*t10**2 + 25953334435976*t10 + 15860989389776400)",
+  "candidates_exact": [
+    "306",
+    "850",
+    "15445638848836/13365440881"
+  ],
+  "candidates": [
+    {
+      "nodes": 37,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 8,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "306"
+    },
+    {
+      "nodes": 23,
+      "free_samples": 0,
+      "verifier_calls": 1,
+      "pruned": 4,
+      "incomplete": false,
+      "failures": {},
+      "witness": {
+        "dsl_values_exact": {
+          "s": "5*sqrt(34)",
+          "e": "4*sqrt(34)",
+          "f": "7*sqrt(34)/2",
+          "g": "sqrt(34)",
+          "h": "sqrt(34)/2",
+          "t": "5/8"
+        },
+        "answer": "850.0",
+        "normalized_residual": "4.493700212975865134039774890120381922805054970241756883036621043502100181396468585539643630216807791e-184",
+        "precision_dps": 180,
+        "status": "verified",
+        "hard_feasible": true
+      },
+      "state": "verified",
+      "candidate_exact": "850"
+    },
+    {
+      "nodes": 19,
+      "free_samples": 0,
+      "verifier_calls": 0,
+      "pruned": 4,
+      "incomplete": false,
+      "failures": {},
+      "witness": null,
+      "state": "excluded",
+      "candidate_exact": "15445638848836/13365440881"
+    }
+  ],
+  "answers": [
+    "850"
+  ],
+  "filter_seconds": 3.0376432670746,
+  "set_complete": true,
+  "wall_seconds": 53.38658658717759,
+  "peak_tree_rss_bytes": 112422912,
+  "supervisor_returncode": 0,
+  "attempts": 1,
+  "last_algebra_marker": "STRONG_LEX_END"
+}

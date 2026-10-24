@@ -1,0 +1,148 @@
+{
+  "id": "HMMT-2013-FEB-GEO-04",
+  "status": "verified_subset",
+  "stage": "finished",
+  "identity": {
+    "commit": "60db4b679b04167175c51c479c87c22fa663fda0",
+    "source_hash": "sha256:d8fd9bb8392ad2984276bab3386e033669246ee79586317917c322d31b4541f5",
+    "clean": true,
+    "verifier_file": "/tmp/exstrong-clean/src/geosolver/engine/standard/evaluation/final_verifier.py",
+    "converter_sha256": "23296abd40168721f6277d3220e21320ec5d5ff69c92fd2c8d8e120a9149ab98",
+    "run_exact_sha256": "9ba6001733afddbdb5d48ada4e2e3650c72152b832d4759ed5cde51da48bd64b"
+  },
+  "dsl_sha256": "62da819d3e0383b91cbeef351886dcda41fe1af4a90af7e46b94e64ce5c7d0bb",
+  "limits": {
+    "wall_seconds": 600,
+    "memory_bytes": 8589934592,
+    "max_file_bytes": 2900000,
+    "threads": 1,
+    "attempts": 1
+  },
+  "implementation_sha256": {
+    "run_strong.py": "05008e24929b2991593bb50964459df554292ab9c5d6044406c0f0a1ba70f9dc",
+    "strong_translate.py": "7d9cdb4acab1d64bf5f9b1f3a55d6b75585479074a4ebefc0e2da39c54da010a"
+  },
+  "worker_wall_seconds": 1.1367485371883959,
+  "translation_seconds": 0.03153384616598487,
+  "nvars": 12,
+  "nequations": 12,
+  "saturation_factors": 5,
+  "algebraic_constants": [],
+  "variable_order": [
+    "v_Ax",
+    "v_Ay",
+    "v_b",
+    "v_r1",
+    "v_r2",
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "s5",
+    "s6",
+    "t7"
+  ],
+  "saturation_factor_expressions": [
+    "s5",
+    "s6",
+    "v_Ay",
+    "v_r1",
+    "v_r2"
+  ],
+  "algebra_seconds": 0.046866151969879866,
+  "algebra_returncode": 0,
+  "algebra_solver_calls": 1,
+  "elimination_polynomials": [
+    "t7**4 - 3*t7**2 + 1"
+  ],
+  "target_polynomial_factored": "(t7**2 - t7 - 1)*(t7**2 + t7 - 1)",
+  "candidates_exact": [
+    "-sqrt(5)/2 - 1/2",
+    "1/2 - sqrt(5)/2",
+    "-1/2 + sqrt(5)/2",
+    "1/2 + sqrt(5)/2"
+  ],
+  "candidates": [
+    {
+      "nodes": 12,
+      "free_samples": 1,
+      "verifier_calls": 0,
+      "pruned": 7,
+      "incomplete": true,
+      "failures": {},
+      "witness": null,
+      "state": "unresolved",
+      "candidate_exact": "-sqrt(5)/2 - 1/2"
+    },
+    {
+      "nodes": 12,
+      "free_samples": 1,
+      "verifier_calls": 0,
+      "pruned": 7,
+      "incomplete": true,
+      "failures": {},
+      "witness": null,
+      "state": "unresolved",
+      "candidate_exact": "1/2 - sqrt(5)/2"
+    },
+    {
+      "nodes": 15,
+      "free_samples": 1,
+      "verifier_calls": 1,
+      "pruned": 3,
+      "incomplete": true,
+      "failures": {},
+      "witness": {
+        "dsl_values_exact": {
+          "r1": "1/2 + sqrt(5)/2",
+          "r2": "sqrt(5)/2 + 3/2",
+          "Ax": "-1/2",
+          "Ay": "CRootOf(16*x**4 - 40*x**2 + 5, 3)",
+          "b": "-1"
+        },
+        "answer": "0.6180339887498948482045868343656381177203091798057628621354486227052604628189024497072",
+        "normalized_residual": "2.704081525569147442638701632536264005149723681945742923203817352434094282969783658649868635244443902e-183",
+        "precision_dps": 180,
+        "status": "verified",
+        "hard_feasible": true
+      },
+      "state": "verified",
+      "candidate_exact": "-1/2 + sqrt(5)/2"
+    },
+    {
+      "nodes": 15,
+      "free_samples": 1,
+      "verifier_calls": 1,
+      "pruned": 3,
+      "incomplete": true,
+      "failures": {},
+      "witness": {
+        "dsl_values_exact": {
+          "r1": "-1/2 + sqrt(5)/2",
+          "r2": "3/2 - sqrt(5)/2",
+          "Ax": "1/2",
+          "Ay": "CRootOf(16*x**4 - 40*x**2 + 5, 2)",
+          "b": "1"
+        },
+        "answer": "1.618033988749894848204586834365638117720309179805762862135448622705260462818902449707",
+        "normalized_residual": "3.670808934215180951392255263821518790149404953304413528390852354506229628692553881784553167411892945e-184",
+        "precision_dps": 180,
+        "status": "verified",
+        "hard_feasible": true
+      },
+      "state": "verified",
+      "candidate_exact": "1/2 + sqrt(5)/2"
+    }
+  ],
+  "answers": [
+    "-1/2 + sqrt(5)/2",
+    "1/2 + sqrt(5)/2"
+  ],
+  "filter_seconds": 1.0253749468829483,
+  "set_complete": false,
+  "wall_seconds": 1.508290909929201,
+  "peak_tree_rss_bytes": 98734080,
+  "supervisor_returncode": 0,
+  "attempts": 1,
+  "last_algebra_marker": "STRONG_LEX_END"
+}
