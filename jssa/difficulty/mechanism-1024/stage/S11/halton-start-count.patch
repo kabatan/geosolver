@@ -1,0 +1,23 @@
+--- a/src/geosolver/engine/standard/search/scipy_multistart_backend.py
++++ b/src/geosolver/engine/standard/search/scipy_multistart_backend.py
+@@ -3,6 +3,7 @@
+ from __future__ import annotations
+ 
+ import math
++import os
+ import time
+ from dataclasses import dataclass, field
+ 
+@@ -36,7 +37,11 @@
+ _LOCAL_FLOAT_TIME_BUDGET_SECONDS = 45.0
+ _PARAMETRIC_LOCAL_FLOAT_TIME_BUDGET_SECONDS = 60.0
+ _BOUNDED_TRF_TIME_BUDGET_SECONDS = 45.0
+-_N_HALTON_STARTS = 320
++# S11 changes only the local Halton count; bounded TRF keeps its own 24 starts.
++# Read once at import. Unset means the original 320-start behavior.
++_N_HALTON_STARTS = int(os.environ.get("GEOSOLVER_SCIPY_N_HALTON_STARTS", "320"))
++if _N_HALTON_STARTS not in (1, 4, 16, 64, 320):
++    raise ValueError("GEOSOLVER_SCIPY_N_HALTON_STARTS must be 1, 4, 16, 64, or 320")
+ _LM_MAX_NFEV = 80
+ # Keep a small search-side closure window so that the high-precision refiner
+ # can polish roots returned by bounded 1-D scans.  Phase C still applies the
