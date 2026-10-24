@@ -1,0 +1,37 @@
+{
+  "source_hash": "sha256:2cb435fc35950aafaf6bb2e3a40df30a7415c9fdc65d3ff4b8d969c361ecac75",
+  "aliases": {
+    "B005_006": "B056"
+  },
+  "configurations": [
+    {
+      "name": "B0",
+      "environment": {}
+    },
+    {
+      "name": "B046",
+      "environment": {
+        "GEOSOLVER_ABLATE_NO_NOMAD_GUARD_PENALTY": "1"
+      }
+    },
+    {
+      "name": "B056",
+      "environment": {
+        "GEOSOLVER_ABLATE_NO_SEARCH_BOX_INFERENCE": "1"
+      }
+    },
+    {
+      "name": "BMADS",
+      "environment": {
+        "SEARCH_MODE": "mads"
+      }
+    }
+  ],
+  "thread_environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "search_mode_adapter": "SEARCH_MODE=mads is driver-only, consumed by s10_worker.py; neither BASE1 nor S10 source reads a SEARCH_MODE env var."
+}
