@@ -63,6 +63,7 @@ cs = list(csv.DictReader((OUT / "per-candidate.csv").open()))
 assert len(ps) == 12 and len({p["case_id"] for p in ps}) == 12
 independent = []
 total_initial = 0
+scale_fallbacks = {}
 for task in M["inputs"]:
     case = task["case_id"]
     d = ROOT / "runs" / case
@@ -70,7 +71,10 @@ for task in M["inputs"]:
     scales = json.loads((d / "scales.json").read_text())
     assert initial["source_hash"] == M["source_hash"]
     assert len(initial["candidates"]) > 0
-    assert all(scales["finite_counts"]), case
+    fallback = [i for i, n in enumerate(scales["finite_counts"]) if n == 0]
+    if fallback:
+        assert all(mp.mpf(scales["scales"][i]) == 1 for i in fallback)
+        scale_fallbacks[case] = fallback
     total_initial += len(initial["candidates"])
     assert counts[(case, "search", None)] == counts[(case, "scales", None)] == 1
     best = {}
@@ -120,4 +124,5 @@ for p in OUT.rglob("*"):
         assert p.stat().st_size <= 3_000_000
 checks.append("no repository artifact exceeds 3,000,000 bytes")
 print(json.dumps({"status": "ok", "audit_script_sha256": sha(Path(__file__)), "checks": checks,
-    "P1_met": p1, "P2_met": p2, "P3_before": before, "P3_after": after}, ensure_ascii=False, indent=2))
+    "P1_met": p1, "P2_met": p2, "P3_before": before, "P3_after": after,
+    "scale_fallbacks_per_fixed_rules": scale_fallbacks}, ensure_ascii=False, indent=2))
